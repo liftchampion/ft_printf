@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:36:59 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/16 23:38:29 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/16 23:43:56 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,5 +17,6 @@ int	printf(const char *frmt, ...)
 	va_list vl;
 
 	va_start(vl, frmt);
+	va_end(vl);
 	return (0);
 }

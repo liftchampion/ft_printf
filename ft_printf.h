@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:40:21 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/16 23:38:20 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/16 23:44:33 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,5 @@
 # include <stdarg.h>
 # include "libft.h"
 
-int	printf(const char *ftmt, ...);
+int	printf(const char *frmt, ...);
 #endif
