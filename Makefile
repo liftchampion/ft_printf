@@ -16,6 +16,8 @@ OBJS = $(SRCS:.c=.o)
 LIB = ./libft/libft.a
 HEADERS = $(wildcard *.h)
 FLAGS = -Wall -Wextra -Werror
+DFLAGS = -g
+CC = clang
 
 .PHONY: all clean fclean re
 
@@ -24,19 +26,15 @@ all: $(NAME)
 $(NAME): $(OBJS) $(HEADERS) $(LIB)
 	clang -o $(NAME) $(OBJS) $(LIB) $(FLAGS)
 
+%.o: %.c $(HDR) $(LIB)
+	$(CC) $(FLAGS) -c $< -o $@
+
 $(LIB):
 	make -C libft/ all
 
-$(OBJS): $(SRCS) $(HEADERS)
-	clang $(FLAGS) -c $(SRCS)
+debug: FLAGS = $(DFLAGS)
+debug: fclean_this all
 
-
-
-link_d: build_d $(LIB)
-	clang -o $(NAME) $(OBJS) $(LIB) -g
-
-build_d: $(SRCS) $(HEADERS)
-	clang -c -g $(SRCS)
 
 clean_lib:
 	make -C libft/ clean
@@ -54,12 +52,9 @@ fclean_this: clean_this
 
 fclean: fclean_lib fclean_this
 
-re_lib:
-	make -C libft/ re
-
 re_this: fclean_this all
 
 re: fclean all
 
-valgrind: fclean_this link_d
+valgrind: debug
 	/Users/ggerardy/.brew/bin/valgrind --leak-check=full --show-leak-kinds=definite ./$(NAME)
