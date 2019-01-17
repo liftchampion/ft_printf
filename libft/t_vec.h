@@ -55,4 +55,22 @@ void				ft_vecdel(void **vect);
 t_vector			*ft_vecpush(t_vector *vec, void *data, size_t s);
 t_vector			*ft_vecgrow(t_vector *vec, size_t s);
 t_vector			*ft_vecshrink(t_vector *vec, unsigned int offset);
+
+typedef struct		s_string
+{
+	char		*data;
+	size_t		len;
+	size_t		capacity;
+}					t_string;
+
+void                    ft_print_string(t_string *str);
+
+void					ft_free_string(t_string **str);
+
+int						ft_string_fit(t_string **str);
+
+int						ft_string_push_back(t_string **str, char c);
+
+t_string				*ft_make_string(size_t init_size);
+
 #endif
