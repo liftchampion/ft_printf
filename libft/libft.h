@@ -100,4 +100,6 @@ int					*ft_foreachintm(const int *arr, size_t len, int (*f)(int));
 int					ft_sqrt(int c);
 int					ft_atoi_m(char **str);
 char				*ft_itoa_base(__int128_t n, int rad);
+void				*ft_realloc(void *old_data, size_t prev_size,
+		size_t new_size);
 #endif
