@@ -15,6 +15,32 @@
 # include <stdarg.h>
 # include "libft.h"
 
+typedef enum	e_printf_arg_sizes
+{
+	B1,
+	B2,
+	B4,
+	B8,
+	B16
+}				t_printf_arg_sizes;
+
+typedef enum 	e_int_lenghts
+{
+	NONE,
+	CHAR,
+	SHORT,
+	INT,
+	LONG_LONG,
+	SIZE,
+	LONG
+}				t_int_lenghts;
+
+typedef enum 	e_dbl_lenghts
+{
+	DOUBLE,
+	LD
+}				t_dbl_lenghts;
+
 typedef struct	s_arg_data
 {
 	int		wdth;
@@ -26,8 +52,12 @@ typedef struct	s_arg_data
 	char	format;				// TODO d, f, F, e, E, g, G, x, X, o, s, c, p, b, r, k
 }				t_arg_data;
 
-t_arg_data ft_printf_parser(char **frmt, va_list *args, va_list args_begin);
+t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_list *args_begin);
 
-int	printf(const char *frmt, ...);
+int	ft_printf(const char *frmt, ...);
+
+va_list *ft_get_va_list_item_by_idx(va_list *args_begin, int idx);
+
+t_string *ft_get_va_lst_sizes(char *frmt);
 
 #endif
