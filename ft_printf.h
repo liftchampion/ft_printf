@@ -15,5 +15,19 @@
 # include <stdarg.h>
 # include "libft.h"
 
+typedef struct	s_arg_data
+{
+	int		wdth;
+	int 	prcson;
+	char	allgnmnt_chr;
+	char	pstv_sgn;
+	char	altrntv_form;
+	va_list arg;
+	char	format;				// TODO d, f, F, e, E, g, G, x, X, o, s, c, p, b, r, k
+}				t_arg_data;
+
+t_arg_data ft_printf_parser(char **frmt, va_list *args, va_list args_begin);
+
 int	printf(const char *frmt, ...);
+
 #endif
