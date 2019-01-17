@@ -13,19 +13,19 @@
 #include "libft.h"
 #include <stdlib.h>
 
-char		*ft_itoa_base(int n, int radix)
+char		*ft_itoa_base(__int128_t n, int rad)
 {
-	static char	base[] = "0123456789ABCDEF";
-	int			nb;
-	int			len;
-	char		*ret;
+	static char		base[] = "0123456789ABCDEF";
+	__int128_t		nb;
+	int				len;
+	char			*ret;
 
 	len = 2 + (n < 0);
 	nb = n;
-	while (!(nb < radix && nb > -radix))
+	while (!(nb < rad && nb > -rad))
 	{
 		len++;
-		nb /= radix;
+		nb /= rad;
 	}
 	if (!(ret = (char *)malloc(sizeof(char) * len)))
 		return (NULL);
@@ -33,8 +33,8 @@ char		*ft_itoa_base(int n, int radix)
 	nb = (n < 0) ? -1 : 1;
 	while (n || len)
 	{
-		ret[--len] = base[n % radix * nb];
-		n /= radix;
+		ret[--len] = base[n % rad * nb];
+		n /= rad;
 	}
 	if (nb < 0)
 		ret[0] = '-';
