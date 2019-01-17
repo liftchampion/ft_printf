@@ -12,7 +12,6 @@
 
 #include <stdlib.h>
 #include "libft.h"
-#include "ft_string.h"
 
 void			ft_print_string(t_string *str)
 {
@@ -60,7 +59,7 @@ void			ft_free_string(t_string **str)
 	*str = 0;
 }
 
-t_int8			ft_string_push_back(t_string **str_ptr, char c)
+int				ft_string_push_back(t_string **str_ptr, char c)
 {
 	t_string *str;
 
@@ -82,7 +81,7 @@ t_int8			ft_string_push_back(t_string **str_ptr, char c)
 	return (1);
 }
 
-t_int8			ft_string_fit(t_string **str_ptr)
+int				ft_string_fit(t_string **str_ptr)
 {
 	t_string *str;
 
