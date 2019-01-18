@@ -6,7 +6,7 @@
 #    By: ggerardy <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/29 22:33:54 by ggerardy          #+#    #+#              #
-#    Updated: 2018/12/13 01:58:26 by ggerardy         ###   ########.fr        #
+#    Updated: 2019/01/18 14:19:54 by ehugh-be         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ NAME = printf
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
 LIB = ./libft/libft.a
+LIBSPATH = -I ./libft
 HEADERS = $(wildcard *.h)
 FLAGS = -Wall -Wextra -Werror
 DFLAGS = -g
@@ -24,7 +25,7 @@ CC = clang
 all: $(NAME)
 
 $(NAME): $(OBJS) $(HEADERS) $(LIB)
-	clang -o $(NAME) $(OBJS) $(LIB) $(FLAGS)
+	$(CC) $(LIBSPATH) -o $(NAME) $(OBJS) $(LIB) $(FLAGS)
 
 %.o: %.c $(HDR) $(LIB)
 	$(CC) $(FLAGS) -c $< -o $@
