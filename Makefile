@@ -6,7 +6,7 @@
 #    By: ggerardy <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/29 22:33:54 by ggerardy          #+#    #+#              #
-#    Updated: 2019/01/18 14:19:54 by ehugh-be         ###   ########.fr        #
+#    Updated: 2019/01/18 14:25:13 by ehugh-be         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ $(NAME): $(OBJS) $(HEADERS) $(LIB)
 	$(CC) $(LIBSPATH) -o $(NAME) $(OBJS) $(LIB) $(FLAGS)
 
 %.o: %.c $(HDR) $(LIB)
-	$(CC) $(FLAGS) -c $< -o $@
+	$(CC) $(FLAGS) $(LIBSPATH) -c $< -o $@
 
 $(LIB):
 	make -C libft/ all
