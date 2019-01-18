@@ -41,7 +41,6 @@ void				ft_putstr_fd(char const *s, int fd);
 void				ft_putendl(char const *s);
 void				ft_putendl_fd(char const *s, int fd);
 char				*ft_itoa(int n);
-char				*ft_itoa_base(int n, int rad);
 char				*ft_strncpy(char *dst, char const *src, size_t len);
 char				**ft_strsplit(char const *s, char c);
 int					ft_tolower(int c);
@@ -53,7 +52,6 @@ int					ft_isalpha(int c);
 int					ft_isalnum(int c);
 size_t				ft_strlen(const char *s);
 int					ft_atoi(const char *st);
-int					ft_atoi_m(char *st);
 char				*ft_strcpy(char *dst, const char *src);
 char				*ft_strdup(const char *s1);
 void				*ft_memalloc(size_t size);
@@ -102,4 +100,6 @@ int					*ft_foreachintm(const int *arr, size_t len, int (*f)(int));
 int					ft_sqrt(int c);
 int					ft_atoi_m(char **str);
 char				*ft_itoa_base(__int128_t n, int rad);
+void				*ft_realloc(void *old_data, size_t prev_size,
+		size_t new_size);
 #endif
