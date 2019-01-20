@@ -32,6 +32,14 @@ typedef enum 	e_dbl_lenghts
 	LD = 8
 }				t_dbl_lenghts;
 
+typedef enum 	e_cntrl_cases
+{
+	NO_CNTL = 0,
+	NEUTRAL = 1,
+	ADD_VA_LST_ITEM = 2,
+	DONT_ADD_VA_LST_ITEM = 3
+}				t_cntrl_cases;
+
 typedef struct	s_arg_data
 {
 	int		wdth;
@@ -47,7 +55,8 @@ t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_lis
 
 int	ft_printf(const char *frmt, ...);
 
-va_list *ft_get_va_list_item_by_idx(va_list *args_begin, int idx);
+int ft_get_va_list_item_by_idx(va_list args_begin, int idx, va_list *res,
+		char *frmt_begin);
 
 t_string *ft_get_va_lst_sizes(char *frmt);
 
