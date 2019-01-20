@@ -363,27 +363,24 @@ int ft_printf_parse_comp_flags(char **frmt, t_arg_data *arg_data, va_list *args,
 	return (0);
 }
 
-void ft_printf_parser_set_arg_type(t_arg_data *arg_data, char c)
-{
-	t_parse_len len_data;
-
-	len_data = ft_printf_parse_size(0);
-}
 
 void ft_printf_print_arg_data(t_arg_data *arg_data)
 {
-	printf("width=%d prec=%d left_allign=%d allign_char=%d pos_sign=%d alt_form=%d apostrop=%d char_arg=%d format=%c\n",
-			arg_data->width, arg_data->precision, arg_data->left_allignment, arg_data->allignment_char, arg_data->positive_sign,
-			arg_data->alternative_form, arg_data->apostrophe, arg_data->char_arg, arg_data->format);
+	static int counter = 0;
+	printf("%2d   width=%10d  prec=%10d  left_allign=%d  allign_char=<%c>  pos_sign=<%c>  alt_form=%d  apostrop=%d  "
+		"int_len=%d  dbl_len=%d  char_arg=%d  format=%c\n",
+			counter++, arg_data->width, arg_data->precision, arg_data->left_allignment, arg_data->allignment_char, arg_data->positive_sign,
+			arg_data->alternative_form, arg_data->apostrophe, arg_data->int_size, arg_data->dbl_size, arg_data->char_arg, arg_data->format);
 }
 
 t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_list *args_begin)
 {
 	t_arg_data *res;
 	int was_found_flags;
+	t_parse_len len_data;
 
 	res = (t_arg_data*)ft_memalloc(sizeof(t_arg_data) * 1);
-	*res = (t_arg_data){0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	*res = (t_arg_data){0, -1, 0, ' ', 0, 0, 0, 0, INT, DOUBLE, 0, 0, 0};
 	res->precision = -1;
 	while (**frmt)
 	{
@@ -394,8 +391,11 @@ t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_lis
 			break ;
 		///(*frmt)++;
 	}
-	if (ft_strchr("diucCsSrpkfFeEgGxXob", **frmt))
+	len_data = ft_printf_parse_size(0);
+	if (ft_strchr("diucCsSrpkfFeEgGxXob", **frmt)) // TODO move to other func
 	{
+		res->int_size = len_data.len_int;
+		res->dbl_size = len_data.len_dbl;
 		res->format = **frmt;
 		res->arg = args;
 		res->format = **frmt;
@@ -405,7 +405,6 @@ t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_lis
 		res->arg = 0;
 		res->char_arg = **frmt;
 		res->format = 'c';
-		res->arg_type = CHAR_T;
 	}
 	ft_printf_print_arg_data(res);
 }

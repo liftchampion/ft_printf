@@ -40,7 +40,7 @@ typedef enum 	e_cntrl_cases
 	DONT_ADD_VA_LST_ITEM = 3
 }				t_cntrl_cases;
 
-typedef enum 	e_arg_types
+/*typedef enum 	e_arg_types
 {
 	CHAR_T,
 	U_CHAR_T,
@@ -56,7 +56,7 @@ typedef enum 	e_arg_types
 	STRING_T,
 	W_STRING_T
 	// TODO finish if needed
-}				t_arg_types;
+}				t_arg_types;*/
 
 
 typedef struct	s_parse_len
@@ -67,13 +67,6 @@ typedef struct	s_parse_len
 	int was_two_l;
 }				t_parse_len;
 
-typedef struct	s_parse_cntl
-{
-	t_int_lenghts len_int;
-	t_dbl_lenghts len_dbl;
-	char was_dot;
-}				t_parse_cntl;
-
 typedef struct	s_begins
 {
 	char *frmt_begin;
@@ -82,18 +75,19 @@ typedef struct	s_begins
 
 typedef struct	s_arg_data
 {
-	int		width;
+	int		width; /// negative only after *n$ be careful with left_alignment flag
 	int 	precision;   /// -1 if wasn't changed
-	char 	left_allignment;
-	char	allignment_char;
-	char	positive_sign;
-	char	alternative_form;
-	char 	apostrophe;
-	va_list *arg;
-	t_arg_types arg_type;
-	char 	char_arg;
+	char 	left_allignment; /// if width > 0 && left_alignment => width *= -1;
+	char	allignment_char; /// char used for allignement default is ' '
+	char	positive_sign; /// sign used for plus in positive numbers, default is \0 can be '+' or ' '
+	char	alternative_form; /// #
+	char 	apostrophe; /// '
+	va_list *arg; /// it's only pointer to current (if you'll do all correctly) va_list. You need to va_arg this and 'refresh' 'global'-ft_printf va_list
+	t_int_lenghts int_size; /// len of int_types, see definition to know more. !!be careful with LONG(single LONG) char!!
+	t_dbl_lenghts dbl_size;	/// same for double types
+	char 	char_arg;	/// for cases when type-specifier is wrong and need to print char
 	char	format; // TODO d, f, F, e, E, g, G, x, X, o, s, c, p, b, r, k
-	char	was_dot;
+	char	was_dot; // don't use! only for parsing
 }				t_arg_data;
 
 t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_list *args_begin);
