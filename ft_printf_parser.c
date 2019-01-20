@@ -265,12 +265,15 @@ void ft_printf_parse_simple_cntl(char c, t_arg_data *arg_data)
 		arg_data->apostrophe = 1;
 }
 
-void ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data)
+int ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data)
 {
+	int was_found;
 
+	was_found = 0;
 	while (ft_printf_is_simple_cntl(**frmt)
 							|| ft_printf_is_size_specifier(**frmt))
 	{
+		was_found++;
 		if (arg_data->was_dot)
 		{
 			arg_data->was_dot = 0;
@@ -280,6 +283,7 @@ void ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data)
 		ft_printf_parse_simple_cntl(**frmt, arg_data);
 		(*frmt)++;
 	}
+	return (was_found ? 1 : 0);
 }
 
 
@@ -312,45 +316,96 @@ void ft_printf_parse_star(char **frmt, t_arg_data *arg_data, va_list *args, t_be
 	arg_data->was_dot = 0;
 }
 
-void ft_printf_parse_num(char **frmt, t_arg_data *arg_data, va_list *args, t_begins *begins)
+void ft_printf_parse_num(char **frmt, t_arg_data *arg_data, t_begins *begins)
 {
+	int num;
+
+	num = ft_atoi_m(frmt);
+	ft_printf_parse_simple_flags(frmt, arg_data);
+	if (**frmt == '$')
+	{
+		ft_get_va_list_item_by_idx(begins->args_begin, num - 1, arg_data->arg,
+				begins->frmt_begin);
+		(*frmt)++;
+		return ;
+	}
+	if (arg_data->was_dot)
+		arg_data->precision = num;
+	else
+		arg_data->width = num;
 
 }
 
-t_parse_cntl ft_printf_parse_comp_flags(char **frmt, t_arg_data *arg_data, va_list *args, t_begins *begins)
+int ft_printf_parse_comp_flags(char **frmt, t_arg_data *arg_data, va_list *args, t_begins *begins)
 {
 	if (**frmt == '*')
 	{
 		(*frmt)++; // TODO think about \0
 		ft_printf_parse_star(frmt, arg_data, args, begins);
+		return (1);
 	}
-	if (**frmt == '.')
-		arg_data->was_dot = 1;
-	if (ft_isdigit(**frmt) && **frmt != '0')
+	else if (**frmt == '.')
 	{
-
+		arg_data->was_dot = 1;
+		(*frmt)++;
+		if (!((ft_isdigit(**frmt) && **frmt != '0') || **frmt == '*'))
+		{
+			arg_data->precision = 0;
+			arg_data->was_dot = 0;
+		}
+		return (1);
 	}
-
+	else if (ft_isdigit(**frmt) && **frmt != '0')
+	{
+		ft_printf_parse_num(frmt, arg_data, begins);
+		return (1);
+	}
+	return (0);
 }
 
+void ft_printf_parser_set_arg_type(t_arg_data *arg_data, char c)
+{
+	t_parse_len len_data;
 
+	len_data = ft_printf_parse_size(0);
+}
+
+void ft_printf_print_arg_data(t_arg_data *arg_data)
+{
+	printf("width=%d prec=%d left_allign=%d allign_char=%d pos_sign=%d alt_form=%d apostrop=%d char_arg=%d format=%c\n",
+			arg_data->width, arg_data->precision, arg_data->left_allignment, arg_data->allignment_char, arg_data->positive_sign,
+			arg_data->alternative_form, arg_data->apostrophe, arg_data->char_arg, arg_data->format);
+}
 
 t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_list *args_begin)
 {
-	int tmp;
 	t_arg_data *res;
-	int was_dot;
-	t_parse_len alpha_data;
+	int was_found_flags;
 
-	was_dot = 0;
 	res = (t_arg_data*)ft_memalloc(sizeof(t_arg_data) * 1);
+	*res = (t_arg_data){0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	res->precision = -1;
 	while (**frmt)
 	{
-		ft_printf_parse_simple_flags(frmt, res);
-		//else if (ft_printf_is_cntl(**frmt))
-		//	ft_printf_parse_comp_cntl(frmt, res, args, &(t_begins){frmt_begin, args_begin});
-
-		(*frmt)++;
+		was_found_flags = 0;
+		was_found_flags += ft_printf_parse_simple_flags(frmt, res);
+		was_found_flags += ft_printf_parse_comp_flags(frmt, res, args, &(t_begins){frmt_begin, args_begin});
+		if (!was_found_flags)
+			break ;
+		///(*frmt)++;
 	}
+	if (ft_strchr("diucCsSrpkfFeEgGxXob", **frmt))
+	{
+		res->format = **frmt;
+		res->arg = args;
+		res->format = **frmt;
+	}
+	else
+	{
+		res->arg = 0;
+		res->char_arg = **frmt;
+		res->format = 'c';
+		res->arg_type = CHAR_T;
+	}
+	ft_printf_print_arg_data(res);
 }

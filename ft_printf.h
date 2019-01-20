@@ -52,7 +52,9 @@ typedef enum 	e_arg_types
 	LONG_T,
 	U_LONG_T,
 	DOUBLE_T,
-	LONG_DOUBLE_T
+	LONG_DOUBLE_T,
+	STRING_T,
+	W_STRING_T
 	// TODO finish if needed
 }				t_arg_types;
 
@@ -87,7 +89,8 @@ typedef struct	s_arg_data
 	char	positive_sign;
 	char	alternative_form;
 	char 	apostrophe;
-	va_list arg;
+	va_list *arg;
+	t_arg_types arg_type;
 	char 	char_arg;
 	char	format; // TODO d, f, F, e, E, g, G, x, X, o, s, c, p, b, r, k
 	char	was_dot;
