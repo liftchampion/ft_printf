@@ -40,14 +40,55 @@ typedef enum 	e_cntrl_cases
 	DONT_ADD_VA_LST_ITEM = 3
 }				t_cntrl_cases;
 
+typedef enum 	e_arg_types
+{
+	CHAR_T,
+	U_CHAR_T,
+	WCHAR_T,
+	SHORT_T,
+	U_SHORT_T,
+	INT_T,
+	U_INT_T,
+	LONG_T,
+	U_LONG_T,
+	DOUBLE_T,
+	LONG_DOUBLE_T
+	// TODO finish if needed
+}				t_arg_types;
+
+
+typedef struct	s_parse_len
+{
+	t_int_lenghts len_int;
+	t_dbl_lenghts len_dbl;
+	int was_two_h;
+	int was_two_l;
+}				t_parse_len;
+
+typedef struct	s_parse_cntl
+{
+	t_int_lenghts len_int;
+	t_dbl_lenghts len_dbl;
+	char was_dot;
+}				t_parse_cntl;
+
+typedef struct	s_begins
+{
+	char *frmt_begin;
+	va_list *args_begin;
+}				t_begins;
+
 typedef struct	s_arg_data
 {
-	int		wdth;
-	int 	prcson;
-	char	allgnmnt_chr;
-	char	pstv_sgn;
-	char	altrntv_form;
+	int		width;
+	int 	precision;
+	char 	left_allignment;
+	char	allignment_char;
+	char	positive_sign;
+	char	alternative_form;
+	char 	apostrophe;
 	va_list arg;
+	char 	char_arg;
 	char	format;				// TODO d, f, F, e, E, g, G, x, X, o, s, c, p, b, r, k
 }				t_arg_data;
 
@@ -55,7 +96,7 @@ t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_lis
 
 int	ft_printf(const char *frmt, ...);
 
-int ft_get_va_list_item_by_idx(va_list args_begin, int idx, va_list *res,
+int ft_get_va_list_item_by_idx(va_list *args_begin, int idx, va_list *res,
 		char *frmt_begin);
 
 t_string *ft_get_va_lst_sizes(char *frmt);

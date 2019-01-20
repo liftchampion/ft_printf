@@ -15,14 +15,19 @@
 
 #include <stdio.h>
 
-int ft_get_va_list_item_by_idx(va_list args_begin, int idx, va_list *res,
+void ft_free_va_list_item_sizes(void)
+{
+	ft_get_va_list_item_by_idx(0, 0, 0, 0);
+}
+
+int ft_get_va_list_item_by_idx(va_list *args_begin, int idx, va_list *res,
 											char *frmt_begin)
 {
 	static t_string *sizes = 0;
 	int i;
 
 	i = 0;
-	if (args_begin == 0 && idx == 0 && res == 0)   /// 'close' sizes vector after end of printf
+	if (args_begin == 0 && idx == 0 && res == 0 && *frmt_begin == 0)   /// 'close' sizes vector after end of printf
 		ft_free_string(&sizes);
 	if (sizes == 0 && idx != 0)
 		if (!(sizes = ft_get_va_lst_sizes(frmt_begin)))
@@ -30,7 +35,7 @@ int ft_get_va_list_item_by_idx(va_list args_begin, int idx, va_list *res,
 			ft_free_string(&sizes);
 			return (0);
 		}
-	va_copy(*res, args_begin);
+	va_copy(*res, *args_begin);
 	while (i < idx)
 	{
 		if (sizes->data[i] <= 4)
@@ -96,7 +101,8 @@ char ft_get_arg_size(char **frmt, int res_int, int res_dbl)
 		return (0);
 }
 
-t_cntrl_cases ft_parse_arg_size_check_one_cntrl_block(char **frmt, t_string **sizes)
+t_cntrl_cases ft_parse_arg_size_check_one_cntrl_block(char **frmt,
+														t_string **sizes)
 {
 	int was_star;
 	int was_num;
@@ -126,16 +132,16 @@ t_cntrl_cases ft_parse_arg_size_check_one_cntrl_block(char **frmt, t_string **si
 
 t_cntrl_cases ft_parse_arg_size_check_cntrl(char **frmt, t_string **sizes)
 {
-	int dont_add_va_ls_item;
+	int dont_add_va_lst_item;
 	t_cntrl_cases curr_case;
 
-	dont_add_va_ls_item = 0;
+	dont_add_va_lst_item = 0;
 	while ((curr_case = ft_parse_arg_size_check_one_cntrl_block(frmt, sizes)))
 	{
 		if (curr_case == DONT_ADD_VA_LST_ITEM)
-			dont_add_va_ls_item = 1;
+			dont_add_va_lst_item = 1;
 	}
-	return (dont_add_va_ls_item ? DONT_ADD_VA_LST_ITEM : NEUTRAL);
+	return (dont_add_va_lst_item ? DONT_ADD_VA_LST_ITEM : NEUTRAL);
 }
 
 char ft_parse_arg_size(char **frmt, t_string **sizes)
@@ -194,30 +200,140 @@ t_string *ft_get_va_lst_sizes(char *frmt)
 }
 
 
-/*void ft_printf_parse_star(char **frmt, va_list *args, va_list *args_begin, int *was_dot)
+
+int ft_printf_is_size_specifier(char c)
+{
+	if (c == 'h' || c == 'l' || c == 'L' || c == 'j' || c == 'z')
+		return (1);
+	else
+		return (0);
+}
+
+int ft_printf_is_simple_cntl(char c)
+{
+	if (c == ' ' || c == '+' || c == '-' || c == '0' || c == '#' || c == '\'')
+		return (1);
+	else
+		return (0);
+}
+
+int ft_printf_is_cntl(char c)
+{
+	if (ft_isdigit(c) || c == '*' || c == ' ' || c == '+' || c == '-'
+								|| c == '0' || c == '#' || c == '\'')
+		return (1);
+	else
+		return (0);
+}
+
+// if (ft_strchr("diucCsSrpkfFeEgGxXob", c))
+
+t_parse_len ft_printf_parse_size(char **frmt)
+{
+	static t_parse_len vars = (t_parse_len){INT, DOUBLE, 0, 0};
+	t_parse_len ret;
+	int curr_type;
+
+	if (!frmt)
+	{
+		ret = vars;
+		vars = (t_parse_len) {INT, DOUBLE, 0, 0};
+		return (ret);
+	}
+	curr_type = ft_parse_len_specifier(frmt, &vars.was_two_h, &vars.was_two_l);
+	if (curr_type == NONE)
+		return (vars);
+	if (curr_type <= LONG && ((t_int_lenghts)curr_type > vars.len_int
+									|| (t_int_lenghts)curr_type == INT))
+		vars.len_int = curr_type;
+	else if (curr_type >= DOUBLE && (t_dbl_lenghts)curr_type > vars.len_dbl)
+		vars.len_dbl = curr_type;
+	return (vars);
+}
+
+void ft_printf_parse_simple_cntl(char c, t_arg_data *arg_data)
+{
+	if (c == ' ' || c == '+')
+		arg_data->positive_sign = c;
+	else if (c == '0')
+		arg_data->allignment_char = c;
+	else if (c == '-')
+		arg_data->left_allignment = 1;
+	else if (c == '#')
+		arg_data->alternative_form = 1;
+	else if (c == '\'')
+		arg_data->apostrophe = 1;
+}
+
+void ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data)
 {
 
-}*/
+	while (ft_printf_is_simple_cntl(**frmt)
+							|| ft_printf_is_size_specifier(**frmt))
+	{
+		ft_printf_parse_size(frmt);
+		ft_printf_parse_simple_cntl(**frmt, arg_data);
+		(*frmt)++;
+	}
+}
 
-/*t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_list *args_begin)
+
+void ft_printf_parse_star(char **frmt, t_arg_data *arg_data, va_list *args, t_begins *begins)
 {
-	static t_string *va_lst_sizes = 0;
+	static char was_dot = 0;
+	int num;
+	char *tmp;
+	va_list arg;
+
+	ft_printf_parse_simple_flags(frmt, arg_data);
+	tmp = *frmt;
+	if (ft_isdigit(*tmp) && *tmp != '0')
+	{
+		num = ft_atoi_m(&tmp);
+		if (*tmp == '$')
+		{
+			ft_get_va_list_item_by_idx(begins->args_begin, num - 1, &arg,
+					begins->frmt_begin);
+			*frmt = tmp + 1;
+		}
+		else
+			va_copy(arg, *args);
+	}
+	else
+		va_copy(arg, *args);
+	if (!was_dot)
+		arg_data->width = va_arg(arg, int);
+	else
+		arg_data->precision = va_arg(arg, int);
+}
+
+t_parse_cntl ft_printf_parse_comp_cntl(char **frmt, t_arg_data *arg_data, va_list *args, t_begins *begins)
+{
+	if (**frmt == '*')
+	{
+		(*frmt)++; // TODO think about \0
+		ft_printf_parse_star(frmt, arg_data, args, begins);
+	}
+
+}
+
+
+
+t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_list *args_begin)
+{
 	int tmp;
 	t_arg_data *res;
 	int was_dot;
+	t_parse_len alpha_data;
 
 	was_dot = 0;
 	res = (t_arg_data*)ft_memalloc(sizeof(t_arg_data) * 1);
-	while (1)
+	while (**frmt)
 	{
-		if (**frmt == '*')
-		{
+		ft_printf_parse_simple_flags(frmt, res);
+		//else if (ft_printf_is_cntl(**frmt))
+		//	ft_printf_parse_comp_cntl(frmt, res, args, &(t_begins){frmt_begin, args_begin});
 
-		}
-		if (ft_isdigit(**frmt))
-			tmp = ft_atoi_m(frmt);
-		break; // TODO remove
-		//if (**frmt == '$')
-		//	res->
+		(*frmt)++;
 	}
-}*/
+}
