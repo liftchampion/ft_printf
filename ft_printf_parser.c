@@ -271,6 +271,11 @@ void ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data)
 	while (ft_printf_is_simple_cntl(**frmt)
 							|| ft_printf_is_size_specifier(**frmt))
 	{
+		if (arg_data->was_dot)
+		{
+			arg_data->was_dot = 0;
+			arg_data->precision = 0;
+		}
 		ft_printf_parse_size(frmt);
 		ft_printf_parse_simple_cntl(**frmt, arg_data);
 		(*frmt)++;
@@ -280,7 +285,6 @@ void ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data)
 
 void ft_printf_parse_star(char **frmt, t_arg_data *arg_data, va_list *args, t_begins *begins)
 {
-	static char was_dot = 0;
 	int num;
 	char *tmp;
 	va_list arg;
@@ -301,18 +305,30 @@ void ft_printf_parse_star(char **frmt, t_arg_data *arg_data, va_list *args, t_be
 	}
 	else
 		va_copy(arg, *args);
-	if (!was_dot)
+	if (!arg_data->was_dot)
 		arg_data->width = va_arg(arg, int);
 	else
 		arg_data->precision = va_arg(arg, int);
+	arg_data->was_dot = 0;
 }
 
-t_parse_cntl ft_printf_parse_comp_cntl(char **frmt, t_arg_data *arg_data, va_list *args, t_begins *begins)
+void ft_printf_parse_num(char **frmt, t_arg_data *arg_data, va_list *args, t_begins *begins)
+{
+
+}
+
+t_parse_cntl ft_printf_parse_comp_flags(char **frmt, t_arg_data *arg_data, va_list *args, t_begins *begins)
 {
 	if (**frmt == '*')
 	{
 		(*frmt)++; // TODO think about \0
 		ft_printf_parse_star(frmt, arg_data, args, begins);
+	}
+	if (**frmt == '.')
+		arg_data->was_dot = 1;
+	if (ft_isdigit(**frmt) && **frmt != '0')
+	{
+
 	}
 
 }
@@ -328,6 +344,7 @@ t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_lis
 
 	was_dot = 0;
 	res = (t_arg_data*)ft_memalloc(sizeof(t_arg_data) * 1);
+	res->precision = -1;
 	while (**frmt)
 	{
 		ft_printf_parse_simple_flags(frmt, res);

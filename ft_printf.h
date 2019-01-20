@@ -81,7 +81,7 @@ typedef struct	s_begins
 typedef struct	s_arg_data
 {
 	int		width;
-	int 	precision;
+	int 	precision;   /// -1 if wasn't changed
 	char 	left_allignment;
 	char	allignment_char;
 	char	positive_sign;
@@ -89,7 +89,8 @@ typedef struct	s_arg_data
 	char 	apostrophe;
 	va_list arg;
 	char 	char_arg;
-	char	format;				// TODO d, f, F, e, E, g, G, x, X, o, s, c, p, b, r, k
+	char	format; // TODO d, f, F, e, E, g, G, x, X, o, s, c, p, b, r, k
+	char	was_dot;
 }				t_arg_data;
 
 t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_list *args_begin);
