@@ -15,30 +15,21 @@
 # include <stdarg.h>
 # include "libft.h"
 
-typedef enum	e_printf_arg_sizes
-{
-	B1,
-	B2,
-	B4,
-	B8,
-	B16
-}				t_printf_arg_sizes;
-
 typedef enum 	e_int_lenghts
 {
-	NONE,
-	CHAR,
-	SHORT,
-	INT,
-	LONG_LONG,
-	SIZE,
-	LONG
+	NONE = 0,
+	CHAR = 1,
+	SHORT = 2,
+	INT = 3,
+	LONG_LONG = 4,
+	SIZE = 5,
+	LONG = 6
 }				t_int_lenghts;
 
 typedef enum 	e_dbl_lenghts
 {
-	DOUBLE,
-	LD
+	DOUBLE = 7,
+	LD = 8
 }				t_dbl_lenghts;
 
 typedef struct	s_arg_data

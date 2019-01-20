@@ -15,7 +15,7 @@
 
 #include <stdio.h>
 
-va_list *ft_get_va_list_item_by_idx(va_list *args_begin, int idx)
+/*va_list *ft_get_va_list_item_by_idx(va_list *args_begin, int idx)
 {
 	va_list res;
 	int i;
@@ -28,10 +28,10 @@ va_list *ft_get_va_list_item_by_idx(va_list *args_begin, int idx)
 		printf("%zu\n", res);
 		i++;
 	}
-}
+}*/
 
 
-t_int_lenghts ft_is_len_specifier(char **frmt, int *w_d_h, int *w_d_l)
+int ft_parse_len_specifier(char **frmt, int *w_d_h, int *w_d_l)
 {
 	if (**frmt == 'h')
 	{
@@ -40,14 +40,12 @@ t_int_lenghts ft_is_len_specifier(char **frmt, int *w_d_h, int *w_d_l)
 		else
 			return (SHORT);
 	}
-	else if (**frmt == 'c')
-		return (CHAR);
 	else if (**frmt == 'l')
 	{
 		if (!*w_d_l && *(*frmt + 1) == 'l' && *(*frmt)++ && (*w_d_l = 1))
-			return (LONG);
-		else
 			return (LONG_LONG);
+		else
+			return (LONG);
 	}
 	else if (**frmt == 'j' || **frmt == 'z')
 		return (SIZE);
@@ -57,25 +55,66 @@ t_int_lenghts ft_is_len_specifier(char **frmt, int *w_d_h, int *w_d_l)
 		return (NONE);
 }
 
-char ft_get_arg_size(char **frmt)
+char ft_get_arg_size(char **frmt, int res_int, int res_dbl)
+{
+	char c;
+
+	c = **frmt;
+	if (c)
+		(*frmt)++;
+	if (c == 'd' || c == 'i' || c == 'u' ||	c == 'x' || c == 'X' || c == 'o'
+																|| c == 'b')
+	{
+		if (res_int >= INT)
+			return (res_int == INT ? (char)4 : (char)8);
+		return (res_int == CHAR ? (char)1 : (char)2);
+	}
+	else if ((c == 'c' && res_int == LONG) || c == 'C')
+		return (4);
+	else if (c == 'c')
+		return (1);
+	else if (c == 'p' || c == 's' || c == 'S' || c == 'r' || c == 'k')
+		return (8);
+	else if (c == 'f' || c == 'F' || c == 'e' || c == 'E' || c == 'g'
+															|| c == 'G')
+		return (res_dbl == DOUBLE ? (char)8 : (char)16);
+	else
+		return (0);
+}
+
+char ft_parse_arg_size(char **frmt)
 {
 	t_int_lenghts res_int;
-	t_printf_lenghts res_double;
+	t_dbl_lenghts res_dbl;
 	int was_double_h;
+	int was_double_l;
+	int curr_type;
 
 	res_int = INT;
+	res_dbl = DOUBLE;
 	was_double_h = 0;
+	was_double_l = 0;
 	while (**frmt)
 	{
+		if (**frmt == ' ' || **frmt == '+' || **frmt == '-' || **frmt == '0' ||
+			**frmt == '#' || **frmt == '\'' || **frmt == '*')
+			(*frmt)++;
+		curr_type = ft_parse_len_specifier(frmt, &was_double_h, &was_double_l);
+		if (curr_type == NONE)
+			return (ft_get_arg_size(frmt, res_int, res_dbl));
+		else if (curr_type <= LONG && curr_type > res_int)
+			res_int = curr_type;
+		else if (curr_type >= DOUBLE && curr_type > res_dbl)
+			res_dbl= curr_type;
 		(*frmt)++;
 	}
-
-
+	return (0);
 }
 
 t_string *ft_get_va_lst_sizes(char *frmt)
 {
 	t_string *sizes;
+	char tmp;
 
 	if (!(sizes = ft_make_string(2)))
 		return (0);
@@ -84,13 +123,15 @@ t_string *ft_get_va_lst_sizes(char *frmt)
 	{
 		while (*frmt && *frmt++ != '%')
 			;
-		if (*frmt == '%' && *frmt++)
+		if (!*frmt || (*frmt == '%' && *frmt++))
 			continue;
 		while (!ft_isalpha(*frmt))
 			frmt++;
-
-		frmt++;
+		tmp = ft_parse_arg_size(&frmt);
+		if (tmp)
+			ft_string_push_back(&sizes, tmp);
 	}
+	return (sizes);
 }
 
 
