@@ -23,18 +23,26 @@ void ft_free_va_list_item_sizes(void)
 int ft_get_va_list_item_by_idx(va_list *args_begin, int idx, va_list *res,
 											char *frmt_begin)
 {
-	static t_string *sizes = 0;
+	static t_string* sizes = 0;
 	int i;
 
+	///printf("\ntrying to get item %d\n", idx);
 	i = 0;
-	if (args_begin == 0 && idx == 0 && res == 0 && *frmt_begin == 0)   /// 'close' sizes vector after end of printf
+	if (args_begin==0 && idx==0 && res==0
+			&& *frmt_begin==0)   /// 'close' sizes vector after end of printf
 		ft_free_string(&sizes);
-	if (sizes == 0 && idx != 0)
+	if (sizes==0 && idx!=0)
+	{	// TODO remove {}
 		if (!(sizes = ft_get_va_lst_sizes(frmt_begin)))
 		{
 			ft_free_string(&sizes);
 			return (0);
 		}
+		for (int e = 0; e < sizes->len; e++)
+			printf("%d ", sizes->data[e]);
+		printf("\n");
+	}
+	///printf("size is %d\n", sizes->data[idx]);
 	va_copy(*res, *args_begin);
 	while (i < idx)
 	{
@@ -43,7 +51,7 @@ int ft_get_va_list_item_by_idx(va_list *args_begin, int idx, va_list *res,
 		else if (sizes->data[i] == 8)
 			va_arg(*res, long int);
 		else if (sizes->data[i] == 16)
-			va_arg(*res, __int128_t); // TODO think about long double / __int128_t
+			va_arg(*res, long double); // TODO think about long double / __int128_t
 		i++;
 	}
 	return (1);
@@ -55,21 +63,23 @@ int ft_parse_len_specifier(char **frmt, int *w_d_h, int *w_d_l)
 	if (**frmt == 'h')
 	{
 		if (!*w_d_h && *(*frmt + 1) == 'h' && *(*frmt)++ && (*w_d_h = 1))
-			return (CHAR);
+			return (CHAR_T);
 		else
-			return (SHORT);
+			return (SHORT_T);
 	}
 	else if (**frmt == 'l')
 	{
 		if (!*w_d_l && *(*frmt + 1) == 'l' && *(*frmt)++ && (*w_d_l = 1))
 			return (LONG_LONG);
 		else
-			return (LONG);
+			return (LONG_T);
 	}
 	else if (**frmt == 'j' || **frmt == 'z')
 		return (SIZE);
 	else if (**frmt == 'L')
 		return (LD);
+	else if (**frmt == '.') // TODO mb need to filter also 0 # - + etc.
+		return (DOT);
 	else
 		return (NONE);
 }
@@ -86,9 +96,9 @@ char ft_get_arg_size(char **frmt, int res_int, int res_dbl)
 	{
 		if (res_int >= INT)
 			return (res_int == INT ? (char)4 : (char)8);
-		return (res_int == CHAR ? (char)1 : (char)2);
+		return (res_int == CHAR_T ? (char)1 : (char)2);
 	}
-	else if ((c == 'c' && res_int == LONG) || c == 'C')
+	else if ((c == 'c' && res_int == LONG_T) || c == 'C')
 		return (4);
 	else if (c == 'c')
 		return (1);
@@ -159,11 +169,11 @@ char ft_parse_arg_size(char **frmt, t_string **sizes)
 	while (**frmt)
 	{
 		if (ft_parse_arg_size_check_cntrl(frmt, sizes) == DONT_ADD_VA_LST_ITEM)
-			return (0);
-		curr_type = ft_parse_len_specifier(frmt, &was_double_h, &was_double_l);
+			return (0); // TODO add function which checks all stars after this point and add neccessery items to array
+		curr_type = ft_parse_len_specifier(frmt, &was_double_h, &was_double_l); // TODO dot!!
 		if (curr_type == NONE)
 			return (ft_get_arg_size(frmt, res_int, res_dbl));
-		else if (curr_type <= LONG && (t_int_lenghts)curr_type > res_int)
+		else if (curr_type <= LONG_T && (t_int_lenghts)curr_type > res_int)
 			res_int = curr_type;
 		else if (curr_type >= DOUBLE && (t_dbl_lenghts)curr_type > res_dbl)
 			res_dbl = curr_type;
@@ -243,7 +253,7 @@ t_parse_len ft_printf_parse_size(char **frmt)
 	curr_type = ft_parse_len_specifier(frmt, &vars.was_two_h, &vars.was_two_l);
 	if (curr_type == NONE)
 		return (vars);
-	if (curr_type <= LONG && ((t_int_lenghts)curr_type > vars.len_int
+	if (curr_type <= LONG_T && ((t_int_lenghts)curr_type > vars.len_int
 									|| (t_int_lenghts)curr_type == INT))
 		vars.len_int = curr_type;
 	else if (curr_type >= DOUBLE && (t_dbl_lenghts)curr_type > vars.len_dbl)
@@ -274,7 +284,7 @@ int ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data)
 							|| ft_printf_is_size_specifier(**frmt))
 	{
 		was_found++;
-		if (arg_data->was_dot)
+		if (arg_data->was_dot) /// important for correct zeroing prec
 		{
 			arg_data->was_dot = 0;
 			arg_data->precision = 0;
@@ -392,6 +402,7 @@ t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_lis
 		///(*frmt)++;
 	}
 	len_data = ft_printf_parse_size(0);
+
 	if (ft_strchr("diucCsSrpkfFeEgGxXob", **frmt)) // TODO move to other func
 	{
 		res->int_size = len_data.len_int;

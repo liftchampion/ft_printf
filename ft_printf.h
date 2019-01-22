@@ -17,13 +17,14 @@
 
 typedef enum 	e_int_lenghts
 {
+	DOT = -1,
 	NONE = 0,
-	CHAR = 1,
-	SHORT = 2,
+	CHAR_T = 1,
+	SHORT_T = 2,
 	INT = 3,
 	LONG_LONG = 4,
 	SIZE = 5,
-	LONG = 6
+	LONG_T = 6
 }				t_int_lenghts;
 
 typedef enum 	e_dbl_lenghts
@@ -73,6 +74,20 @@ typedef struct	s_begins
 	va_list *args_begin;
 }				t_begins;
 
+typedef	enum	e_arg_sz
+{
+	DEFAULT = 0,
+	CHAR,
+	SHORT,
+	LONG,
+}				t_arg_sz;
+
+// CHAR
+// SHORT
+// DEFAULT
+// LONG
+
+
 typedef struct	s_arg_data
 {
 	int		width; /// negative only after *n$ be careful with left_alignment flag
@@ -82,11 +97,13 @@ typedef struct	s_arg_data
 	char	positive_sign; /// sign used for plus in positive numbers, default is \0 can be '+' or ' '
 	char	alternative_form; /// #
 	char 	apostrophe; /// '
-	va_list *arg; /// it's only pointer to current (if you'll do all correctly) va_list. You need to va_arg this and 'refresh' 'global'-ft_printf va_list
-	t_int_lenghts int_size; /// len of int_types, see definition to know more. !!be careful with LONG(single LONG) char!!
-	t_dbl_lenghts dbl_size;	/// same for double types
+	int 	num;
+	t_arg_sz	sz; /// Lenght of arg
+	//va_list *arg; /// it's only pointer to current (if you'll do all correctly) va_list. You need to va_arg this and 'refresh' 'global'-ft_printf va_list
+	//t_int_lenghts int_size; /// len of int_types, see definition to know more. !!be careful with LONG(single LONG) char!!
+	//t_dbl_lenghts dbl_size;	/// same for double types
 	char 	char_arg;	/// for cases when type-specifier is wrong and need to print char
-	char	format; // TODO d, f, F, e, E, g, G, x, X, o, s, c, p, b, r, k
+	char	format; // TODO d, f, F, e, E, g, G, x, X, o, s, c, p, b, r, k, C (lc), S
 	char	was_dot; // don't use! only for parsing
 }				t_arg_data;
 
