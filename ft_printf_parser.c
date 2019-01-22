@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include "ft_printf_parser.h"
 #include "libft.h"
 
 #include <stdio.h>
