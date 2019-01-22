@@ -6,7 +6,7 @@
 /*   By: ggerardy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 17:25:22 by ggerardy          #+#    #+#             */
-/*   Updated: 2018/12/13 02:05:38 by ggerardy         ###   ########.fr       */
+/*   Updated: 2019/01/18 15:04:18 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,12 @@
 
 void			ft_print_string(t_string *str)
 {
-	size_t i;
-
 	if (!str)
 	{
 		ft_putstr("NO V_STRING\n");
 		return ;
 	}
-	i = 0;
-	while (i < str->len)
-	{
-		ft_putchar(str->data[i]);
-		i++;
-	}
+	write(1, str->data, str->len);
 	ft_putchar('\n');
 }
 

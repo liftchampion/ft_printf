@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:40:21 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/16 23:44:33 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/18 14:38:55 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,8 @@ t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin,
 		va_list *args_begin);
 
 int	ft_printf(const char *frmt, ...);
+
+int ft_find_cntrl(const char **frmt, t_string **str);
+
 
 #endif
