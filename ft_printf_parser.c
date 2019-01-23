@@ -14,6 +14,7 @@
 #include "ft_printf_parser.h"
 #include "libft.h"
 
+#include <stdlib.h>
 #include <stdio.h>
 
 /*void ft_free_va_list_item_sizes(void)
@@ -476,7 +477,14 @@ int ft_printf_parse_modifiers(char **frmt, t_arg_data *arg_data)
 	else if (**frmt == '\'' && ++was_found)
 		arg_data->apostrophe = 1;
 	else if (**frmt == '.' && ++was_found)
+	{
 		arg_data->__was_dot = 1;
+		if ((**frmt == '0' && (*frmt)++) || !ft_isdigit(**frmt) * **frmt != '*')
+		{
+			arg_data->precision = 0;
+			arg_data->__was_dot = 0;
+		}
+	}
 	if (was_found)
 		(*frmt)++;
 	return (was_found);
@@ -500,29 +508,98 @@ int ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data,
 	return (was_found_total ? 1 : 0);
 }
 
+void ft_printf_arg_data_set_width_or_prec(t_arg_data *arg_data, int n)
+{
+	if (!arg_data->__was_dot)
+	{
+		arg_data->width = n;
+	}
+	else
+	{
+		arg_data->precision = n;
+		arg_data->__was_dot = 0;
+	}
+}
+
 int ft_printf_parse_comlex_flags(char **frmt, t_arg_data *arg_data, t_string *args, int *n_arg)
 {
 	int was_star;
 	int num;
 	int was_dollar;
+	int was_zero;
 
-	was_star = 0;
-	num = -1;
-	was_dollar = 0;
-	if (**frmt == '*' && *(*frmt)++)
-		was_star++;
-	if (ft_isdigit(**frmt))
-		num = ft_atoi_m(frmt);
-	if (**frmt == '$' && *(*frmt)++)
-		was_dollar++;
+	was_star = (**frmt == '*' && *(*frmt)++) ? 1 : 0;
+	was_zero = **frmt == '0' ? 1 : 0;
+	num = ft_isdigit(**frmt) ? ft_atoi_m(frmt) : -1;
+	was_dollar = ((**frmt == '$' && num + was_star > 0 )&& *(*frmt)++) ? 1 : 0;
+	was_zero = (was_zero && !(was_star && was_dollar)) ? 1 : 0;
+
+	if (was_star && num > 0 && was_dollar)
+	{
+		if (!ft_string_set_value(&args, (size_t)(num - 1), 'g', 'g')) // TODO ??? undefined what if width/prec is fp
+			return ((*n_arg = -1) + 1);	// TODO catch this err_code
+		ft_printf_arg_data_set_width_or_prec(arg_data, -1 * (num - 1));
+	}
+	if (was_star && !was_dollar)
+	{
+		if (!ft_string_set_value(&args, (size_t)*n_arg, 'g', 'g'))
+			return ((*n_arg = -1) + 1);
+		ft_printf_arg_data_set_width_or_prec(arg_data, -1 * *n_arg);
+		(*n_arg)++;
+		if (num > 0)
+			ft_printf_arg_data_set_width_or_prec(arg_data, num);
+	}
+
+	if (!was_star && num > 0 && was_dollar)
+		*n_arg = num - 1;
+	if (!was_star && num > 0 && !was_dollar)
+		ft_printf_arg_data_set_width_or_prec(arg_data, num);
+
+	arg_data->allignment_char = was_zero ? (char)'0' : arg_data->allignment_char;
 
 	return ((num + 1 || was_star || was_dollar) ? 1 : 0);
 }
 
-t_arg_data ft_printf_parser(char **frmt, t_string *args) // TODO close it
+t_arg_data *ft_printf_parser(char **frmt, t_string *args) // TODO close it
 {
-	static n_arg = 0;
-
+	static int n_arg = 0;
 	t_arg_data *arg_data;
+	int was_found_flag;
 
+	int lenghts[2];
+	lenghts[0] = INT_L;
+	lenghts[1] = DOUBLE_L;
+
+	if (!(arg_data = (t_arg_data*)ft_memalloc(sizeof(t_arg_data))))
+		return (0);
+
+	was_found_flag = 1;
+	while (was_found_flag)
+	{
+		was_found_flag = 0;
+		was_found_flag += ft_printf_parse_simple_flags(frmt, arg_data, lenghts);
+		was_found_flag += ft_printf_parse_comlex_flags(frmt, arg_data, args, &n_arg);
+		if (n_arg == -1)
+			return (0);
+	}
+
+	arg_data->num = n_arg;
+	if (ft_strchr("diucCsSrpkxXob", **frmt))
+	{
+		if (!ft_string_set_value(&args, (size_t)(arg_data->num), 'g', 'g')) // TODO ??? undefined what if width/prec is fp
+			return (0);
+	}
+	else if (ft_strchr("fFeEgG", **frmt))
+	{
+		if (!ft_string_set_value(&args, (size_t)(arg_data->num), 'g', 'f')) // TODO ??? undefined what if width/prec is fp
+			return (0);
+	}
+	else
+	{
+		arg_data->num = -1;
+		arg_data->char_arg = **frmt;
+		arg_data->format = 'c';
+		arg_data->size = CHAR;
+	}
+	return (arg_data);
 }
