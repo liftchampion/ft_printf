@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 
-void ft_free_va_list_item_sizes(void)
+/*void ft_free_va_list_item_sizes(void)
 {
 	ft_get_va_list_item_by_idx(0, 0, 0, 0);
 }
@@ -419,4 +419,93 @@ t_arg_data ft_printf_parser(char **frmt, va_list *args, char *frmt_begin, va_lis
 		res->format = 'c';
 	}
 	ft_printf_print_arg_data(res);
+}*/
+
+/*int ft_parse_len_specifier_proceede_h_l(char **frmt)
+{
+	if (**frmt == 'h')
+	{
+		if (*(*frmt + 1) == 'h' && *(*frmt)++)
+			return (CHAR_L);
+		else
+			return (SHORT_L);
+	}
+	else
+	{
+		if (*(*frmt + 1) == 'l' && *(*frmt)++)
+			return (LONG_LONG_L);
+		else
+			return (LONG_L);
+	}
+}*/
+
+int ft_parse_len_specifier(char **frmt, int *lenghts)
+{
+	int current_int_len;
+
+	current_int_len = 0;
+	if (**frmt == 'h' && *(*frmt)++)
+		current_int_len = (**frmt == 'h' && *(*frmt)++) ? CHAR_L : SHORT_L;
+	else if (**frmt == 'l' && *(*frmt)++)
+		current_int_len = (**frmt == 'l' && *(*frmt)++) ? LONG_L : LONG_LONG_L;
+	else if ((**frmt == 'j' || **frmt == 'z') && *(*frmt)++)
+		current_int_len = LONG_LONG_L;
+	if (current_int_len != 0 &&
+					(current_int_len != INT_L || current_int_len > lenghts[0]))
+		lenghts[0] = current_int_len;
+	if ((!current_int_len && **frmt == 'L') && *(*frmt)++)
+		lenghts[1] = LD_L;
+	else if (!current_int_len)
+		return (0);
+	return (1);
+}
+
+int ft_printf_parse_simple_cntl(char c, t_arg_data *arg_data)
+{
+	int was_found;
+
+	was_found = 0;
+	if ((c == ' ' || c == '+') && ++was_found)
+		arg_data->positive_sign = c;
+	else if (c == '0' && ++was_found)
+		arg_data->allignment_char = c;
+	else if (c == '-' && ++was_found)
+		arg_data->left_allignment = 1;
+	else if (c == '#' && ++was_found)
+		arg_data->alternative_form = 1;
+	else if (c == '\'' && ++was_found)
+		arg_data->apostrophe = 1;
+	else if (c == '.' && ++was_found)
+		arg_data->__was_dot = 1;
+	return (was_found);
+}
+
+int ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data)
+{
+	int was_found_iter;
+	int was_found_total;
+
+	was_found_iter = 1;
+	was_found_total = 0;
+	while (was_found_iter)
+	{
+		was_found_iter = 0;
+		was_found_iter += ft_parse_len_specifier(frmt);
+		was_found_iter += ft_printf_parse_simple_cntl(**frmt, arg_data);
+		was_found_total += was_found_iter;
+	}
+	return (was_found_total ? 1 : 0);
+}
+
+int ft_printf_parse_comlex_flags(char **frmt)
+{
+
+}
+
+t_arg_data ft_printf_parser(char **frmt) // TODO close it
+{
+	static i = 0;
+
+	t_arg_data *parsed_data;
+
 }

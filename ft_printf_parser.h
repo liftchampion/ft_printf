@@ -18,20 +18,17 @@
 
 typedef enum 	e_int_lenghts
 {
-	DOT = -1,
-	NONE = 0,
-	CHAR_T = 1,
-	SHORT_T = 2,
-	INT = 3,
-	LONG_LONG = 4,
-	SIZE = 5,
-	LONG_T = 6
+	CHAR_L = 1,
+	SHORT_L = 2,
+	INT_L = 3,
+	LONG_LONG_L = 4,
+	LONG_L = 5
 }				t_int_lenghts;
 
 typedef enum 	e_dbl_lenghts
 {
-	DOUBLE = 7,
-	LD = 8
+	DOUBLE_L = 6,
+	LD_L = 7
 }				t_dbl_lenghts;
 
 typedef enum 	e_cntrl_cases
