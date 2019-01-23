@@ -11,13 +11,27 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <stdio.h>
+
+void ft_print_va_struct(va_list ls)
+{
+	printf("gp_offs - %u fp_offs - %u overflow_arg_area - %p reg_save_area - %p\n",
+			ls->gp_offset, ls->fp_offset, ls->overflow_arg_area, ls->reg_save_area);
+	long int *t1 = (long int *)ls->overflow_arg_area;
+	long int *t2 = (long int *)ls->reg_save_area;
+	printf("overflow_arg_area - %ld reg_save_area - %ld\n",
+			(*(t1)) , *(t2 + 3));
+}
 
 int	ft_printf(const char *frmt, ...)
 {
 	va_list		vl;
 	t_string	*str;
 
+	int x;
+
 	va_start(vl, frmt);
+
 	str = ft_make_string(1);
 	while (*frmt)
 	{
@@ -28,6 +42,7 @@ int	ft_printf(const char *frmt, ...)
 	}
 	ft_print_string(str);
 	ft_free_string(&str);
+
 	va_end(vl);
 	return (0);
 }
