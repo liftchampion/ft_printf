@@ -23,26 +23,33 @@ void ft_print_va_struct(va_list ls)
 			(*(t1)) , *(t2 + 3));
 }
 
+
 int	ft_printf(const char *frmt, ...)
 {
 	va_list		vl;
 	t_string	*str;
 
-	int x;
 
 	va_start(vl, frmt);
+
 
 	str = ft_make_string(1);
 	while (*frmt)
 	{
-		if (!ft_find_cntrl(&frmt, &str))
-			return (1);
-		//ft_printf_parser(&frmt, &vl, vl);
+		while (*frmt && *frmt != '%')
+			frmt++;
+		if (!*frmt)
+			break;
+		frmt++;
+		ft_printf_parser((char**)&frmt, str);
 		//ft_stringify(&str, vl);
 	}
+	printf("\n");
 	ft_print_string(str);
 	ft_free_string(&str);
+	printf("\n");
 
+	ft_printf_parser(0, 0);
 	va_end(vl);
 	return (0);
 }

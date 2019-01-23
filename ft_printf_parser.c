@@ -560,6 +560,15 @@ int ft_printf_parse_comlex_flags(char **frmt, t_arg_data *arg_data, t_string *ar
 	return ((num + 1 || was_star || was_dollar) ? 1 : 0);
 }
 
+void ft_printf_print_arg_data(t_arg_data *arg_data)
+{
+	static int counter = 0;
+	printf("%2d   width=%10d  prec=%10d  left_allign=%d  allign_char=<%c>  pos_sign=<%c>  alt_form=%d  apostrop=%d  "
+		   "ARG_IDX=%d  size=%d char_arg=%d  format=%c\n",
+			counter++, arg_data->width, arg_data->precision, arg_data->left_allignment, arg_data->allignment_char, arg_data->positive_sign,
+			arg_data->alternative_form, arg_data->apostrophe, arg_data->num, arg_data->size, arg_data->char_arg, arg_data->format);
+}
+
 t_arg_data *ft_printf_parser(char **frmt, t_string *args) // TODO close it
 {
 	static int n_arg = 0;
@@ -569,6 +578,13 @@ t_arg_data *ft_printf_parser(char **frmt, t_string *args) // TODO close it
 	int lenghts[2];
 	lenghts[0] = INT_L;
 	lenghts[1] = DOUBLE_L;
+
+	if (!frmt && !args)
+	{
+		n_arg = 0;
+		return (0);
+	}
+
 
 	if (!(arg_data = (t_arg_data*)ft_memalloc(sizeof(t_arg_data))))
 		return (0);
@@ -584,22 +600,27 @@ t_arg_data *ft_printf_parser(char **frmt, t_string *args) // TODO close it
 	}
 
 	arg_data->num = n_arg;
+	++n_arg;
 	if (ft_strchr("diucCsSrpkxXob", **frmt))
 	{
+		arg_data->format = **frmt;
 		if (!ft_string_set_value(&args, (size_t)(arg_data->num), 'g', 'g')) // TODO ??? undefined what if width/prec is fp
 			return (0);
 	}
 	else if (ft_strchr("fFeEgG", **frmt))
 	{
+		arg_data->format = **frmt;
 		if (!ft_string_set_value(&args, (size_t)(arg_data->num), 'g', 'f')) // TODO ??? undefined what if width/prec is fp
 			return (0);
 	}
 	else
 	{
+		--n_arg;
 		arg_data->num = -1;
 		arg_data->char_arg = **frmt;
 		arg_data->format = 'c';
 		arg_data->size = CHAR;
 	}
+	ft_printf_print_arg_data(arg_data);
 	return (arg_data);
 }
