@@ -6,20 +6,22 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 14:03:08 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/18 15:30:52 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/23 13:46:41 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char	ft_find_cntrl(const char **frmt, t_string **str)
+int	ft_find_cntrl(const char **frmt, t_string **str)
 {
+	if (!frmt || !*frmt || !str || !*str)
+		return (0);
 	while (**frmt != '%' && **frmt != '{')
 	{
 		if (!ft_string_push_back(str, **frmt))
-			return ((char) -1);
+			return (0);
 		(*frmt)++;
 	}
 	(*frmt)++;
-		return (*(*frmt - 1));
+		return (1);
 }
