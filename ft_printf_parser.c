@@ -460,27 +460,30 @@ int ft_parse_len_specifier(char **frmt, int *lenghts)
 	return (1);
 }
 
-int ft_printf_parse_simple_cntl(char c, t_arg_data *arg_data)
+int ft_printf_parse_modifiers(char **frmt, t_arg_data *arg_data)
 {
 	int was_found;
 
 	was_found = 0;
-	if ((c == ' ' || c == '+') && ++was_found)
-		arg_data->positive_sign = c;
-	else if (c == '0' && ++was_found)
-		arg_data->allignment_char = c;
-	else if (c == '-' && ++was_found)
+	if ((**frmt == ' ' || **frmt == '+') && ++was_found)
+		arg_data->positive_sign = **frmt;
+	else if (**frmt == '0' && ++was_found)
+		arg_data->allignment_char = **frmt;
+	else if (**frmt == '-' && ++was_found)
 		arg_data->left_allignment = 1;
-	else if (c == '#' && ++was_found)
+	else if (**frmt == '#' && ++was_found)
 		arg_data->alternative_form = 1;
-	else if (c == '\'' && ++was_found)
+	else if (**frmt == '\'' && ++was_found)
 		arg_data->apostrophe = 1;
-	else if (c == '.' && ++was_found)
+	else if (**frmt == '.' && ++was_found)
 		arg_data->__was_dot = 1;
+	if (was_found)
+		(*frmt)++;
 	return (was_found);
 }
 
-int ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data)
+int ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data,
+															int *lenghts)
 {
 	int was_found_iter;
 	int was_found_total;
@@ -490,22 +493,36 @@ int ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data)
 	while (was_found_iter)
 	{
 		was_found_iter = 0;
-		was_found_iter += ft_parse_len_specifier(frmt);
-		was_found_iter += ft_printf_parse_simple_cntl(**frmt, arg_data);
+		was_found_iter += ft_parse_len_specifier(frmt, lenghts);
+		was_found_iter += ft_printf_parse_modifiers(frmt, arg_data);
 		was_found_total += was_found_iter;
 	}
 	return (was_found_total ? 1 : 0);
 }
 
-int ft_printf_parse_comlex_flags(char **frmt)
+int ft_printf_parse_comlex_flags(char **frmt, t_arg_data *arg_data, t_string *args, int *n_arg)
 {
+	int was_star;
+	int num;
+	int was_dollar;
 
+	was_star = 0;
+	num = -1;
+	was_dollar = 0;
+	if (**frmt == '*' && *(*frmt)++)
+		was_star++;
+	if (ft_isdigit(**frmt))
+		num = ft_atoi_m(frmt);
+	if (**frmt == '$' && *(*frmt)++)
+		was_dollar++;
+
+	return ((num + 1 || was_star || was_dollar) ? 1 : 0);
 }
 
-t_arg_data ft_printf_parser(char **frmt) // TODO close it
+t_arg_data ft_printf_parser(char **frmt, t_string *args) // TODO close it
 {
-	static i = 0;
+	static n_arg = 0;
 
-	t_arg_data *parsed_data;
+	t_arg_data *arg_data;
 
 }
