@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:36:59 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/18 14:39:38 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/23 17:18:07 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,11 @@ int	ft_printf(const char *frmt, ...)
 	while (*frmt)
 	{
 		if (!ft_find_cntrl(&frmt, &str))
-			return (1);
-		//ft_printf_parser(&frmt, &vl, vl);
+			return (-1);
+		if (*(frmt - 1) == '{')
+			ft_set_color(&frmt, str);
+		else
+			ft_printf_parser(&frmt, &vl, vl);
 		//ft_stringify(&str, vl);
 	}
 	ft_print_string(str);
