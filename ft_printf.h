@@ -17,10 +17,11 @@
 
 typedef	enum	e_arg_sz
 {
-	DEFAULT = 0,
-	CHAR,
-	SHORT,
-	LONG,
+	CHAR = 1,
+	SHORT = 2,
+	LONG = 8,
+	_INT128 = 16,
+	DEFAULT = -2147481337
 }				t_arg_sz;
 
 /*

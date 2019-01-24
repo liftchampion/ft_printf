@@ -40,6 +40,7 @@ t_string		*ft_make_string(size_t init_size)
 	}
 	str->data[0] = '\0';
 	str->len = 0;
+	str->info = 0;
 	return (str);
 }
 

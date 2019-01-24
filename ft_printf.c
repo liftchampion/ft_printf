@@ -49,7 +49,6 @@ int	ft_printf(const char *frmt, ...)
 	ft_free_string(&str);
 	printf("\n");
 
-	ft_printf_parser(0, 0);
 	va_end(vl);
 	return (0);
 }
