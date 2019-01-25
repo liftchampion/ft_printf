@@ -1,27 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_find_cntrl.c                                    :+:      :+:    :+:   */
+/*   ft_make_string.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/18 14:03:08 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/23 19:41:15 by ehugh-be         ###   ########.fr       */
+/*   Created: 2019/01/23 15:08:29 by ehugh-be          #+#    #+#             */
+/*   Updated: 2019/01/23 15:09:28 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_find_cntrl(const char **frmt, t_string **str)
+t_string		*ft_make_string(size_t init_size)
 {
-	if (!frmt || !*frmt || !str || !*str)
+	t_string *str;
+
+	str = (t_string*)malloc(sizeof(t_string) * 1);
+	if (!str)
 		return (0);
-	while (**frmt != '%' && (**frmt != '{' && *(*frmt - 1) != '\\'))
+	str->capacity = init_size <= 1 ? 2 : init_size;
+	str->data = (char*)malloc(sizeof(char) * (str->capacity));
+	if (!str->data)
 	{
-		if (!ft_string_push_back_c(str, **frmt))
-			return (0);
-		(*frmt)++;
+		free(str);
+		return (0);
 	}
-	(*frmt)++;
-		return (1);
+	str->data[0] = '\0';
+	str->len = 0;
+	return (str);
 }

@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:36:59 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/18 14:39:38 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/23 17:18:07 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,26 +28,27 @@ int	ft_printf(const char *frmt, ...)
 {
 	va_list		vl;
 	t_string	*str;
-
+	t_string	*args_seq;
 
 	va_start(vl, frmt);
 
 	t_arg_data *arg_data;
 	str = ft_make_string(1);
+	args_seq = ft_make_string(1);
 	while (*frmt)
 	{
-		while (*frmt && *frmt != '%')
-			frmt++;
-		if (!*frmt)
-			break;
-		frmt++;
-		arg_data = ft_printf_parser((char**)&frmt, str);
-		ft_memdel((void**)&arg_data);
+		if (!ft_find_cntrl(&frmt, &str))
+			return (-1);
+		if (*(frmt - 1) == '{')
+			ft_set_color(&frmt, str);
+		else
+			ft_printf_parser((char**)&frmt, args_seq);
 		//ft_stringify(&str, vl);
 	}
 	printf("\n");
 	ft_print_string(str);
 	ft_free_string(&str);
+	ft_free_string(&args_seq);
 	printf("\n");
 
 	va_end(vl);
