@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_find_cntrl.c                                    :+:      :+:    :+:   */
+/*   ft_free_string.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/18 14:03:08 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/23 19:41:15 by ehugh-be         ###   ########.fr       */
+/*   Created: 2019/01/23 15:09:39 by ehugh-be          #+#    #+#             */
+/*   Updated: 2019/01/23 15:10:13 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_find_cntrl(const char **frmt, t_string **str)
+void			ft_free_string(t_string **str)
 {
-	if (!frmt || !*frmt || !str || !*str)
-		return (0);
-	while (**frmt != '%' && (**frmt != '{' && *(*frmt - 1) != '\\'))
-	{
-		if (!ft_string_push_back_c(str, **frmt))
-			return (0);
-		(*frmt)++;
-	}
-	(*frmt)++;
-		return (1);
+	if (!str || !*str)
+		return ;
+	free((*str)->data);
+	free(*str);
+	*str = 0;
 }

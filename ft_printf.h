@@ -6,14 +6,14 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:40:21 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/18 14:38:55 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/24 18:38:45 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 # include <stdarg.h>
-# include "libft.h"
+# include "libft/libft.h"  //reset!!!!
 
 typedef	enum	e_arg_sz
 {
@@ -34,7 +34,7 @@ typedef	enum	e_arg_sz
  **/
 
 typedef struct	s_arg_data
-{
+{	
 	int		width; /// negative only after *n$ be careful with left_alignment flag
 	int 	precision;   /// -1 if wasn't changed
 	char 	left_allignment; /// if width > 0 && left_alignment => width *= -1;
@@ -49,11 +49,9 @@ typedef struct	s_arg_data
 	char	__was_dot; // don't use! only for parsing
 }				t_arg_data;
 
-t_arg_data *ft_printf_parser(char **frmt, t_string *args);
-
-int	ft_printf(const char *frmt, ...);
-
-//int ft_find_cntrl(const char **frmt, t_string **str);
-
+int				ft_printf(const char *frmt, ...);
+int				ft_find_cntrl(const char **frmt, t_string **str);
+int				ft_set_color(const char **frmt, t_string *str);
+t_arg_data		*ft_printf_parser(char **frmt, t_string *args);
 
 #endif

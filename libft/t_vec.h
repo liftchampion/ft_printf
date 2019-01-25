@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/12 13:41:24 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/15 00:08:06 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/23 15:43:45 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ void				ft_free_string(t_string **str);
 
 int					ft_string_fit(t_string **str);
 
-int					ft_string_push_back(t_string **str, char c);
+int					ft_string_push_back_c(t_string **str, char c);
+int					ft_string_push_back(t_string **str_ptr, char *str);
 
 t_string			*ft_make_string(size_t init_size);
 
