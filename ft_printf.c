@@ -32,7 +32,7 @@ int	ft_printf(const char *frmt, ...)
 
 	va_start(vl, frmt);
 
-
+	t_arg_data *arg_data;
 	str = ft_make_string(1);
 	while (*frmt)
 	{
@@ -41,7 +41,8 @@ int	ft_printf(const char *frmt, ...)
 		if (!*frmt)
 			break;
 		frmt++;
-		ft_printf_parser((char**)&frmt, str);
+		arg_data = ft_printf_parser((char**)&frmt, str);
+		ft_memdel((void**)&arg_data);
 		//ft_stringify(&str, vl);
 	}
 	printf("\n");
