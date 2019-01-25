@@ -57,7 +57,7 @@ t_arg_sz		ft_printf_parser_get_arg_size(char c, int lengths[2])
 }
 
 int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
-											t_string *args, int lengths[2])
+											t_string **args, int lengths[2])
 {
 	if (arg_data->precision == DEFAULT)
 		arg_data->precision = DEFAULT_INT_PRECISION;
@@ -66,7 +66,7 @@ int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 		arg_data->format = 'C';
 	else
 		arg_data->format = c;
-	if (!ft_string_set_value(&args, (size_t)(arg_data->num) - 1, 'g',
+	if (!ft_string_set_value(args, (size_t)(arg_data->num) - 1, 'g',
 			arg_data->size == _INT128 ? (char)'G' : (char)'g'))
 	{
 		return (0);
@@ -75,13 +75,13 @@ int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 }
 
 int				ft_set_float_arg_data(t_arg_data *arg_data, char c,
-												t_string *args, int lengths[2])
+												t_string **args, int lengths[2])
 {
 	if (arg_data->precision == DEFAULT)
 		arg_data->precision = DEFAULT_FLOAT_PRECISION;
 	arg_data->size = ft_printf_parser_get_arg_size(c, lengths);
 	arg_data->format = c;
-	if (!ft_string_set_value(&args, (size_t)(arg_data->num) - 1, 'g',
+	if (!ft_string_set_value(args, (size_t)(arg_data->num) - 1, 'g',
 			arg_data->size == LONG ? (char)'F' : (char)'f'))
 	{
 		return (0);
@@ -90,7 +90,7 @@ int				ft_set_float_arg_data(t_arg_data *arg_data, char c,
 }
 
 void			ft_set_invalid_arg_data(t_arg_data *arg_data, char c,
-																t_string *args)
+																t_string **args)
 {
 	if (arg_data->precision == DEFAULT)
 		arg_data->precision = DEFAULT_INT_PRECISION;
@@ -98,5 +98,5 @@ void			ft_set_invalid_arg_data(t_arg_data *arg_data, char c,
 	arg_data->format = 'c';
 	arg_data->char_arg = c;
 	arg_data->num = -1;
-	--args->info;
+	--(*args)->info;
 }

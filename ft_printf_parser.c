@@ -34,13 +34,13 @@ void			ft_printf_print_arg_data(t_arg_data *arg_data)
 }
 ///															TODO delete it
 
-t_arg_data		*ft_printf_parser_flags_preceeder(char **frmt, t_string *args,
+t_arg_data		*ft_printf_parser_flags_preceeder(char **frmt, t_string **args,
 														int lengths[2])
 {
 	t_arg_data	*arg_data;
 	int			was_found_flag;
 
-	++args->info;
+	++(*args)->info;
 	lengths[0] = INT_L;
 	lengths[1] = DOUBLE_L;
 	if (!(arg_data = (t_arg_data*)ft_memalloc(sizeof(t_arg_data))))
@@ -52,25 +52,25 @@ t_arg_data		*ft_printf_parser_flags_preceeder(char **frmt, t_string *args,
 		was_found_flag = 0;
 		was_found_flag += ft_printf_parse_simple_flags(frmt, arg_data, lengths);
 		was_found_flag += ft_printf_parse_comlex_flags(frmt, arg_data, args,
-				&args->info);
-		if (args->info == -1)
+				&(*args)->info);
+		if ((*args)->info == -1)
 		{
 			ft_memdel((void**)&arg_data);
 			return (0);
 		}
 	}
-	arg_data->num = args->info;
+	arg_data->num = (*args)->info;
 	return (arg_data);
 }
 
-t_arg_data		*ft_printf_parser(char **frmt, t_string *args)
+t_arg_data		*ft_printf_parser(char **frmt, t_string **args)
 {
 	t_arg_data	*arg_data;
 	int			lengths[2];
 
 	if (!(arg_data = ft_printf_parser_flags_preceeder(frmt, args, lengths)))
 		return (0);
-	if (ft_strchr(INT_TYPE_SPECIFIERS, **frmt))
+	if (ft_strchr(INT_TYPE_SPECIFIERS, **frmt) && **frmt)
 	{
 		if (!ft_set_int_arg_data(arg_data, *(*frmt)++, args, lengths))
 		{
@@ -78,7 +78,7 @@ t_arg_data		*ft_printf_parser(char **frmt, t_string *args)
 			return (0);
 		}
 	}
-	else if (ft_strchr(FLOAT_TYPE_SPECIFIERS, **frmt))
+	else if (ft_strchr(FLOAT_TYPE_SPECIFIERS, **frmt) && **frmt)
 	{
 		if (!ft_set_float_arg_data(arg_data, *(*frmt)++, args, lengths))
 		{
@@ -86,7 +86,7 @@ t_arg_data		*ft_printf_parser(char **frmt, t_string *args)
 			return (0);
 		}
 	}
-	else
+	else if (**frmt)
 		ft_set_invalid_arg_data(arg_data, *(*frmt)++, args);
 	ft_printf_print_arg_data(arg_data);
 	return (arg_data);

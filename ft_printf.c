@@ -33,18 +33,26 @@ int	ft_printf(const char *frmt, ...)
 	va_start(vl, frmt);
 
 	t_arg_data *arg_data;
-	str = ft_make_string(1);
-	args_seq = ft_make_string(1);
+
+	if (!(str = ft_make_string(1)))
+		return (0);
+	if (!(args_seq = ft_make_string(1)))
+	{
+		ft_free_string(&str);
+		return (0);
+	}
+
 	while (*frmt)
 	{
 		if (!ft_find_cntrl(&frmt, &str))
 			return (-1);
-		if (*(frmt - 1) == '{')
-			ft_set_color(&frmt, str);
-		else
-			ft_printf_parser((char**)&frmt, args_seq);
+		if (*(frmt - 1) == '{') // TODO dangerous -1
+			ft_set_color(&frmt, &str); // changed for safe free in the end of prog
+		else if (*frmt)
+			ft_printf_parser((char**)&frmt, &args_seq);
 		//ft_stringify(&str, vl);
 	}
+	ft_print_string(args_seq); // TODO debug
 	printf("\n");
 	ft_print_string(str);
 	ft_free_string(&str);

@@ -16,12 +16,13 @@ int	ft_find_cntrl(const char **frmt, t_string **str)
 {
 	if (!frmt || !*frmt || !str || !*str)
 		return (0);
-	while (**frmt != '%' && (**frmt != '{' && *(*frmt - 1) != '\\'))
+	while (**frmt && **frmt != '%' && (**frmt != '{' && *(*frmt - 1) != '\\')) // TODO dangerous -1 in case of "{red}..." - '{' in begin
 	{
 		if (!ft_string_push_back(str, **frmt))
 			return (0);
 		(*frmt)++;
 	}
-	(*frmt)++;
-		return (1);
+	if (**frmt)
+		(*frmt)++;
+	return (1);
 }

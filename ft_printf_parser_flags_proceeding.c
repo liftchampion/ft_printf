@@ -82,17 +82,17 @@ int		ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data,
 }
 
 int		ft_printf_parser_comlex_flags_proceeder(t_arg_data *arg_data,
-				t_complex_flags_data *flags_data, t_string *args, int *n_arg)
+				t_complex_flags_data *flags_data, t_string **args, int *n_arg)
 {
 	if (flags_data->was_star && flags_data->num > 0 && flags_data->was_dollar)
 	{
-		if (!ft_string_set_value(&args, (size_t)flags_data->num - 1, 'g', 'g'))
+		if (!ft_string_set_value(args, (size_t)flags_data->num - 1, 'g', 'g'))
 			return ((*n_arg = -1) + 1);
 		ft_printf_arg_data_set_width_or_prec(arg_data, -1 * flags_data->num);
 	}
 	else if (flags_data->was_star && !flags_data->was_dollar)
 	{
-		if (!ft_string_set_value(&args, (size_t)*n_arg - 1, 'g', 'g'))
+		if (!ft_string_set_value(args, (size_t)*n_arg - 1, 'g', 'g'))
 			return ((*n_arg = -1) + 1);
 		ft_printf_arg_data_set_width_or_prec(arg_data, -1 * *n_arg);
 		(*n_arg)++;
@@ -109,7 +109,7 @@ int		ft_printf_parser_comlex_flags_proceeder(t_arg_data *arg_data,
 }
 
 int		ft_printf_parse_comlex_flags(char **frmt, t_arg_data *arg_data,
-													t_string *args, int *n_arg)
+													t_string **args, int *n_arg)
 {
 	int was_star;
 	int num;

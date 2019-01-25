@@ -52,7 +52,7 @@ typedef struct	s_arg_data
 
 int				ft_printf(const char *frmt, ...);
 int				ft_find_cntrl(const char **frmt, t_string **str);
-int				ft_set_color(const char **frmt, t_string *str);
-t_arg_data		*ft_printf_parser(char **frmt, t_string *args);
+int				ft_set_color(const char **frmt, t_string **str);
+t_arg_data		*ft_printf_parser(char **frmt, t_string **args);
 
 #endif
