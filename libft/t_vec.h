@@ -70,8 +70,8 @@ void				ft_free_string(t_string **str);
 
 int					ft_string_fit(t_string **str);
 
-int					ft_string_push_back_c(t_string **str, char c);
-int					ft_string_push_back(t_string **str_ptr, char *str);
+int					ft_string_push_back(t_string **str, char c);
+int					ft_string_push_back_s(t_string **str_ptr, char *str);
 
 int					ft_string_set_value(t_string **str, size_t n, char filler,
 																	char value);
