@@ -35,14 +35,13 @@ void			ft_printf_print_arg_data(t_arg_data *arg_data)
 ///															TODO delete it
 
 t_arg_data		*ft_printf_parser_flags_preceeder(char **frmt, t_string **args,
-														int lengths[2])
+														int lengths[3])
 {
 	t_arg_data	*arg_data;
 	int			was_found_flag;
 
 	++(*args)->info;
-	lengths[0] = INT_L;
-	lengths[1] = DOUBLE_L;
+	SET_DEFAULT_LENGTHS;
 	if (!(arg_data = (t_arg_data*)ft_memalloc(sizeof(t_arg_data))))
 		return (0);
 	*arg_data = (t_arg_data){1, DEFAULT, 0, ' ', 0, 0, 0, 0, DEFAULT, -1, 0, 0};
@@ -66,7 +65,7 @@ t_arg_data		*ft_printf_parser_flags_preceeder(char **frmt, t_string **args,
 t_arg_data		*ft_printf_parser(char **frmt, t_string **args)
 {
 	t_arg_data	*arg_data;
-	int			lengths[2];
+	int			lengths[3];
 
 	if (!(arg_data = ft_printf_parser_flags_preceeder(frmt, args, lengths)))
 		return (0);

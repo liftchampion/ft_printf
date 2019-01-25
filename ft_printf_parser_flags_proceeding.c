@@ -14,23 +14,17 @@
 #include "ft_printf_parser.h"
 #include "libft.h"
 
-int		ft_parse_len_specifier(char **frmt, int lengths[2])
+int		ft_parse_len_specifier(char **frmt, int lengths[3])
 {
-	int current_int_len;
-
-	current_int_len = 0;
 	if (**frmt == 'h' && *(*frmt)++)
-		current_int_len = (**frmt == 'h' && *(*frmt)++) ? CHAR_L : SHORT_L;
+		H_COUNT++;
 	else if (**frmt == 'l' && *(*frmt)++)
-		current_int_len = (**frmt == 'l' && *(*frmt)++) ? LONG_L : LONG_LONG_L;
+		L_COUNT++;
 	else if ((**frmt == 'j' || **frmt == 'z') && *(*frmt)++)
-		current_int_len = LONG_LONG_L;
-	if (current_int_len != 0 &&
-			(lengths[0] == INT_L || current_int_len > lengths[0]))
-		lengths[0] = current_int_len;
-	if ((!current_int_len && **frmt == 'L') && *(*frmt)++)
-		lengths[1] = LD_L;
-	else if (!current_int_len)
+		L_COUNT += 2;
+	else if (**frmt == 'L' && *(*frmt)++)
+		BIG_L_COUNT++;
+	else
 		return (0);
 	return (1);
 }
