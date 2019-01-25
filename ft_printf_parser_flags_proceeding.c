@@ -14,7 +14,7 @@
 #include "ft_printf_parser.h"
 #include "libft.h"
 
-int		ft_parse_len_specifier(char **frmt, int *lenghts)
+int		ft_parse_len_specifier(char **frmt, int lengths[2])
 {
 	int current_int_len;
 
@@ -26,10 +26,10 @@ int		ft_parse_len_specifier(char **frmt, int *lenghts)
 	else if ((**frmt == 'j' || **frmt == 'z') && *(*frmt)++)
 		current_int_len = LONG_LONG_L;
 	if (current_int_len != 0 &&
-			(current_int_len != INT_L || current_int_len > lenghts[0]))
-		lenghts[0] = current_int_len;
+			(lengths[0] == INT_L || current_int_len > lengths[0]))
+		lengths[0] = current_int_len;
 	if ((!current_int_len && **frmt == 'L') && *(*frmt)++)
-		lenghts[1] = LD_L;
+		lengths[1] = LD_L;
 	else if (!current_int_len)
 		return (0);
 	return (1);
@@ -64,7 +64,7 @@ int		ft_printf_parse_modifiers(char **frmt, t_arg_data *arg_data)
 }
 
 int		ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data,
-		int *lenghts)
+		int lengths[2])
 {
 	int was_found_iter;
 	int was_found_total;
@@ -74,7 +74,7 @@ int		ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data,
 	while (was_found_iter)
 	{
 		was_found_iter = 0;
-		was_found_iter += ft_parse_len_specifier(frmt, lenghts);
+		was_found_iter += ft_parse_len_specifier(frmt, lengths);
 		was_found_iter += ft_printf_parse_modifiers(frmt, arg_data);
 		was_found_total += was_found_iter;
 	}

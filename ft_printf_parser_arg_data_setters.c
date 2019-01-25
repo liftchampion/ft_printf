@@ -59,7 +59,6 @@ t_arg_sz		ft_printf_parser_get_arg_size(char c, int lengths[2])
 int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 											t_string *args, int lengths[2])
 {
-//TODO maybe need to use ANOTHER DEFAULT WIDTH for o x b
 	if (arg_data->precision == DEFAULT)
 		arg_data->precision = DEFAULT_INT_PRECISION;
 	arg_data->size = ft_printf_parser_get_arg_size(c, lengths);

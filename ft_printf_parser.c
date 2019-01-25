@@ -21,7 +21,7 @@
 
 void			ft_printf_print_arg_data(t_arg_data *arg_data)
 {
-	static int	counter = 0;
+	static int counter = 0;
 
 	printf("%2d   width=%4d  prec=%4d  left_allign=%d  allign_char=<%c>  "
 		"pos_sign=<%c>  alt_form=%d  apostrop=%d  "
