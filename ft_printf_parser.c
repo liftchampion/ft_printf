@@ -64,16 +64,7 @@ t_arg_data		*ft_printf_parser_flags_proceeder(char **frmt, t_string **args,
 	return (arg_data);
 }
 
-t_res_item		*ft_printf_parser_arg_data_maker(t_arg_data	*arg_data)
-{
-	t_res_item	*res;
-	if (!(res = (t_res_item*)malloc(sizeof(t_res_item))))
-		return (0);
-	*res = (t_res_item){arg_data, 0, I_VAR};
-	return (res);
-}
-
-t_res_item		*ft_printf_parser(char **frmt, t_string **args)
+t_arg_data		*ft_printf_parser(char **frmt, t_string **args)
 {
 	t_arg_data	*arg_data;
 	int			lengths[4];
@@ -99,5 +90,5 @@ t_res_item		*ft_printf_parser(char **frmt, t_string **args)
 	else if (**frmt)
 		ft_set_invalid_arg_data(arg_data, *(*frmt)++, args);
 	ft_printf_print_arg_data(arg_data); // TODO delete it
-	return (ft_printf_parser_arg_data_maker(arg_data));
+	return (arg_data);
 }
