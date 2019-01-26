@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:40:21 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/24 18:38:45 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/27 02:27:34 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ typedef struct	s_arg_data
 
 int				ft_printf(const char *frmt, ...);
 int				ft_find_cntrl(const char **frmt, t_string **str);
-int				ft_set_color(const char **frmt, t_string *str);
-t_arg_data		*ft_printf_parser(char **frmt, t_string *args);
+int				ft_set_color(const char **frmt, t_string **str);
+t_arg_data		*ft_printf_parser(const char **frmt, t_string *args);
+void			ft_stringify(t_string **str, t_arg_data *vars[]);
+void			ft_free_string_arr(t_string *str[], int i);
+void			ft_print_string_arr(t_string *str[], int i);
 
 #endif
