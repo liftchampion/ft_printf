@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 13:47:48 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/24 00:04:37 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/27 02:36:37 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	ft_check_str(const char **frmt)
 	return (i);
 }
 
-static int	ft_parse_format(const char **frmt, t_string *str)
+static int	ft_parse_format(const char **frmt, t_string **str)
 {
 	char	bgre;
 	int		i;
@@ -63,42 +63,42 @@ static int	ft_parse_format(const char **frmt, t_string *str)
 	bgre = ft_check_bgre(frmt);
 	i = ft_check_str(frmt);
 	if (i == NUM_OF_COLS)
-		return ((ft_string_push_back(&str, "0m") < 1) ? -1 : 0);
+		return ((ft_string_push_back_s(str, "0m") < 1) ? -1 : 0);
 	bgre -= (pf_cols[i].num > 10 && bgre / 10 == 1) ? 10 : 0;
 	bgre -= (pf_cols[i].num < 10 && bgre % 10 == 1) ? 1 : 0;
 	bgre = (pf_cols[i].num == 0) ? 0 : bgre;
-	return ((ft_string_push_back(&str, ft_itoa(pf_cols[i].num + bgre +
+	return ((ft_string_push_back_s(str, ft_itoa(pf_cols[i].num + bgre +
 						bgre % 10 * 20)) < 1) ? -1 : 1);
 }
 
-static int	ft_parse_compl_col(const char **frmt, t_string *str)
+static int	ft_parse_compl_col(const char **frmt, t_string **str)
 {
 	if (*(++(*frmt)) == 'b' && *(*frmt + 1) == '_')
 	{
 		*frmt += 2;
-		if (!ft_string_push_back(&str, "48;5;"))
+		if (!ft_string_push_back_s(str, "48;5;"))
 			return (-1);
 	}
 	else
 	{
-		if (!ft_string_push_back(&str, "38;5;"))
+		if (!ft_string_push_back_s(str, "38;5;"))
 			return (-1);
 	}
 	while (ft_isdigit(**frmt))
 	{
-		if (ft_string_push_back_c(&str, *((*frmt)++)) < 1)
+		if (ft_string_push_back(str, *((*frmt)++)) < 1)
 			return (-1);
 	}
 	return (1);
 }
 
-int			ft_set_color(const char **frmt, t_string *str)
+int			ft_set_color(const char **frmt, t_string **str)
 {
 	int ret;
 
-	if (!frmt || !*frmt || !str)
+	if (!frmt || !*frmt || !str || !*str)
 		return (-1);
-	ft_string_push_back(&str, "\e[");
+	ft_string_push_back_s(str, "\e[");
 	while (**frmt && **frmt != '}')
 	{
 		if (*(*frmt) == '\\')
@@ -110,9 +110,9 @@ int			ft_set_color(const char **frmt, t_string *str)
 			return (ret);
 		if (**frmt != ',')
 			break ;
-		else if (!(*frmt)++ || !ft_string_push_back_c(&str, ';'))
+		else if (!(*frmt)++ || !ft_string_push_back(str, ';'))
 			return (-1);
 	}
-	ft_string_push_back(&str, "m");
+	ft_string_push_back_s(str, "m");
 	return (0);
 }
