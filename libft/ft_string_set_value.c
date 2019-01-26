@@ -12,7 +12,8 @@
 
 #include "libft.h"
 
-int ft_string_set_value(t_string **str, size_t n, char filler, char value)
+int			ft_string_set_value(t_string **str, size_t n, char filler,
+																char value)
 {
 	size_t i;
 

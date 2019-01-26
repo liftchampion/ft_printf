@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int	ft_string_push_back_c(t_string **str_ptr, char c)
+int	ft_string_push_back(t_string **str_ptr, char c)
 {
 	t_string *str;
 
@@ -34,13 +34,13 @@ int	ft_string_push_back_c(t_string **str_ptr, char c)
 	return (1);
 }
 
-int	ft_string_push_back(t_string **str_ptr, char *str)
+int	ft_string_push_back_s(t_string **str_ptr, char *str)
 {
 	int t;
 
 	while (*str)
 	{
-		if ((t = ft_string_push_back_c(str_ptr, *str)) == 1)
+		if ((t = ft_string_push_back(str_ptr, *str)) == 1)
 			str++;
 		else
 			return (t);
