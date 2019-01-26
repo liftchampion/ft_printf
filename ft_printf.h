@@ -69,7 +69,7 @@ typedef struct	s_res_item
 
 int				ft_printf(const char *frmt, ...);
 t_res_item		*ft_find_cntrl(const char **frmt);
-int				ft_set_color(const char **frmt, t_string **str);
+t_res_item		*ft_set_color(const char **frmt);
 t_res_item		*ft_printf_parser(char **frmt, t_string **args);
 
 

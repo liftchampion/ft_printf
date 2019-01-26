@@ -33,7 +33,7 @@ void ft_print_items_vector(void **vec)
 		res_item = *(t_res_item**)vec;
 		if (res_item->item_type == I_STRING)
 		{
-			for (int g = 0; g < res_item->str_len; g++)
+			for (size_t g = 0; g < res_item->str_len; g++)
 			{
 				printf("%c", ((char*)res_item->item_ptr)[g]);
 			}
@@ -41,6 +41,10 @@ void ft_print_items_vector(void **vec)
 		else if (res_item->item_type == I_VAR)
 		{
 			printf("[%d]", ((t_arg_data*)res_item->item_ptr)->num);
+		}
+		else if (res_item->item_type == I_COLOR)
+		{
+			printf("%s", (char*)res_item->item_ptr);
 		}
 		vec++;
 	}
@@ -61,7 +65,6 @@ int	ft_printf(const char *frmt, ...)
 	res_items = (void**)ft_memalloc(sizeof(void*) * 100); // TODO use vector
 
 
-	t_arg_data *arg_data = 0;
 
 
 	if (!(str = ft_make_string(1)))
@@ -78,7 +81,11 @@ int	ft_printf(const char *frmt, ...)
 			return (-1);
 		res_items[counter++] = (void*)res_item; // TODO use vector
 		if (*(frmt - 1) == '{') // TODO dangerous -1
-			ft_set_color(&frmt, &str);
+		{
+			if (!(res_item = ft_set_color(&frmt)))
+				return (-1);
+			res_items[counter++] = (void*)res_item;
+		}
 		else if (*frmt)
 		{
 			if (!(res_item = ft_printf_parser((char**) &frmt, &args_seq)))

@@ -66,7 +66,7 @@ static int	ft_parse_format(const char **frmt, t_string **str)
 		return ((ft_string_push_back_s(str, "0m") < 1) ? -1 : 0);
 	bgre -= (pf_cols[i].num > 10 && bgre / 10 == 1) ? 10 : 0;
 	bgre -= (pf_cols[i].num < 10 && bgre % 10 == 1) ? 1 : 0;
-	bgre = (pf_cols[i].num == 0) ? 0 : bgre;
+	bgre = (pf_cols[i].num == (char)0) ? (char)0 : bgre;
 	return ((ft_string_push_back_s(str, ft_itoa(pf_cols[i].num + bgre +
 						bgre % 10 * 20)) < 1) ? -1 : 1);
 }
@@ -92,27 +92,35 @@ static int	ft_parse_compl_col(const char **frmt, t_string **str)
 	return (1);
 }
 
-int			ft_set_color(const char **frmt, t_string **str)
+t_res_item	*ft_set_color(const char **frmt)
 {
-	int ret;
+	int			ret;
+	t_string	*str;
+	t_res_item	*res_item;
 
-	if (!frmt || !*frmt || !str)
-		return (-1);
-	ft_string_push_back_s(str, "\e[");
+	if (!frmt || !*frmt || !(str = ft_make_string(1))) // TODO free it
+		return (0);
+	ft_string_push_back_s(&str, "\e[");
 	while (**frmt && **frmt != '}')
 	{
 		if (*(*frmt) == '\\')
 		{
-			if (ft_parse_compl_col(frmt, str) < 1)
-				return (-1);
+			if (ft_parse_compl_col(frmt, &str) < 1)
+				return (0);
 		}
-		else if ((ret = ft_parse_format(frmt, str)) < 1)
-			return (ret);
+		else if ((ret = ft_parse_format(frmt, &str)) < 1)
+			return (0);
 		if (**frmt != ',')
 			break ;
-		else if (!(*frmt)++ || !ft_string_push_back(str, ';'))
-			return (-1);
+		else if (!(*frmt)++ || !ft_string_push_back(&str, ';'))
+			return (0);
 	}
-	ft_string_push_back_s(str, "m");
-	return (0);
+	if (**frmt)
+		(*frmt)++;
+	ft_string_push_back_s(&str, "m");
+	if (!(res_item = (t_res_item*)malloc(sizeof(t_res_item))))
+		return (0);
+	*res_item = (t_res_item){str->data, 0, I_COLOR};
+	ft_memdel((void**)&str);
+	return (res_item);
 }
