@@ -14,7 +14,7 @@
 #include "ft_printf_parser.h"
 #include "libft.h"
 
-int		ft_parse_len_specifier(char **frmt, int lengths[4])
+int		ft_parse_len_specifier(const char **frmt, int lengths[4])
 {
 	if (**frmt == 'h' && *(*frmt)++)
 		H_COUNT++;
@@ -31,7 +31,7 @@ int		ft_parse_len_specifier(char **frmt, int lengths[4])
 	return (1);
 }
 
-int		ft_printf_parse_modifiers(char **frmt, t_arg_data *arg_data)
+int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data)
 {
 	int was_found;
 
@@ -59,7 +59,7 @@ int		ft_printf_parse_modifiers(char **frmt, t_arg_data *arg_data)
 	return (was_found);
 }
 
-int		ft_printf_parse_simple_flags(char **frmt, t_arg_data *arg_data,
+int		ft_printf_parse_simple_flags(const char **frmt, t_arg_data *arg_data,
 		int lengths[4])
 {
 	int was_found_iter;
@@ -104,7 +104,7 @@ int		ft_printf_parser_comlex_flags_proceeder(t_arg_data *arg_data,
 	return (1);
 }
 
-int		ft_printf_parse_comlex_flags(char **frmt, t_arg_data *arg_data,
+int		ft_printf_parse_comlex_flags(const char **frmt, t_arg_data *arg_data,
 													t_string **args, int *n_arg)
 {
 	int was_star;
