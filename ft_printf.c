@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:36:59 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/23 17:18:07 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/27 02:27:36 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,40 @@ void ft_print_va_struct(va_list ls)
 	long int *t2 = (long int *)ls->reg_save_area;
 	printf("overflow_arg_area - %ld reg_save_area - %ld\n",
 			(*(t1)) , *(t2 + 3));
+	printf("3rd arg is %lf\n", *((double*)(&t2[6])));
 }
 
 int	ft_printf(const char *frmt, ...)
 {
 	va_list		vl;
-	t_string	*str;
+	t_string	*str[100];
+	int			i;
+	t_string	*args_seq;
+	t_arg_data	*vars[99];
 
-	int x;
 
 	va_start(vl, frmt);
-
-	str = ft_make_string(1);
+	args_seq = ft_make_string(1);
+	i = 0;
+	str[i] = ft_make_string(1);
 	while (*frmt)
 	{
-		if (!ft_find_cntrl(&frmt, &str))
+		if (!ft_find_cntrl(&frmt, &str[i]))
 			return (-1);
 		if (*(frmt - 1) == '{')
-			ft_set_color(&frmt, str);
+		{
+			if (ft_set_color(&frmt, &str[i]))
+				return (-1);
+		}
 		else
-			ft_printf_parser(&frmt, &vl, vl);
-		//ft_stringify(&str, vl);
+		{
+			vars[i++] = ft_printf_parser(&frmt, args_seq);
+			str[i] = ft_make_string(1);
+		}
 	}
-	ft_print_string(str);
-	ft_free_string(&str);
+	ft_stringify(&str[0], vars);
+	ft_print_string_arr(str, i);
+	ft_free_string_arr(str, i); 
 
 	va_end(vl);
 	return (0);
