@@ -28,16 +28,16 @@ void			ft_printf_arg_data_set_width_or_prec(t_arg_data *arg_data,
 	}
 }
 
-t_arg_sz		ft_printf_parser_get_int_arg_size(char c, int lengths[3])
+t_arg_sz		ft_printf_parser_get_int_arg_size(char c, int lengths[4])
 {
-	if (c == 'D')
-		return (_INT128);
-	else if (ft_strchr(LONG_INT_TYPE_SPECS, c))
+	if (ft_strchr(LONG_INT_TYPE_SPECS, c))
 		return (LONG);
 	else if ((c == 'c' && L_COUNT % 2) || c == 'C')
 		return (DEFAULT);
 	else if (c == 'c')
 		return (CHAR);
+	else if (_128_COUNT)
+		return (_INT128);
 	else if (L_COUNT)
 		return (LONG);
 	else if (H_COUNT % 2)
@@ -49,7 +49,7 @@ t_arg_sz		ft_printf_parser_get_int_arg_size(char c, int lengths[3])
 }
 
 int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
-											t_string **args, int lengths[3])
+											t_string **args, int lengths[4])
 {
 	if (arg_data->precision == DEFAULT)
 		arg_data->precision = DEFAULT_INT_PRECISION;
@@ -67,7 +67,7 @@ int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 }
 
 int				ft_set_float_arg_data(t_arg_data *arg_data, char c,
-												t_string **args, int lengths[3])
+												t_string **args, int lengths[4])
 {
 	if (arg_data->precision == DEFAULT)
 		arg_data->precision = DEFAULT_FLOAT_PRECISION;

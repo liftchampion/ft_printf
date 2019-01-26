@@ -26,6 +26,6 @@ int			ft_string_set_value(t_string **str, size_t n, char filler,
 			return (0);
 		++i;
 	}
-	((*str)->data)[n] = value;
+	(*str)->data[n] = value;
 	return (1);
 }

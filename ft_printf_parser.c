@@ -34,17 +34,19 @@ void			ft_printf_print_arg_data(t_arg_data *arg_data)
 }
 ///															TODO delete it
 
-t_arg_data		*ft_printf_parser_flags_preceeder(char **frmt, t_string **args,
-														int lengths[3])
+t_arg_data		*ft_printf_parser_flags_proceeder(char **frmt, t_string **args,
+														int lengths[4])
 {
 	t_arg_data	*arg_data;
 	int			was_found_flag;
 
 	++(*args)->info;
 	SET_DEFAULT_LENGTHS;
-	if (!(arg_data = (t_arg_data*)ft_memalloc(sizeof(t_arg_data))))
+	_128_COUNT = 0;
+	if (!(arg_data = (t_arg_data*)malloc(sizeof(t_arg_data))))
 		return (0);
-	*arg_data = (t_arg_data){1, DEFAULT, 0, ' ', 0, 0, 0, 0, DEFAULT, -1, 0, 0};
+	*arg_data =
+			(t_arg_data){0, 1, DEFAULT, 0, ' ', 0, 0, 0, 0, DEFAULT, -1, 0, 0};
 	was_found_flag = 1;
 	while (was_found_flag)
 	{
@@ -62,12 +64,21 @@ t_arg_data		*ft_printf_parser_flags_preceeder(char **frmt, t_string **args,
 	return (arg_data);
 }
 
-t_arg_data		*ft_printf_parser(char **frmt, t_string **args)
+t_res_item		*ft_printf_parser_arg_data_maker(t_arg_data	*arg_data)
+{
+	t_res_item	*res;
+	if (!(res = (t_res_item*)malloc(sizeof(t_res_item))))
+		return (0);
+	*res = (t_res_item){arg_data, 0, I_VAR};
+	return (res);
+}
+
+t_res_item		*ft_printf_parser(char **frmt, t_string **args)
 {
 	t_arg_data	*arg_data;
-	int			lengths[3];
+	int			lengths[4];
 
-	if (!(arg_data = ft_printf_parser_flags_preceeder(frmt, args, lengths)))
+	if (!(arg_data = ft_printf_parser_flags_proceeder(frmt, args, lengths)))
 		return (0);
 	if (ft_strchr(INT_TYPE_SPECIFIERS, **frmt) && **frmt)
 	{
@@ -87,6 +98,6 @@ t_arg_data		*ft_printf_parser(char **frmt, t_string **args)
 	}
 	else if (**frmt)
 		ft_set_invalid_arg_data(arg_data, *(*frmt)++, args);
-	ft_printf_print_arg_data(arg_data);
-	return (arg_data);
+	ft_printf_print_arg_data(arg_data); // TODO delete it
+	return (ft_printf_parser_arg_data_maker(arg_data));
 }

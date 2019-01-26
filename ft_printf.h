@@ -15,6 +15,8 @@
 # include <stdarg.h>
 # include "libft/libft.h"  // TODO reset!!!!
 
+# define _128_SPECIFIER '_'
+
 typedef	enum	e_arg_sz
 {
 	CHAR = 1,
@@ -35,7 +37,8 @@ typedef	enum	e_arg_sz
  **/
 
 typedef struct	s_arg_data
-{	
+{
+	void	*arg_ptr;
 	int		width; /// negative only after *n$ be careful with left_alignment flag
 	int 	precision;   /// -1 if wasn't changed
 	char 	left_allignment; /// if width > 0 && left_alignment => width *= -1;
@@ -50,9 +53,26 @@ typedef struct	s_arg_data
 	char	__was_dot; // don't use! only for parsing
 }				t_arg_data;
 
+typedef enum	e_item_types
+{
+	I_STRING,
+	I_COLOR,
+	I_VAR
+}				t_item_types;
+
+typedef struct	s_res_item
+{
+	void	*item_ptr;
+	size_t	str_len;
+	t_item_types item_type;
+}				t_res_item;
+
 int				ft_printf(const char *frmt, ...);
-int				ft_find_cntrl(const char **frmt, t_string **str);
+t_res_item		*ft_find_cntrl(const char **frmt);
 int				ft_set_color(const char **frmt, t_string **str);
-t_arg_data		*ft_printf_parser(char **frmt, t_string **args);
+t_res_item		*ft_printf_parser(char **frmt, t_string **args);
+
+
+void ft_print_va_struct(va_list ls); // TODO delete it
 
 #endif
