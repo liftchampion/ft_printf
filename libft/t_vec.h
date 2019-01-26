@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/12 13:41:24 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/23 15:43:45 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/27 02:46:47 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,7 @@ int					ft_string_push_back(t_string **str, char c);
 int					ft_string_push_back_s(t_string **str_ptr, char *str);
 
 int					ft_string_set_value(t_string **str, size_t n, char filler,
-																	char value);
-
+				char value);
 t_string			*ft_make_string(size_t init_size);
 
 #endif
