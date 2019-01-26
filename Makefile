@@ -58,4 +58,4 @@ re_this: fclean_this all
 re: fclean all
 
 valgrind: debug
-	~/.brew/bin/valgrind --leak-check=full --show-leak-kinds=definite ./$(NAME)
+	~/.brew/bin/valgrind --leak-check=full --show-leak-kinds=definite --dsymutil=yes --track-origins=yes ./$(NAME)

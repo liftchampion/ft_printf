@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:40:21 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/27 02:27:34 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/27 02:45:40 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,14 @@
 
 typedef	enum	e_arg_sz
 {
-	DEFAULT = 0,
-	CHAR,
-	SHORT,
-	LONG,
+	CHAR = 1,
+	SHORT = 2,
+	LONG = 8,
+	_INT128 = 16,
+	DEFAULT = -2147481337,
 }				t_arg_sz;
+
+# define _128_SPECIFIER '_'
 
 /*
  * default precision for FP is 6
@@ -45,7 +48,7 @@ typedef struct	s_arg_data
 	int 	num;
 	t_arg_sz	size; /// Lenght of arg
 	char 	char_arg;	/// for cases when type-specifier is wrong and need to print char
-	char	format; // TODO d, f, F, e, E, g, G, x, X, o, s, c, p, b, r, k, C (lc), S
+	char	format; // TODO d, D, u, U, f, F, e, E, g, G, x, X, o, s, c, p, b, B, r, k, C (lc), S
 	char	__was_dot; // don't use! only for parsing
 }				t_arg_data;
 

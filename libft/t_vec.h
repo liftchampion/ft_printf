@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/12 13:41:24 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/27 02:37:40 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/27 02:46:47 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct		s_string
 	char		*data;
 	size_t		len;
 	size_t		capacity;
+	int			info;
 }					t_string;
 
 void				ft_print_string(t_string *str);
@@ -72,6 +73,8 @@ int					ft_string_fit(t_string **str);
 int					ft_string_push_back(t_string **str, char c);
 int					ft_string_push_back_s(t_string **str_ptr, char *str);
 
+int					ft_string_set_value(t_string **str, size_t n, char filler,
+				char value);
 t_string			*ft_make_string(size_t init_size);
 
 #endif
