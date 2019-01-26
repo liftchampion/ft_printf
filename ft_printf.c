@@ -11,8 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h> // TODO delete it
-
+#include <stdio.h>
 
 void ft_print_va_struct(va_list ls)
 {
@@ -20,87 +19,32 @@ void ft_print_va_struct(va_list ls)
 			ls->gp_offset, ls->fp_offset, ls->overflow_arg_area, ls->reg_save_area);
 	long int *t1 = (long int *)ls->overflow_arg_area;
 	long int *t2 = (long int *)ls->reg_save_area;
-	printf("overflow_arg_area - %ld reg_save_area - %ld\n", (*(t1)) , *(t2 + 3));
-}
-
-void ft_print_items_vector(void **vec)
-{
-	t_res_item	*res_item;
-
-	printf("args:<");
-	while (*vec)
-	{
-		res_item = *(t_res_item**)vec;
-		if (res_item->item_type == I_STRING)
-		{
-			for (size_t g = 0; g < res_item->str_len; g++)
-			{
-				printf("%c", ((char*)res_item->item_ptr)[g]);
-			}
-		}
-		else if (res_item->item_type == I_VAR)
-		{
-			ft_printf_set_arg_pointer((t_arg_data*)res_item->item_ptr); // TODO finish
-			printf("[%d]", ((t_arg_data*)res_item->item_ptr)->num);
-		}
-		else if (res_item->item_type == I_COLOR)
-		{
-			printf("%s", (char*)res_item->item_ptr);
-		}
-		vec++;
-	}
-	printf(">\n");
+	printf("overflow_arg_area - %ld reg_save_area - %ld\n",
+			(*(t1)) , *(t2 + 3));
 }
 
 int	ft_printf(const char *frmt, ...)
 {
 	va_list		vl;
 	t_string	*str;
-	t_string	*args_seq;
-	t_res_item	*res_item;
+
+	int x;
 
 	va_start(vl, frmt);
 
-	void	**res_items;  // TODO use vector
-	int counter = 0;  // TODO delete when will use vector
-	res_items = (void**)ft_memalloc(sizeof(void*) * 100); // TODO use vector
-
-
-	// todo check this ft_printf("abc{Green,Bold,Blink}efg%D %U %1$ld xui{eof}", 1, 2);
-
-	if (!(str = ft_make_string(1)))
-		return (0);
-	if (!(args_seq = ft_make_string(1)))
-	{
-		ft_free_string(&str);
-		return (0);
-	}
-
+	str = ft_make_string(1);
 	while (*frmt)
 	{
-		if (!(res_item = ft_find_cntrl(&frmt)))
+		if (!ft_find_cntrl(&frmt, &str))
 			return (-1);
-		res_items[counter++] = (void*)res_item; // TODO use vector
-		if (*(frmt - 1) == '{') // TODO dangerous -1
-		{
-			if (!(res_item = ft_set_color(&frmt)))
-				return (-1);
-			res_items[counter++] = (void*)res_item;
-		}
-		else if (*frmt)
-		{
-			if (!(res_item = ft_printf_parser((char**) &frmt, &args_seq)))
-				return (-1);
-			res_items[counter++] = (void*)res_item;	// TODO use vector
-		}
-
-		//ft_stringify(&str, arg_data, args_seq);
+		if (*(frmt - 1) == '{')
+			ft_set_color(&frmt, str);
+		else
+			ft_printf_parser(&frmt, &vl, vl);
+		//ft_stringify(&str, vl);
 	}
-	ft_print_items_vector(res_items);
-	ft_print_string(args_seq); // TODO delete it
-	printf("\n");
+	ft_print_string(str);
 	ft_free_string(&str);
-	ft_free_string(&args_seq);
 
 	va_end(vl);
 	return (0);

@@ -12,28 +12,16 @@
 
 #include "ft_printf.h"
 
-t_res_item *ft_find_cntrl(const char **frmt)
+int	ft_find_cntrl(const char **frmt, t_string **str)
 {
-	int			was_slash;
-	size_t		len;
-	char		*str_begin;
-	t_res_item	*res;
-
-	was_slash = 0;
-	len = 0;
-	if (!frmt || !*frmt)
+	if (!frmt || !*frmt || !str || !*str)
 		return (0);
-	str_begin = (char*)*frmt;
-	while (**frmt && **frmt != '%' && (**frmt != '{' && !was_slash))
+	while (**frmt != '%' && (**frmt != '{' && *(*frmt - 1) != '\\'))
 	{
-		was_slash = **frmt == '\\' ? 1 : 0;
+		if (!ft_string_push_back_c(str, **frmt))
+			return (0);
 		(*frmt)++;
-		len++;
 	}
-	if (**frmt)
-		(*frmt)++;
-	if (!(res = (t_res_item*)malloc(sizeof(t_res_item))))
-		return (0);
-	*res = (t_res_item){str_begin, len, I_STRING};
-	return (res);
+	(*frmt)++;
+		return (1);
 }
