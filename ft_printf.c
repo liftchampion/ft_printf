@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h>
+#include <stdio.h> // TODO delete it
 
 
 void ft_print_va_struct(va_list ls)
@@ -40,6 +40,7 @@ void ft_print_items_vector(void **vec)
 		}
 		else if (res_item->item_type == I_VAR)
 		{
+			ft_printf_set_arg_pointer((t_arg_data*)res_item->item_ptr); // TODO finish
 			printf("[%d]", ((t_arg_data*)res_item->item_ptr)->num);
 		}
 		else if (res_item->item_type == I_COLOR)
@@ -65,7 +66,7 @@ int	ft_printf(const char *frmt, ...)
 	res_items = (void**)ft_memalloc(sizeof(void*) * 100); // TODO use vector
 
 
-
+	// todo check this ft_printf("abc{Green,Bold,Blink}efg%D %U %1$ld xui{eof}", 1, 2);
 
 	if (!(str = ft_make_string(1)))
 		return (0);
@@ -98,10 +99,8 @@ int	ft_printf(const char *frmt, ...)
 	ft_print_items_vector(res_items);
 	ft_print_string(args_seq); // TODO delete it
 	printf("\n");
-	///ft_print_string(str);
 	ft_free_string(&str);
 	ft_free_string(&args_seq);
-	printf("\n");
 
 	va_end(vl);
 	return (0);

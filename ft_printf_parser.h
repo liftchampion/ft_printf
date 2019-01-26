@@ -19,7 +19,7 @@
 # define DEFAULT_FLOAT_PRECISION 6
 # define DEFAULT_INT_PRECISION 1
 
-# define INT_TYPE_SPECIFIERS "dDiuUcCsSrpkxXob"
+# define INT_TYPE_SPECIFIERS "dDiuUcCsSrpkxXoObB"
 # define FLOAT_TYPE_SPECIFIERS "fFeEgG"
 # define LONG_INT_TYPE_SPECS "sprkSDU"
 

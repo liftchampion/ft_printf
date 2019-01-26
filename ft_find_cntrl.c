@@ -21,7 +21,6 @@ t_res_item *ft_find_cntrl(const char **frmt)
 
 	was_slash = 0;
 	len = 0;
-	str_begin = 0;
 	if (!frmt || !*frmt)
 		return (0);
 	str_begin = (char*)*frmt;

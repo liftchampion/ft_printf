@@ -72,6 +72,8 @@ t_res_item		*ft_find_cntrl(const char **frmt);
 t_res_item		*ft_set_color(const char **frmt);
 t_res_item		*ft_printf_parser(char **frmt, t_string **args);
 
+void			ft_printf_set_arg_pointer(t_arg_data *arg_data);
+
 
 void ft_print_va_struct(va_list ls); // TODO delete it
 
