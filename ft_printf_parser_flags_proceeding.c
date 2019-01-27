@@ -6,13 +6,12 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:40:21 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/16 23:44:33 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/27 04:24:14 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "ft_printf_parser.h"
-#include "libft.h"
 
 int		ft_parse_len_specifier(const char **frmt, int lengths[4])
 {
@@ -52,7 +51,7 @@ int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data)
 		if ((**frmt == '0' && (*frmt)++) || (!ft_isdigit(**frmt) &&
 																**frmt != '*'))
 		{
-			arg_data->precision = 0;
+			arg_data->prcsn = 0;
 			arg_data->__was_dot = 0;
 		}
 	}

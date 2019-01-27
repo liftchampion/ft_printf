@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:11:01 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/23 15:43:59 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/27 04:07:07 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int	ft_string_push_back_s(t_string **str_ptr, char *str)
 {
 	int t;
 
+	if (!str)
+		return (-1);
 	while (*str)
 	{
 		if ((t = ft_string_push_back(str_ptr, *str)) == 1)

@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:40:21 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/16 23:44:33 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/01/27 04:24:36 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void			ft_printf_arg_data_set_width_or_prec(t_arg_data *arg_data,
 	}
 	else
 	{
-		arg_data->precision = n;
+		arg_data->prcsn = n;
 		arg_data->__was_dot = 0;
 	}
 }
@@ -51,8 +51,8 @@ t_arg_sz		ft_printf_parser_get_int_arg_size(char c, int lengths[4])
 int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 											t_string **args, int lengths[4])
 {
-	if (arg_data->precision == DEFAULT)
-		arg_data->precision = DEFAULT_INT_PRECISION;
+	if (arg_data->prcsn == DEFAULT)
+		arg_data->prcsn = DEFAULT_INT_PRECISION;
 	arg_data->size = ft_printf_parser_get_int_arg_size(c, lengths);
 	if (c == 'c' && arg_data->size == DEFAULT)
 		arg_data->format = 'C';
@@ -69,8 +69,8 @@ int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 int				ft_set_float_arg_data(t_arg_data *arg_data, char c,
 												t_string **args, int lengths[4])
 {
-	if (arg_data->precision == DEFAULT)
-		arg_data->precision = DEFAULT_FLOAT_PRECISION;
+	if (arg_data->prcsn == DEFAULT)
+		arg_data->prcsn = DEFAULT_FLOAT_PRECISION;
 	arg_data->size = BIG_L_COUNT ? LONG : DEFAULT;
 	arg_data->format = c;
 	if (!ft_string_set_value(args, (size_t)(arg_data->num) - 1, 'g',
@@ -84,8 +84,8 @@ int				ft_set_float_arg_data(t_arg_data *arg_data, char c,
 void			ft_set_invalid_arg_data(t_arg_data *arg_data, char c,
 																t_string **args)
 {
-	if (arg_data->precision == DEFAULT)
-		arg_data->precision = DEFAULT_INT_PRECISION;
+	if (arg_data->prcsn == DEFAULT)
+		arg_data->prcsn = DEFAULT_INT_PRECISION;
 	arg_data->size = CHAR;
 	arg_data->format = 'c';
 	arg_data->char_arg = c;
