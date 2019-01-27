@@ -13,4 +13,6 @@
 #ifndef FT_PRINTF_COMPOSERS_H
 # define FT_PRINTF_COMPOSERS_H
 
+char		*ft_printf_itoa_pro(__int128_t n, int rad, int prec, char sign);
+
 #endif
