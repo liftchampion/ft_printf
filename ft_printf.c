@@ -48,7 +48,7 @@ int	ft_printf(const char *frmt, ...)
 		}
 		else
 		{
-			vars[i++] = ft_printf_parser(&frmt, args_seq);
+			vars[i++] = ft_printf_parser(&frmt, &args_seq);
 			str[i] = ft_make_string(1);
 		}
 	}

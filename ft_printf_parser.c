@@ -34,7 +34,7 @@ void			ft_printf_print_arg_data(t_arg_data *arg_data)
 }
 ///															TODO delete it
 
-t_arg_data		*ft_printf_parser_flags_proceeder(char **frmt, t_string **args,
+t_arg_data		*ft_printf_parser_flags_proceeder(const char **frmt, t_string **args,
 														int lengths[4])
 {
 	t_arg_data	*arg_data;
@@ -64,7 +64,7 @@ t_arg_data		*ft_printf_parser_flags_proceeder(char **frmt, t_string **args,
 	return (arg_data);
 }
 
-t_arg_data		*ft_printf_parser(char **frmt, t_string **args)
+t_arg_data		*ft_printf_parser(const char **frmt, t_string **args)
 {
 	t_arg_data	*arg_data;
 	int			lengths[4];
