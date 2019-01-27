@@ -6,13 +6,12 @@
 /*   By: ggerardy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 17:25:22 by ggerardy          #+#    #+#             */
-/*   Updated: 2018/11/29 16:09:36 by ggerardy         ###   ########.fr       */
+/*   Updated: 2019/01/27 04:24:31 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "ft_printf_parser.h"
-#include "libft.h"
 
 #include <stdlib.h>
 
@@ -26,7 +25,7 @@ void			ft_printf_print_arg_data(t_arg_data *arg_data)
 	printf("%2d   width=%4d  prec=%4d  left_allign=%d  allign_char=<%c>  "
 		"pos_sign=<%c>  alt_form=%d  apostrop=%d  "
 		"ARG_IDX=%2d  size=%11d  char_arg=%2d  format=%c\n",
-			counter++, arg_data->width, arg_data->precision,
+			counter++, arg_data->width, arg_data->prcsn,
 			arg_data->left_allignment, arg_data->allignment_char,
 			arg_data->positive_sign, arg_data->alternative_form,
 			arg_data->apostrophe, arg_data->num, arg_data->size,
