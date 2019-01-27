@@ -26,7 +26,7 @@ int	ft_find_cntrl(const char **frmt, t_string **str)
 			return (0);
 		(*frmt)++;
 	}
-	if (*frmt)
+	if (**frmt)
 		(*frmt)++;
 	return (1);
 }
