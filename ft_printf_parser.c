@@ -46,7 +46,7 @@ t_arg_data		*ft_printf_parser_flags_proceeder(const char **frmt, t_string **args
 	if (!(arg_data = (t_arg_data*)malloc(sizeof(t_arg_data))))
 		return (0);
 	*arg_data =
-			(t_arg_data){0, 1, DEFAULT, 0, ' ', 0, 0, 0, 0, DEFAULT, -1, 0, 0};
+			(t_arg_data){1, DEFAULT, 0, ' ', 0, 0, 0, 0, DEFAULT, 0, 0, 0};
 	was_found_flag = 1;
 	while (was_found_flag)
 	{
