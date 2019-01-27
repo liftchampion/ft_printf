@@ -52,9 +52,9 @@ int	ft_printf(const char *frmt, ...)
 			str[i] = ft_make_string(1);
 		}
 	}
-	ft_stringify(&str[0], vars);
-	ft_print_string_arr(str, i);
-	ft_free_string_arr(str, i); 
+	//ft_stringify(&str[0], vars);
+	//ft_print_string_arr(str, i);
+	//ft_free_string_arr(str, i);
 
 	va_end(vl);
 	return (0);
