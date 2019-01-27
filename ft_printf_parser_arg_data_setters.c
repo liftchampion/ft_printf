@@ -52,7 +52,7 @@ int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 											t_string **args, int lengths[4])
 {
 	if (arg_data->prcsn == DEFAULT)
-		arg_data->prcsn = DEFAULT_INT_prcsn;
+		arg_data->prcsn = DEFAULT_INT_PRECISION;
 	arg_data->size = ft_printf_parser_get_int_arg_size(c, lengths);
 	if (c == 'c' && arg_data->size == DEFAULT)
 		arg_data->format = 'C';
@@ -70,7 +70,7 @@ int				ft_set_float_arg_data(t_arg_data *arg_data, char c,
 												t_string **args, int lengths[4])
 {
 	if (arg_data->prcsn == DEFAULT)
-		arg_data->prcsn = DEFAULT_FLOAT_prcsn;
+		arg_data->prcsn = DEFAULT_FLOAT_PRECISION;
 	arg_data->size = BIG_L_COUNT ? LONG : DEFAULT;
 	arg_data->format = c;
 	if (!ft_string_set_value(args, (size_t)(arg_data->num) - 1, 'g',
@@ -85,7 +85,7 @@ void			ft_set_invalid_arg_data(t_arg_data *arg_data, char c,
 																t_string **args)
 {
 	if (arg_data->prcsn == DEFAULT)
-		arg_data->prcsn = DEFAULT_INT_prcsn;
+		arg_data->prcsn = DEFAULT_INT_PRECISION;
 	arg_data->size = CHAR;
 	arg_data->format = 'c';
 	arg_data->char_arg = c;
