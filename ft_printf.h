@@ -38,10 +38,10 @@ typedef	enum	e_arg_sz
 
 typedef struct	s_arg_data
 {	
-	int		width; /// negative only after *n$ be careful with left_alignment flag
-	int 	prcsn;   /// -1 if wasn't changed
-	char 	left_allignment; /// if width > 0 && left_alignment => width *= -1;
-	char	allignment_char; /// char used for allignement default is ' '
+	int		width; /// 									just push_n chars
+	int 	prcsn;   /// 								push_n '0'
+	char 	left_allignment; /// 						when to push width
+	char	allignment_char; ///						before pushing number push ' '/'+' (also -1 to width/prec)
 	char	positive_sign; /// sign used for plus in positive numbers, default is \0 can be '+' or ' '
 	char	alternative_form; /// #
 	char 	apostrophe; /// '
