@@ -27,22 +27,17 @@ void ft_print_bits(unsigned long n)
 }
 
 
-long ft_vsrato_caster(long n, int size, char us)
+long ft_vsrato_caster(long n, int size, char us) // todo dont' work with long need to fix and with u_char 200 to signed
 {
 	int is_negative;
 
-	ft_print_bits(n);
+	///ft_print_bits(n);
 	is_negative = n < 0 ? 1 : 0;
-
 	n = n & (~(~0l << (size * 8 - 1)) * 2 + 1);
-
-	ft_print_bits(n);
-
-	if (!us)
-	{
+	///ft_print_bits(n);
+	if (!us && is_negative)
 		n = n | (~0ul << 8 * size);
-	}
-	ft_print_bits(n);
+	///ft_print_bits(n);
 	return (n);
 }
 
