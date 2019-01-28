@@ -24,24 +24,27 @@ char		*ft_printf_itoa_pro(__int128_t n, int rad, int prec, char sign)
 	char			*ret;
 	__int128_t		nb;
 
-	len = 2 + (sign != 0 || n < 0);
+	len = 2 + ((sign && rad == 10) || n < 0);
 	nb = n;
 	while (!(nb < rad && nb > -rad))
 	{
 		len++;
-		nb /= rad; // TODO check for 0 !!!
+		nb /= rad;
 	}
-	len = (prec > len ) ? (prec + 1 + (n < 0 || sign)) : len;
+	nb = n < 0 ? -1 : 1;
+	len = (prec > len ) ? (prec + 1 + (n < 0 || (sign && rad == 10))) : len;
 	printf("len = %d\n", len);
 	if (!(ret = (char *)malloc(sizeof(char) * len)))
 		return (NULL);
 	ret[--len] = '\0';
 	while (n || len)
 	{
-		ret[--len] = base[n % rad * nb];
+		ret[--len] = base[(n % rad) * nb];
+		///printf("%c<%lld> ", base[(n % rad) * nb], (n % rad) * nb);
 		n /= rad;
 	}
-	if (sign || nb < 0)
+	///printf("\n");
+	if ((sign && rad == 10) || nb < 0)
 		ret[0] = nb < 0 ? (char)'-' : sign;
 	return (ret);
 }
