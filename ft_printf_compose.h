@@ -15,4 +15,8 @@
 
 char		*ft_printf_itoa_pro(__int128_t n, int rad, int prec, char sign);
 
+void ft_print_bits(unsigned long n);
+
+long ft_vsrato_caster(long n, int size, char us);
+
 #endif

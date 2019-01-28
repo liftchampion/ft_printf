@@ -15,7 +15,36 @@
 
 #include <stdio.h> // TODO delete it
 
+void ft_print_bits(unsigned long n)
+{
+	for (int e = sizeof(n) * 8 - 1; e >= 0; e--)
+	{
+		printf("%d", (n & (1L << e)) != 0);
+		if (e % 8 == 0)
+			printf(" ");
+	}
+	printf("\n");
+}
 
+
+long ft_vsrato_caster(long n, int size, char us)
+{
+	int is_negative;
+
+	ft_print_bits(n);
+	is_negative = n < 0 ? 1 : 0;
+
+	n = n & (~(~0l << (size * 8 - 1)) * 2 + 1);
+
+	ft_print_bits(n);
+
+	if (!us)
+	{
+		n = n | (~0ul << 8 * size);
+	}
+	ft_print_bits(n);
+	return (n);
+}
 
 char		*ft_printf_itoa_pro(__int128_t n, int rad, int prec, char sign)
 {
