@@ -50,11 +50,11 @@ int		ft_string_push_back_s(t_string **str_ptr, char *str)
 	return (1);
 }
 
-int		ft_string_push_back_n_c(t_string **str_ptr, size_t n, char c)
+int		ft_string_push_back_n_c(t_string **str_ptr, long n, char c)
 {
-	size_t i;
+	long i;
 
-	if (!str_ptr)
+	if (!str_ptr || !*str_ptr)
 		return (-1);
 	i = 0;
 	while (i < n)

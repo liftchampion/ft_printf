@@ -59,12 +59,11 @@ void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
 			v[i]->width = *(int*)vl_p[i];
 		if (v[i]->prcsn < 0)
 			v[i]->prcsn = *(int*)vl_p[i] >= 0 ? *(int*)vl_p[i] : 1;  // todo added ternary for  > 1
-		/*if (v[i]->char_arg)
-			ft_gen_compose(v[i], NULL, str);
-		else if (ft_tolower(a_s->data[v[i]->num - 1]) == 'g')
-			ft_gen_compose(v[i], vl_p[i], str);
+		if (v[i]->char_arg)
+			ft_printf_compose(v[i], NULL, str, 'g');
 		else
-			ft_float_compose(v[i], vl_p[i], str);*/
+			ft_printf_compose(v[i], vl_p[i], str,
+					(char)ft_tolower(a_s->data[v[i]->num - 1]));
 		i++;
 		ft_string_push_back_s(str, str[i]->data);
 	}
