@@ -42,7 +42,6 @@ static void ft_vl_to_p(va_list vl, t_string *a_s, void *vl_p[])
 void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
 {
 	int i;
-	va_list vlc;
 	void	**vl_p;
 
 	i = 0;
