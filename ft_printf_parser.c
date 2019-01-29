@@ -88,6 +88,6 @@ t_arg_data		*ft_printf_parser(const char **frmt, t_string **args)
 	}
 	else if (**frmt)
 		ft_set_invalid_arg_data(arg_data, *(*frmt)++, args);
-	ft_printf_print_arg_data(arg_data); // TODO delete it
+	//ft_printf_print_arg_data(arg_data); // TODO delete it
 	return (arg_data);
 }
