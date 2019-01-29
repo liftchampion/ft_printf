@@ -31,7 +31,6 @@ int	ft_printf(const char *frmt, ...)
 	t_string	*args_seq;
 	t_arg_data	*vars[99];
 
-
 	va_start(vl, frmt);
 	args_seq = ft_make_string(1);
 	i = 0;
@@ -44,6 +43,7 @@ int	ft_printf(const char *frmt, ...)
 		{
 			if (ft_set_color(&frmt, &str[i]))
 				return (-1);
+			frmt++;
 		}
 		else
 		{
