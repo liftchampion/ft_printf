@@ -33,7 +33,6 @@ int	ft_printf(const char *frmt, ...)
 
 
 	va_start(vl, frmt);
-
 	args_seq = ft_make_string(1);
 	i = 0;
 	str[i] = ft_make_string(1);
@@ -50,10 +49,11 @@ int	ft_printf(const char *frmt, ...)
 		{
 			vars[i++] = ft_printf_parser(&frmt, &args_seq);
 			str[i] = ft_make_string(1);
+			str[i + 1] = NULL;
 		}
 	}
 	ft_stringify(&(str[0]), vars, vl, args_seq);
-	ft_print_string(str[0]);
+	ft_print_string(*str);
 	//ft_print_string_arr(str, i);
 	//ft_free_string_arr(str, i);
 
