@@ -49,8 +49,8 @@ char		*ft_printf_itoa_pro(__int128_t n, int rad, int prec, char sign)
 	char			*ret;
 	__int128_t		nb;
 
-	if (rad == -2)
-		return (ft_print_bits(n)); // TODO
+	/*if (rad == -2)
+		return (ft_print_bits(n)); */// TODO
 	if (rad == 16 || rad == -16)
 		(rad < 0 && (rad *= -1)) ? ft_tolower_str(bas) : ft_toupper_str(bas);
 	len = 1 + (n != 0) + ((sign && rad == 10) || n < 0);

@@ -14,7 +14,7 @@
 #include "ft_printf_compose.h"
 #include "ft_printf.h"
 
-int ft_printf_string_compose(t_arg_data *arg_data, void *arg, t_string **str)
+/*int ft_printf_string_compose(t_arg_data *arg_data, void *arg, t_string **str)
 {
 
 }
@@ -22,7 +22,7 @@ int ft_printf_string_compose(t_arg_data *arg_data, void *arg, t_string **str)
 int ft_printf_float_compose(t_arg_data *arg_data, void *arg, t_string **str)
 {
 
-}
+}*/
 
 int ft_printf_get_itoa_radix(char c)
 {
@@ -38,30 +38,32 @@ int ft_printf_get_itoa_radix(char c)
 		return (10);
 }
 
-int ft_printf_int_compose(t_arg_data *arg_data, long arg, t_string **str)
+int ft_printf_int_compose(t_arg_data *arg_data, __int128_t arg, t_string **str)
 {
 	char *res;
 	char us;
 	int radix;
 	size_t len;
+	int need_hex_prefix;
 
 	us = ft_strchr("puUxXoObB", arg_data->format) != 0;
 	radix = ft_printf_get_itoa_radix(arg_data->format);
-
-	if (!(res = ft_printf_itoa_pro(ft_printf_int_caster(arg, arg_data->size,
-			us), radix, arg_data->prcsn, arg_data->positive_sign)))
-		return (0);
+	need_hex_prefix = (ft_strchr("xXp", arg_data->format) &&
+			(arg != 0 || arg_data->format == 'p')) ? 1 : 0;
+	arg_data->width -= need_hex_prefix * 2;
+	arg_data->prcsn += (arg_data->prcsn == 0) &&
+			(ft_tolower(arg_data->format) == 'o') && arg_data->alternative_form;
+	res = ft_printf_itoa_pro(ft_printf_int_caster(arg, arg_data->size, us),
+			radix, arg_data->prcsn, arg_data->positive_sign);
 	len = ft_strlen(res);
 	if (!arg_data->left_allignment)
-		if (!ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC))
-			return (0);
-	///if (ft_strchr("xXp", arg_data->format) && arg != 0)
-	if (!ft_string_push_back_s(str, res))
-		return (0);
+		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC);
+	if (need_hex_prefix)
+		ft_string_push_back_s(str, arg_data->format == 'X' ? "0X" : "0x");
+	ft_string_push_back_s(str, res);
 	if (arg_data->left_allignment)
-		if (!ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC))
-			return (0);
-	return (1);
+		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC);
+	return ((*str || !res) ? 1 : 0);
 }
 
 
@@ -69,10 +71,16 @@ int ft_printf_int_compose(t_arg_data *arg_data, long arg, t_string **str)
 // TODO get already tolowered type (fFg)
 int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type)
 {
+	if (arg_data->width < 0)
+	{
+		arg_data->width *= -1;
+		arg_data->left_allignment = 1;
+	}
 	if (type == 'g' && !ft_strchr("sScC", arg_data->format))
-		return (ft_printf_int_compose(arg_data, *(long*)arg, str));
-	else if (type == 'g')
+		return (ft_printf_int_compose(arg_data, *(long*) arg, str));
+	/*else if (type == 'g')
 		return (ft_printf_string_compose(arg_data, arg, str));
 	else
-		return (ft_printf_float_compose(arg_data, arg, str));
+		return (ft_printf_float_compose(arg_data, arg, str));*/
+	return (1);
 }

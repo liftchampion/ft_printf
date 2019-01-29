@@ -70,9 +70,7 @@ int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 		arg_data->format = c;
 	if (!ft_string_set_value(args, (size_t)(arg_data->num) - 1, 'g',
 			arg_data->size == _INT128 ? (char)'G' : (char)'g'))
-	{
 		return (0);
-	}
 	return (1);
 }
 
