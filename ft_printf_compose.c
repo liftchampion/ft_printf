@@ -34,7 +34,7 @@ int ft_printf_get_itoa_radix(char c)
 	else if (c == 'o' || c == 'O')
 		return (8);
 	else if (c == 'x' || c == 'X' || c == 'p')
-		return (c == 'x' ? -16 : 16);
+		return ((c == 'x' || c == 'p') ? -16 : 16);
 	else
 		return (10);
 }
@@ -49,8 +49,8 @@ int ft_printf_int_compose(t_arg_data *arg_data, __int128_t arg, t_string **str)
 
 	us = ft_strchr("puUxXoObB", arg_data->format) != 0;
 	radix = ft_printf_get_itoa_radix(arg_data->format);
-	need_hex_prefix = (ft_strchr("xXp", arg_data->format) &&
-			(arg != 0 || arg_data->format == 'p')) ? 1 : 0;
+	need_hex_prefix = (ft_strchr("xXp", arg_data->format) && ((arg != 0 &&
+			arg_data->alternative_form) || arg_data->format == 'p')) ? 1 : 0;
 	arg_data->width -= need_hex_prefix * 2;
 	arg_data->prcsn += (arg_data->prcsn == 0) &&
 			(ft_tolower(arg_data->format) == 'o') && arg_data->alternative_form;
