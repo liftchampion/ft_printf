@@ -16,7 +16,7 @@
 # include "ft_printf.h"
 
 # ifdef AC
-#  undef AC
+#  undef AC // Danger practice
 # endif
 # define AC allignment_char
 

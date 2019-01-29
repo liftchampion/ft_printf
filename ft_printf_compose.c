@@ -13,6 +13,7 @@
 #include "ft_printf_parser.h"
 #include "ft_printf_compose.h"
 #include "ft_printf.h"
+#include <stdio.h> // TODO delete
 
 /*int ft_printf_string_compose(t_arg_data *arg_data, void *arg, t_string **str)
 {
@@ -33,7 +34,7 @@ int ft_printf_get_itoa_radix(char c)
 	else if (c == 'o' || c == 'O')
 		return (8);
 	else if (c == 'x' || c == 'X' || c == 'p')
-		return (c == 'x' ? 16 : -16);
+		return (c == 'x' ? -16 : 16);
 	else
 		return (10);
 }
@@ -65,8 +66,6 @@ int ft_printf_int_compose(t_arg_data *arg_data, __int128_t arg, t_string **str)
 		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC);
 	return ((*str || !res) ? 1 : 0);
 }
-
-
 
 // TODO get already tolowered type (fFg)
 int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type)
