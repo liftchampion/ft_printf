@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "printf.h"
+#include "ft_printf.h"
 
 #include <stdio.h> // TODO delete it
 
-void ft_print_bits(unsigned long n)
+int ft_print_bits(unsigned long n)
 {
 	for (int e = sizeof(n) * 8 - 1; e >= 0; e--)
 	{
@@ -24,50 +24,45 @@ void ft_print_bits(unsigned long n)
 			printf(" ");
 	}
 	printf("\n");
+	return (1);
 }
 
 
-long ft_vsrato_caster(long n, int size, char us) // todo dont' work with long need to fix and with u_char 200 to signed
+__int128_t ft_printf_int_caster(__int128_t n, t_arg_sz size, char us)
 {
-	int is_negative;
-
-	///ft_print_bits(n);
-	is_negative = n < 0 ? 1 : 0;
-	n = n & (~(~0l << (size * 8 - 1)) * 2 + 1);
-	///ft_print_bits(n);
-	if (!us && is_negative)
-		n = n | (~0ul << 8 * size);
-	///ft_print_bits(n);
-	return (n);
+	if (size == CHAR)
+		return (us ? (unsigned char)n : (char)n);
+	else if (size == SHORT)
+		return (us ? (unsigned short)n : (short)n);
+	else if (size == DEFAULT)
+		return (us ? (unsigned int)n : (int)n);
+	else if (size == LONG)
+		return (us ? (unsigned long)n : n);
+	else
+		return (n);
 }
 
 char		*ft_printf_itoa_pro(__int128_t n, int rad, int prec, char sign)
 {
-	static char		base[] = "0123456789ABCDEF";
+	static char		bas[] = "0123456789ABCDEF";
 	int				len;
 	char			*ret;
 	__int128_t		nb;
 
-	len = 2 + ((sign && rad == 10) || n < 0);
+	if (rad == -2)
+		return (ft_print_bits(n)); // TODO
+	if (rad == 16 || rad == -16)
+		(rad < 0 && (rad *= -1)) ? ft_tolower_str(bas) : ft_toupper_str(bas);
+	len = 1 + (n != 0) + ((sign && rad == 10) || n < 0);
 	nb = n;
-	while (!(nb < rad && nb > -rad))
-	{
-		len++;
+	while (!(nb < rad && nb > -rad) && len++)
 		nb /= rad;
-	}
 	nb = n < 0 ? -1 : 1;
 	len = (prec > len ) ? (prec + 1 + (n < 0 || (sign && rad == 10))) : len;
-	printf("len = %d\n", len);
-	if (!(ret = (char *)malloc(sizeof(char) * len)))
+	if (!(ret = (char *)ft_memalloc(sizeof(char) * len--)))
 		return (NULL);
-	ret[--len] = '\0';
-	while (n || len)
-	{
-		ret[--len] = base[(n % rad) * nb];
-		///printf("%c<%lld> ", base[(n % rad) * nb], (n % rad) * nb);
+	while ((n || len) && (ret[--len] = bas[(n % rad) * nb]))
 		n /= rad;
-	}
-	///printf("\n");
 	if ((sign && rad == 10) || nb < 0)
 		ret[0] = nb < 0 ? (char)'-' : sign;
 	return (ret);

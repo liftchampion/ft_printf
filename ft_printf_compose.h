@@ -13,10 +13,17 @@
 #ifndef FT_PRINTF_COMPOSERS_H
 # define FT_PRINTF_COMPOSERS_H
 
+# include "ft_printf.h"
+
+# ifdef AC
+#  undef AC
+# endif
+# define AC allignment_char
+
 char		*ft_printf_itoa_pro(__int128_t n, int rad, int prec, char sign);
 
 void ft_print_bits(unsigned long n);
 
-long ft_vsrato_caster(long n, int size, char us);
+__int128_t ft_printf_int_caster(__int128_t n, t_arg_sz size, char us);
 
 #endif

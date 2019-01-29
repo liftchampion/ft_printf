@@ -52,9 +52,16 @@ int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 											t_string **args, int lengths[4])
 {
 	if (arg_data->prcsn == DEFAULT)
-		arg_data->prcsn = (c=='s' || c=='S') ? DEFAULT_STRING_PRECISION :
+		arg_data->prcsn = (c == 's' || c == 'S') ? DEFAULT_STRING_PRECISION :
 						  DEFAULT_INT_PRECISION;
 	else
+		arg_data->allignment_char = ' ';
+	if (arg_data->allignment_char == '0' && (c != 's' && c != 'S'))
+	{
+		arg_data->prcsn = arg_data->width;
+		arg_data->width = 1;
+	}
+	if (arg_data->left_allignment)
 		arg_data->allignment_char = ' ';
 	arg_data->size = ft_printf_parser_get_int_arg_size(c, lengths);
 	if (c == 'c' && arg_data->size == DEFAULT)
