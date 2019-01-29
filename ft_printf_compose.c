@@ -64,6 +64,7 @@ int ft_printf_int_compose(t_arg_data *arg_data, __int128_t arg, t_string **str)
 	ft_string_push_back_s(str, res);
 	if (arg_data->left_allignment)
 		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC);
+	free(res);
 	return ((*str || !res) ? 1 : 0);
 }
 
