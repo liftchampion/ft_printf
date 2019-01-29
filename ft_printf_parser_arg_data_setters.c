@@ -54,7 +54,7 @@ int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 	if (arg_data->prcsn == DEFAULT)
 		arg_data->prcsn = (c == 's' || c == 'S') ? DEFAULT_STRING_PRECISION :
 						  DEFAULT_INT_PRECISION;
-	else
+	else if (ft_tolower(c) != 's')
 		arg_data->allignment_char = ' ';
 	if (arg_data->allignment_char == '0' && (c != 's' && c != 'S'))
 	{
