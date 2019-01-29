@@ -21,5 +21,4 @@ void			ft_print_string(t_string *str)
 		return ;
 	}
 	write(1, str->data, str->len);
-	ft_putchar('\n');
 }
