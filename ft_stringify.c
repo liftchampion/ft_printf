@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <stdio.h> //TODO delete
 
 static void ft_vl_to_p(va_list vl, t_string *a_s, void *vl_p[])
 {
@@ -35,7 +36,7 @@ static void ft_vl_to_p(va_list vl, t_string *a_s, void *vl_p[])
 		}
 		else
 		{
-			vl_p[i] = (vl->fp_offset < 48) ? vl->reg_save_area + vl->gp_offset
+			vl_p[i] = (vl->gp_offset < 48) ? vl->reg_save_area + vl->gp_offset
 											: vl->overflow_arg_area;
 			va_arg(vl, long);
 		}
@@ -49,10 +50,12 @@ void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
 
 	i = 0;
 	vl_p = malloc(sizeof(void *) * a_s->len);
+	if (!str || !*str || !vl_p || !a_s || !v || !*v)
+		return ;
 	ft_vl_to_p(vl, a_s, vl_p);
 	while (1)
 	{
-		if (!str || !str[i] || !*str || v[i]->format == 0)
+		if (!str[i] || !v[i] || v[i]->format == 0)
 			return ;
 		if (v[i]->width < 0)
 			v[i]->width = *(int*)vl_p[i];
