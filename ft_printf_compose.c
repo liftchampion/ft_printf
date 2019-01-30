@@ -18,12 +18,12 @@
 /*int ft_printf_string_compose(t_arg_data *arg_data, void *arg, t_string **str)
 {
 
-}
+}*/
 
 int ft_printf_float_compose(t_arg_data *arg_data, void *arg, t_string **str)
 {
-
-}*/
+	printf("<%f>\n", *(double*)arg);
+}
 
 int ft_printf_get_itoa_radix(char c)
 {
@@ -39,7 +39,7 @@ int ft_printf_get_itoa_radix(char c)
 		return (10);
 }
 
-int ft_printf_int_compose(t_arg_data *arg_data, __int128_t arg, t_string **str)
+int ft_printf_int_compose(t_arg_data *arg_data, void* arg, t_string **str)
 {
 	char *res;
 	char us;
@@ -49,13 +49,13 @@ int ft_printf_int_compose(t_arg_data *arg_data, __int128_t arg, t_string **str)
 
 	us = ft_strchr("puUxXoObB", arg_data->format) != 0;
 	radix = ft_printf_get_itoa_radix(arg_data->format);
-	need_hex_prefix = (ft_strchr("xXp", arg_data->format) && ((arg != 0 &&
-			arg_data->alternative_form) || arg_data->format == 'p')) ? 1 : 0;
+	need_hex_prefix = (ft_strchr("xXp", arg_data->format) && ((*(int*)arg != 0
+			&& arg_data->alternative_form) || arg_data->format == 'p')) ? 1 : 0;
 	arg_data->width -= need_hex_prefix * 2;
 	arg_data->prcsn += (arg_data->prcsn == 0) &&
 			(ft_tolower(arg_data->format) == 'o') && arg_data->alternative_form;
-	res = ft_printf_itoa_pro(ft_printf_int_caster(arg, arg_data->size, us),
-			radix, arg_data->prcsn, arg_data->positive_sign);
+	res = ft_printf_itoa_pro(ft_printf_int_caster(arg, arg_data->size, us,
+	&arg_data->positive_sign), radix, arg_data->prcsn, arg_data->positive_sign);
 	len = ft_strlen(res);
 	if (!arg_data->left_allignment)
 		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC);
@@ -90,10 +90,10 @@ int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type
 		arg_data->left_allignment = 1;
 	}
 	if (type == 'g' && !ft_strchr("sScC", arg_data->format))
-		return (ft_printf_int_compose(arg_data, *(long*) arg, str));
+		return (ft_printf_int_compose(arg_data, arg, str));
 	else if (type == 'g')
 		return (ft_printf_string_compose(arg_data, (char**)arg, str));
-	/*else
-		return (ft_printf_float_compose(arg_data, arg, str));*/
+	else
+		return (ft_printf_float_compose(arg_data, arg, str));
 	return (1);
 }

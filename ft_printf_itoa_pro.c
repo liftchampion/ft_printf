@@ -28,25 +28,62 @@ int ft_print_bits(unsigned long n)
 }
 
 
-__int128_t ft_printf_int_caster(__int128_t n, t_arg_sz size, char us)
+unsigned long ft_printf_int_caster(void* n, t_arg_sz size, char us, char *sign)
 {
-	int sign;
-
-	sign = n < 0 ? -1 : 1;
-	n *= sign;
-	if (size == CHAR)
-		return (us ? (unsigned char)n * sign : (char)n * sign);
-	else if (size == SHORT)
-		return (us ? (unsigned short)n * sign : (short)n * sign);
-	else if (size == DEFAULT)
-		return (us ? (unsigned int)n * sign : (int)n * sign);
-	else if (size == LONG)
-		return (us ? (unsigned long)n * sign : n * sign);
+	if (size == CHAR && (us || ((*(char*)n < 0 && (*sign = '-'))) || (*(char*)n >= 0)))
+		return (us ? *(unsigned char*)n : (unsigned char)(*(char*)n * ((*sign == '-') ? -1 : 1)));
+	else if (size == SHORT && (us || ((*(short*)n < 0 && (*sign = '-'))) || (*(short*)n >= 0)))
+		return (us ? *(unsigned short*)n : (unsigned short)(*(short*)n * ((*sign == '-') ? -1 : 1)));
+	else if (size == DEFAULT && (us || ((*(int*)n < 0 && (*sign = '-'))) || (*(int*)n >= 0)))
+		return (us ? *(unsigned int*)n : (unsigned int)(*(int*)n * ((*sign == '-') ? -1 : 1)));
+	else if (size == LONG && (us || ((*(long*)n < 0 && (*sign = '-'))) || (*(long*)n >= 0)))
+		return (us ? *(unsigned long*)n : (unsigned long)(*(long*)n * ((*sign == '-') ? -1 : 1)));
 	else
-		return (n * sign);
+		return (*(unsigned long*)n);
+
+
+
+	/*else if (size == CHAR)
+	{
+		*sign = *(char*)n < 0 ? (char)'-' : *sign;
+		return ((unsigned char)(*(char*)n * ((*sign == '-') ? -1 : 1)));
+	}
+	else if (size == SHORT && us)
+		return (*(unsigned short*)n);
+	else if (size == SHORT)
+	{
+		*sign = *(short*)n < 0 ? (char)'-' : *sign;
+		return ((unsigned short)(*(short*)n * ((*sign == '-') ? -1 : 1)));
+	}
+	else if (size == DEFAULT && us)
+		return (*(unsigned int*)n);
+	else if (size == DEFAULT)
+	{
+		*sign = *(int*)n < 0 ? (char)'-' : *sign;
+		return ((unsigned int)(*(int*)n * ((*sign == '-') ? -1 : 1)));
+	}
+	else if (size == LONG && us)
+		return (*(unsigned long*)n);
+	else
+	{
+		*sign = *(long*)n < 0 ? (char)'-' : *sign;
+		return ((unsigned long)(*(long*)n * ((*sign == '-') ? -1 : 1)));
+	}*/
+
+
+
+
+	/*else if (size == SHORT)
+		return (us ? *(unsigned short*)n : *(short*)n);
+	else if (size == DEFAULT)
+		return (us ? *(unsigned int*)n : *(int*)n);
+	else if (size == LONG)
+		return (us ? *(unsigned long*)n : *(long*)n);
+	else
+		return (*(unsigned long*)n);*/
 }
 
-char		*ft_printf_itoa_pro(__int128_t n, int rad, int prec, char sign)
+char		*ft_printf_itoa_pro(unsigned long n, int rad, int prec, char sign)
 {
 	static char		bas[] = "0123456789ABCDEF";
 	int				len;
@@ -57,7 +94,7 @@ char		*ft_printf_itoa_pro(__int128_t n, int rad, int prec, char sign)
 		return (ft_print_bits(n)); */// TODO
 	if (rad == 16 || rad == -16)
 		(rad < 0 && (rad *= -1)) ? ft_tolower_str(bas) : ft_toupper_str(bas);
-	len = 1 + (n != 0) + ((sign && rad == 10) || n < 0);
+	len = 1 + (n != 0) + (sign && rad == 10);
 	nb = n;
 	while (!(nb < rad && nb > -rad) && len++)
 		nb /= rad;

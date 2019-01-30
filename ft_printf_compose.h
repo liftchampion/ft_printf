@@ -20,10 +20,10 @@
 # endif
 # define AC allignment_char
 
-char		*ft_printf_itoa_pro(__int128_t n, int rad, int prec, char sign);
+char		*ft_printf_itoa_pro(unsigned long n, int rad, int prec, char sign);
 
 void ft_print_bits(unsigned long n);
 
-__int128_t ft_printf_int_caster(__int128_t n, t_arg_sz size, char us);
+unsigned long ft_printf_int_caster(void* n, t_arg_sz size, char us, char *sign);
 
 #endif
