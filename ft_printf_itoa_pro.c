@@ -30,16 +30,20 @@ int ft_print_bits(unsigned long n)
 
 __int128_t ft_printf_int_caster(__int128_t n, t_arg_sz size, char us)
 {
+	int sign;
+
+	sign = n < 0 ? -1 : 1;
+	n *= sign;
 	if (size == CHAR)
-		return (us ? (unsigned char)n : (char)n);
+		return (us ? (unsigned char)n * sign : (char)n * sign);
 	else if (size == SHORT)
-		return (us ? (unsigned short)n : (short)n);
+		return (us ? (unsigned short)n * sign : (short)n * sign);
 	else if (size == DEFAULT)
-		return (us ? (unsigned int)n : (int)n);
+		return (us ? (unsigned int)n * sign : (int)n * sign);
 	else if (size == LONG)
-		return (us ? (unsigned long)n : n);
+		return (us ? (unsigned long)n * sign : n * sign);
 	else
-		return (n);
+		return (n * sign);
 }
 
 char		*ft_printf_itoa_pro(__int128_t n, int rad, int prec, char sign)
