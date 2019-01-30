@@ -71,12 +71,16 @@ int ft_printf_int_compose(t_arg_data *arg_data, __int128_t arg, t_string **str)
 int ft_printf_string_compose(t_arg_data *arg_data, char **arg, t_string **str)
 {
 	size_t len;
+	char uni[5];
 
 	len = arg ? ft_strlen(arg) : 1;
 	len = arg_data->prcsn < len ? arg_data->prcsn : len;
 	if(!arg_data->left_allignment)
 		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC);
-	ft_string_push_back_n_s(str, arg ? *arg : &arg_data->char_arg, len);
+	ft_bzero(uni, 5);
+	arg_data->format == 'C' ?
+	ft_string_push_back_s(str, ft_int_to_unicode(*(int*)arg, uni))
+	: ft_string_push_back_n_s(str, arg ? *arg : &arg_data->char_arg, len);
 	if(arg_data->left_allignment)
 		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC);
 }
@@ -90,7 +94,7 @@ int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type
 		arg_data->left_allignment = 1;
 	}
 	if (type == 'g' && !ft_strchr("sScC", arg_data->format))
-		return (ft_printf_int_compose(arg_data, *(long*) arg, str));
+		return (ft_printf_int_compose(arg_data, *(long*)arg, str));
 	else if (type == 'g')
 		return (ft_printf_string_compose(arg_data, (char**)arg, str));
 	/*else
