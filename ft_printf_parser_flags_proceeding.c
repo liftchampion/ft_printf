@@ -48,6 +48,7 @@ int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data) // TODO 
 	else if (**frmt == '.' && ++was_found && *(*frmt)++)
 	{
 		arg_data->__was_dot = 1;
+		if (ft_isdigit(**frmt))
 		if ((**frmt == '0' && (*frmt)++) || (!ft_isdigit(**frmt) &&
 																**frmt != '*'))
 		{
