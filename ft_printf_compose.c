@@ -78,9 +78,16 @@ int ft_printf_string_compose(t_arg_data *arg_data, char **arg, t_string **str)
 	if(!arg_data->left_allignment)
 		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC);
 	ft_bzero(uni, 5);
-	arg_data->format == 'C' ?
-	ft_string_push_back_s(str, ft_int_to_unicode(*(int*)arg, uni))
-	: ft_string_push_back_n_s(str, arg ? *arg : &arg_data->char_arg, len);
+	if (ft_tolower(arg_data->format) == 'c')
+		arg_data->format == 'C' ?
+			ft_string_push_back_s(str, ft_int_to_unicode(*(int*)arg, uni))
+			: ft_string_push_back(str, arg ? (char)*arg : arg_data->char_arg);
+	else
+		if (arg_data->format == 'S')
+			while ((int*)arg++)
+				ft_string_push_back_s(str, ft_int_to_unicode(*(int*)arg, uni));
+		else
+			ft_string_push_back_s(str, *arg);
 	if(arg_data->left_allignment)
 		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC);
 }

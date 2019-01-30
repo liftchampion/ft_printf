@@ -61,8 +61,7 @@ void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
 			v[i]->width = *(int*)vl_p[i];
 		if (v[i]->prcsn < 0)
 			v[i]->prcsn = *(int*)vl_p[i] >= 0 ? *(int*)vl_p[i] : 1;  // todo added ternary for  > 1
-		if (v[i]->char_arg || (v[i]->format == 'c' &&
-		(v[i]->char_arg = *(char*)vl_p[i])))
+		if (v[i]->char_arg)
 			ft_printf_compose(v[i], NULL, str, 'g');
 		else
 			ft_printf_compose(v[i], vl_p[i], str,
