@@ -48,13 +48,8 @@ int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data) // TODO 
 	else if (**frmt == '.' && ++was_found && *(*frmt)++)
 	{
 		arg_data->__was_dot = 1;
-		if (ft_isdigit(**frmt))
-		if ((**frmt == '0' && (*frmt)++) || (!ft_isdigit(**frmt) &&
-																**frmt != '*'))
-		{
-			arg_data->prcsn = 0;
-			arg_data->__was_dot = 0;
-		}
+		if (**frmt != '*')
+			ft_printf_arg_data_set_width_or_prec(arg_data, ft_atoi_m(frmt));
 	}
 	return (was_found);
 }
