@@ -55,7 +55,7 @@ int ft_printf_int_compose(t_arg_data *arg_data, void* arg, t_string **str)
 	arg_data->prcsn += (arg_data->prcsn == 0) &&
 			(ft_tolower(arg_data->format) == 'o') && arg_data->alternative_form;
 	res = ft_printf_itoa_pro(ft_printf_int_caster(arg, arg_data->size, us,
-	&arg_data->positive_sign), radix, arg_data->prcsn, arg_data->positive_sign);
+							&arg_data->positive_sign), radix, arg_data);
 	len = ft_strlen(res);
 	if (!arg_data->left_allignment)
 		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC);
