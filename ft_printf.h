@@ -40,11 +40,11 @@ typedef struct	s_arg_data
 {	
 	int		width; /// 									just push_n chars
 	int 	prcsn;   /// 								push_n '0'
-	char 	left_allignment; /// 						when to push width
-	char	allignment_char; ///						before pushing number push ' '/'+' (also -1 to width/prec)
+	char 	l_a; /// 						when to push width
+	char	ac; ///						before pushing number push ' '/'+' (also -1 to width/prec)
 	char	sign; /// sign used for plus in positive numbers, default is \0 can be '+' or ' '
-	char	alternative_form; /// #
-	char 	apostrophe; /// '
+	char	alt; /// #
+	char 	spl; /// '
 	int 	num;
 	t_arg_sz	size; /// Lenght of arg
 	char 	char_arg;	/// for cases when type-specifier is wrong and need to print char

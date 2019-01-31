@@ -66,7 +66,7 @@ char		*ft_printf_itoa_pro(unsigned long n, int rad, t_arg_data *arg_data)
 	nb = n;
 	while (nb >= rad && len++)
 		nb /= rad;
-	len += ((len - 1) / 3) * ((i = 1) && arg_data->apostrophe != 0 && (rad == 10 || rad == 8));
+	len += ((len - 1) / 3) * ((i = 1) && arg_data->spl != 0 && (rad == 10 || rad == 8));
 	len = (arg_data->prcsn + 1 > len ) ? (arg_data->prcsn + 1 +
 										(arg_data->sign && rad == 10)) : len;
 	if (!(ret = (char *)ft_memalloc(sizeof(char) * len--)))
@@ -74,8 +74,8 @@ char		*ft_printf_itoa_pro(unsigned long n, int rad, t_arg_data *arg_data)
 	while ((n || len) && (ret[--len] = bas[(n % rad)]))
 	{
 		n /= rad;
-		if (arg_data->apostrophe && !(i % 3) && n && (rad == 10 || rad == 8))
-			ret[--len] = arg_data->apostrophe;
+		if (arg_data->spl && !(i % 3) && n && (rad == 10 || rad == 8))
+			ret[--len] = arg_data->spl;
 		i++;
 	}
 	ret[0] = (arg_data->sign && rad == 10) ? arg_data->sign : ret[0];

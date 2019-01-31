@@ -15,10 +15,7 @@
 
 # include "ft_printf.h"
 
-# ifdef AC
-#  undef AC // Danger practice
-# endif
-# define AC allignment_char
+
 
 char		*ft_printf_itoa_pro(unsigned long n, int rad, t_arg_data *arg_data);
 
