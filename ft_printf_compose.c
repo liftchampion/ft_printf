@@ -71,12 +71,23 @@ int ft_printf_int_compose(t_arg_data *arg_data, void* arg, t_string **str)
 int ft_printf_string_compose(t_arg_data *arg_data, char **arg, t_string **str)
 {
 	size_t len;
+	char uni[5];
 
 	len = arg ? ft_strlen(arg) : 1;
 	len = arg_data->prcsn < len ? arg_data->prcsn : len;
 	if(!arg_data->l_a)
 		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->ac);
-	ft_string_push_back_n_s(str, arg ? *arg : &arg_data->char_arg, len);
+	ft_bzero(uni, 5);
+	if (ft_tolower(arg_data->format) == 'c')
+		arg_data->format == 'C' ?
+			ft_string_push_back_s(str, ft_int_to_unicode(*(int*)arg, uni))
+			: ft_string_push_back(str, arg ? (char)*arg : arg_data->char_arg);
+	else
+		if (arg_data->format == 'S')
+			while ((int*)arg++)
+				ft_string_push_back_s(str, ft_int_to_unicode(*(int*)arg, uni));
+		else
+			ft_string_push_back_s(str, *arg);
 	if(arg_data->l_a)
 		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->ac);
 }
@@ -95,5 +106,4 @@ int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type
 		return (ft_printf_string_compose(arg_data, (char**)arg, str));
 	else
 		return (ft_printf_float_compose(arg_data, arg, str));
-	return (1);
 }
