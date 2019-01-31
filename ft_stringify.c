@@ -66,7 +66,7 @@ void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
 		if (v[i]->char_arg)
 			ft_printf_compose(v[i], NULL, str, 'g');
 		else
-			ft_printf_compose(v[i], vl_p[i], str,
+			ft_printf_compose(v[i], vl_p[v[i]->num - 1], str,
 					(char)ft_tolower(a_s->data[v[i]->num - 1]));
 		i++;
 		ft_string_push_back_s(str, str[i]->data);
