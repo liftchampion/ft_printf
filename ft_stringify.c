@@ -59,10 +59,9 @@ void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
 			return ;
 		if (v[i]->width < 0)
 			v[i]->width = *(int*)vl_p[-v[i]->width - 1];
-		if (v[i]->prcsn < 0)
+		if (v[i]->prcsn < 0 && v[i]->prcsn != DEFAULT)
 			v[i]->prcsn = *(int*)vl_p[-v[i]->prcsn - 1] >= 0 ? // tODO do something for correct moving in arr
-					*(int*)vl_p[-v[i]->prcsn - 1] : 1;  // todo add ternary for  >= 0
-		///printf("<%d>\n", v[i]->prcsn);
+					*(int*)vl_p[-v[i]->prcsn - 1] : DEFAULT;  // todo add ternary for  >= 0
 		if (v[i]->char_arg)
 			ft_printf_compose(v[i], NULL, str, 'g');
 		else
