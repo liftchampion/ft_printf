@@ -13,12 +13,16 @@
 #include <stdlib.h>
 #include "ft_printf.h"
 
-char			*ft_printf_get_bits(unsigned long n, t_arg_sz sz)
+char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 {
-	int		len;
-	char	*ret;
-	int		i;
+	int			len;
+	char		*ret;
+	int			i;
+	t_arg_sz	sz;
+	char		f;
 
+	sz = ad->size;
+	f = ad->spl ? ad->spl : (char)' ';
 	i = 0;
 	sz = (sz == DEFAULT) ? 4 : sz;
 	len = sz * 8;
@@ -30,7 +34,7 @@ char			*ft_printf_get_bits(unsigned long n, t_arg_sz sz)
 	{
 		ret[i++] = (char)'0' + ((n & (1L << len)) != 0);
 		if (len && len % 8 == 0)
-			ret[i++] = ' ';
+			ret[i++] = f;
 		len--;
 	}
 	return (ret);
@@ -67,7 +71,7 @@ char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 	int				i;
 
 	if (r == -2)
-		return (ft_printf_get_bits(n, ad->size));
+		return (ft_printf_get_bits(n, ad));
 	if (r == 16 || r == -16)
 		(r < 0 && (r *= -1)) ? ft_tolower_str(bas) : ft_toupper_str(bas);
 	l = 1 + (n != 0) + (ad->sign && r == 10);
