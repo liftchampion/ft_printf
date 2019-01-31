@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include "ft_printf.h"
 
-char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
+static char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 {
 	int			len;
 	char		*ret;
@@ -40,7 +40,8 @@ char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 	return (ret);
 }
 
-unsigned long	ft_printf_int_caster(void *n, t_arg_sz sz, char us, char *sign)
+static unsigned long	ft_printf_int_caster(void *n, t_arg_sz sz, char us,
+		char *sign)
 {
 	if (sz == CHAR && (us || ((*(char*)n < 0 && (*sign = '-'))) ||
 															(*(char*)n >= 0)))
@@ -62,7 +63,7 @@ unsigned long	ft_printf_int_caster(void *n, t_arg_sz sz, char us, char *sign)
 		return (*(unsigned long*)n);
 }
 
-char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
+static char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 {
 	static char		bas[] = "0123456789ABCDEF";
 	int				l;
@@ -89,7 +90,7 @@ char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 	return (ret);
 }
 
-int ft_printf_get_itoa_radix(char c)
+static int			ft_printf_get_itoa_radix(char c)
 {
 	if (ft_strchr("dDuUiI", c))
 		return (10);
@@ -103,7 +104,8 @@ int ft_printf_get_itoa_radix(char c)
 		return (10);
 }
 
-int ft_printf_int_compose(t_arg_data *arg_data, void* arg, t_string **str)
+int					ft_printf_int_compose(t_arg_data *arg_data, void* arg,
+													t_string **str)
 {
 	char *res;
 	char us;
