@@ -17,7 +17,7 @@
 
 
 
-char		*ft_printf_itoa_pro(unsigned long n, int rad, t_arg_data *arg_data);
+char		*ft_printf_itoa_pro(unsigned long n, int rad, t_arg_data *ad);
 
 void ft_print_bits(unsigned long n);
 

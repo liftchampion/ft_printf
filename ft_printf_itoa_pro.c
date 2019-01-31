@@ -50,34 +50,29 @@ unsigned long ft_printf_int_caster(void* n, t_arg_sz size, char us, char *sign)
 		return (*(unsigned long*)n);
 }
 
-char		*ft_printf_itoa_pro(unsigned long n, int rad, t_arg_data *arg_data)
+char		*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 {
 	static char		bas[] = "0123456789ABCDEF";
-	int				len;
+	int				l;
 	char			*ret;
 	unsigned long	nb;
 	int 			i;
 
 	/*if (rad == -2)
 		return (ft_print_bits(n)); */// TODO
-	if (rad == 16 || rad == -16)
-		(rad < 0 && (rad *= -1)) ? ft_tolower_str(bas) : ft_toupper_str(bas);
-	len = 1 + (n != 0) + (arg_data->sign && rad == 10);
+	if (r == 16 || r == -16)
+		(r < 0 && (r *= -1)) ? ft_tolower_str(bas) : ft_toupper_str(bas);
+	l = 1 + (n != 0) + (ad->sign && r == 10);
 	nb = n;
-	while (nb >= rad && len++)
-		nb /= rad;
-	len += ((len - 1) / 3) * ((i = 1) && arg_data->spl != 0 && (rad == 10 || rad == 8));
-	len = (arg_data->prcsn + 1 > len ) ? (arg_data->prcsn + 1 +
-										(arg_data->sign && rad == 10)) : len;
-	if (!(ret = (char *)ft_memalloc(sizeof(char) * len--)))
+	while (nb >= r && l++)
+		nb /= r;
+	l += ((l - 2) / 3) * ((i = 1) && ad->spl != 0 && (r == 10 || r == 8));
+	l = (ad->prcsn + 1 > l ) ? (ad->prcsn + 1 + (ad->sign && r == 10)) : l;
+	if (!(ret = (char *)ft_memalloc(sizeof(char) * l--)))
 		return (NULL);
-	while ((n || len) && (ret[--len] = bas[(n % rad)]))
-	{
-		n /= rad;
-		if (arg_data->spl && !(i % 3) && n && (rad == 10 || rad == 8))
-			ret[--len] = arg_data->spl;
-		i++;
-	}
-	ret[0] = (arg_data->sign && rad == 10) ? arg_data->sign : ret[0];
+	while ((n || l) && (ret[--l] = bas[(n % r)]))
+		if (((n /= r) + 1) && n && !(i++ % 3) && ad->spl && (r == 10 || r == 8))
+			ret[--l] = ad->spl;
+	ret[0] = (ad->sign && r == 10) ? ad->sign : ret[0];
 	return (ret);
 }
