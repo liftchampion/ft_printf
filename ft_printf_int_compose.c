@@ -80,7 +80,7 @@ static char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 	while (nb >= r && l++)
 		nb /= r;
 	l += ((l - 2) / 3) * ((i = 1) && ad->spl != 0 && (r == 10 || r == 8));
-	l = (ad->prcsn + 1 > l) ? (ad->prcsn + 1 + (ad->sign && r == 10)) : l;
+	l = (ad->prcsn + 1 > l) ? (ad->prcsn + 1) : l;
 	if (!(ret = (char *)ft_memalloc(sizeof(char) * l--)))
 		return (NULL);
 	while ((n || l) && (ret[--l] = bas[(n % r)]))
