@@ -13,53 +13,61 @@
 #include <stdlib.h>
 #include "ft_printf.h"
 
-#include <stdio.h> // TODO delete it
-
-int ft_print_bits(unsigned long n)
+char			*ft_printf_get_bits(unsigned long n, t_arg_sz sz)
 {
-	for (int e = sizeof(n) * 8 - 1; e >= 0; e--)
+	int		len;
+	char	*ret;
+	int		i;
+
+	i = 0;
+	sz = (sz == DEFAULT) ? 4 : sz;
+	len = sz * 8;
+	len += sz - 1;
+	if (!(ret = ft_memalloc(sizeof(char) * (len + 1))))
+		return (0);
+	len -= (sz - 1) + 1;
+	while (len >= 0)
 	{
-		printf("%d", (n & (1L << e)) != 0);
-		if (e % 8 == 0)
-			printf(" ");
+		ret[i++] = (char)'0' + ((n & (1L << len)) != 0);
+		if (len && len % 8 == 0)
+			ret[i++] = ' ';
+		len--;
 	}
-	printf("\n");
-	return (1);
+	return (ret);
 }
 
-
-unsigned long ft_printf_int_caster(void* n, t_arg_sz size, char us, char *sign)
+unsigned long	ft_printf_int_caster(void *n, t_arg_sz sz, char us, char *sign)
 {
-	if (size == CHAR && (us || ((*(char*)n < 0 && (*sign = '-'))) ||
+	if (sz == CHAR && (us || ((*(char*)n < 0 && (*sign = '-'))) ||
 															(*(char*)n >= 0)))
 		return (us ? *(unsigned char*)n :
-					(unsigned char)(*(char*)n * ((*sign == '-') ? -1 : 1)));
-	else if (size == SHORT && (us || ((*(short*)n < 0 && (*sign = '-'))) ||
+					(unsigned char)(*(char*)n * (1 - 2 * (*sign == '-'))));
+	else if (sz == SHORT && (us || ((*(short*)n < 0 && (*sign = '-'))) ||
 															(*(short*)n >= 0)))
 		return (us ? *(unsigned short*)n :
-					(unsigned short)(*(short*)n * ((*sign == '-') ? -1 : 1)));
-	else if (size == DEFAULT && (us || ((*(int*)n < 0 && (*sign = '-'))) ||
+					(unsigned short)(*(short*)n * (1 - 2 * (*sign == '-'))));
+	else if (sz == DEFAULT && (us || ((*(int*)n < 0 && (*sign = '-'))) ||
 															(*(int*)n >= 0)))
 		return (us ? *(unsigned int*)n :
-					(unsigned int)(*(int*)n * ((*sign == '-') ? -1 : 1)));
-	else if (size == LONG && (us || ((*(long*)n < 0 && (*sign = '-'))) ||
+					(unsigned int)(*(int*)n * (1 - 2 * (*sign == '-'))));
+	else if (sz == LONG && (us || ((*(long*)n < 0 && (*sign = '-'))) ||
 															(*(long*)n >= 0)))
 		return (us ? *(unsigned long*)n :
-					(unsigned long)(*(long*)n * ((*sign == '-') ? -1 : 1)));
+					(unsigned long)(*(long*)n * (1 - 2 * (*sign == '-'))));
 	else
 		return (*(unsigned long*)n);
 }
 
-char		*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
+char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 {
 	static char		bas[] = "0123456789ABCDEF";
 	int				l;
 	char			*ret;
 	unsigned long	nb;
-	int 			i;
+	int				i;
 
-	/*if (rad == -2)
-		return (ft_print_bits(n)); */// TODO
+	if (r == -2)
+		return (ft_printf_get_bits(n, ad->size));
 	if (r == 16 || r == -16)
 		(r < 0 && (r *= -1)) ? ft_tolower_str(bas) : ft_toupper_str(bas);
 	l = 1 + (n != 0) + (ad->sign && r == 10);
@@ -67,7 +75,7 @@ char		*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 	while (nb >= r && l++)
 		nb /= r;
 	l += ((l - 2) / 3) * ((i = 1) && ad->spl != 0 && (r == 10 || r == 8));
-	l = (ad->prcsn + 1 > l ) ? (ad->prcsn + 1 + (ad->sign && r == 10)) : l;
+	l = (ad->prcsn + 1 > l) ? (ad->prcsn + 1 + (ad->sign && r == 10)) : l;
 	if (!(ret = (char *)ft_memalloc(sizeof(char) * l--)))
 		return (NULL);
 	while ((n || l) && (ret[--l] = bas[(n % r)]))

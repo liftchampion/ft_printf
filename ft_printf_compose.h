@@ -19,8 +19,6 @@
 
 char		*ft_printf_itoa_pro(unsigned long n, int rad, t_arg_data *ad);
 
-void ft_print_bits(unsigned long n);
-
-unsigned long ft_printf_int_caster(void* n, t_arg_sz size, char us, char *sign);
+unsigned long ft_printf_int_caster(void* n, t_arg_sz sz, char us, char *sign);
 
 #endif
