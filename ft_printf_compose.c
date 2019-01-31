@@ -90,6 +90,7 @@ int ft_printf_string_compose(t_arg_data *arg_data, char **arg, t_string **str)
 			ft_string_push_back_s(str, *arg);
 	if(arg_data->left_allignment)
 		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->AC);
+	return (*str ? 1 : 0);
 }
 
 // TODO get already tolowered type (fFg)
