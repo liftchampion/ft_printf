@@ -55,11 +55,11 @@ void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 	if (type == 'g')
 	{
 		if (arg_data->prcsn == DEFAULT)
-			arg_data->prcsn = (ft_tolower(arg_data->format) == 's') ?
+			arg_data->prcsn = (ft_strchr("sSr", arg_data->format)) ?
 					DEFAULT_STRING_PRECISION : DEFAULT_INT_PRECISION;
-		else if (ft_tolower(arg_data->format) != 's')
+		else if (!ft_strchr("sSr", arg_data->format))
 			arg_data->ac = ' ';
-		if (arg_data->ac == '0' && (ft_tolower(arg_data->format) != 's'))
+		if (arg_data->ac == '0' && !ft_strchr("sSr", arg_data->format))
 		{
 			arg_data->prcsn = arg_data->width;
 			arg_data->width = 1;
