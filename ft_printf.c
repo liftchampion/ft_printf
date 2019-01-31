@@ -43,7 +43,7 @@ int	ft_printf(const char *frmt, ...)
 		{
 			if (ft_set_color(&frmt, &str[i]))
 				return (-1);
-			frmt++;
+			frmt += *frmt != '\0';
 		}
 		else
 		{
@@ -54,7 +54,6 @@ int	ft_printf(const char *frmt, ...)
 	}
 	ft_stringify(&(str[0]), vars, vl, args_seq);
 	ft_print_string(*str);
-	//ft_print_string_arr(str, i);
 	//ft_free_string_arr(str, i);
 
 	va_end(vl);
