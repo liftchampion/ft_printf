@@ -66,7 +66,7 @@ static int	ft_parse_format(const char **frmt, t_string **str)
 		return ((ft_string_push_back_s(str, "0m") < 1) ? -1 : 0);
 	bgre -= (pf_cols[i].num > 10 && bgre / 10 == 1) ? 10 : 0;
 	bgre -= (pf_cols[i].num < 10 && bgre % 10 == 1) ? 1 : 0;
-	bgre = (pf_cols[i].num == 0) ? 0 : bgre;
+	bgre = (pf_cols[i].num == 0) ? (char)0 : bgre;
 	return ((ft_string_push_back_s(str, ft_itoa(pf_cols[i].num + bgre +
 						bgre % 10 * 20)) < 1) ? -1 : 1);
 }
@@ -108,11 +108,17 @@ int			ft_set_color(const char **frmt, t_string **str)
 		}
 		else if ((ret = ft_parse_format(frmt, str)) < 1)
 			return (ret);
-		if (**frmt != ',')
-			break ;
-		else if (!(*frmt)++ || !ft_string_push_back(str, ';'))
+		if (**frmt != ',' || !(*frmt))
+		{
+			(*str)->data[(*str)->len - 1] = '\0';
+			(*str)->len--;
+			break;
+		}
+		else if(!(*frmt)++ || !ft_string_push_back(str, ';'))
 			return (-1);
 	}
+	while (**frmt && **frmt != '}')
+		(*frmt)++;
 	ft_string_push_back_s(str, "m");
 	return (0);
 }
