@@ -88,3 +88,46 @@ char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 	ret[0] = (ad->sign && r == 10) ? ad->sign : ret[0];
 	return (ret);
 }
+
+int ft_printf_get_itoa_radix(char c)
+{
+	if (ft_strchr("dDuUiI", c))
+		return (10);
+	else if (c == 'b' || c == 'B')
+		return (c == 'b' ? 2 : -2);
+	else if (c == 'o' || c == 'O')
+		return (8);
+	else if (c == 'x' || c == 'X' || c == 'p')
+		return ((c == 'x' || c == 'p') ? -16 : 16);
+	else
+		return (10);
+}
+
+int ft_printf_int_compose(t_arg_data *arg_data, void* arg, t_string **str)
+{
+	char *res;
+	char us;
+	int radix;
+	size_t len;
+	int need_hex_prefix;
+
+	us = ft_strchr("puUxXoObB", arg_data->format) != 0;
+	radix = ft_printf_get_itoa_radix(arg_data->format);
+	need_hex_prefix = (ft_strchr("xXp", arg_data->format) && ((*(int*)arg != 0
+			&& arg_data->alt) || arg_data->format == 'p')) ? 1 : 0;
+	arg_data->width -= need_hex_prefix * 2;
+	arg_data->prcsn += (arg_data->prcsn == 0) &&
+			(ft_tolower(arg_data->format) == 'o') && arg_data->alt;
+	res = ft_printf_itoa_pro(ft_printf_int_caster(arg, arg_data->size, us,
+			&arg_data->sign), radix, arg_data);
+	len = ft_strlen(res);
+	if (!arg_data->l_a)
+		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->ac);
+	if (need_hex_prefix)
+		ft_string_push_back_s(str, arg_data->format == 'X' ? "0X" : "0x");
+	ft_string_push_back_s(str, res);
+	if (arg_data->l_a)
+		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->ac);
+	free(res);
+	return ((*str || !res) ? 1 : 0);
+}
