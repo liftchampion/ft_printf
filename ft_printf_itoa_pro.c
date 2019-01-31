@@ -56,20 +56,28 @@ char		*ft_printf_itoa_pro(unsigned long n, int rad, t_arg_data *arg_data)
 	int				len;
 	char			*ret;
 	unsigned long	nb;
+	int 			i;
 
 	/*if (rad == -2)
 		return (ft_print_bits(n)); */// TODO
 	if (rad == 16 || rad == -16)
 		(rad < 0 && (rad *= -1)) ? ft_tolower_str(bas) : ft_toupper_str(bas);
-	len = 1 + (n != 0) + (arg_data->positive_sign && rad == 10);
+	len = 1 + (n != 0) + (arg_data->sign && rad == 10);
 	nb = n;
 	while (nb >= rad && len++)
 		nb /= rad;
-	len = (arg_data->prcsn + 1 > len ) ? (arg_data->prcsn + 1 + (arg_data->positive_sign && rad == 10)) : len;
+	len += ((len - 1) / 3) * ((i = 1) && arg_data->apostrophe != 0 && (rad == 10 || rad == 8));
+	len = (arg_data->prcsn + 1 > len ) ? (arg_data->prcsn + 1 +
+										(arg_data->sign && rad == 10)) : len;
 	if (!(ret = (char *)ft_memalloc(sizeof(char) * len--)))
 		return (NULL);
 	while ((n || len) && (ret[--len] = bas[(n % rad)]))
+	{
 		n /= rad;
-	ret[0] = (arg_data->positive_sign && rad == 10) ? arg_data->positive_sign : ret[0];
+		if (arg_data->apostrophe && !(i % 3) && n && (rad == 10 || rad == 8))
+			ret[--len] = arg_data->apostrophe;
+		i++;
+	}
+	ret[0] = (arg_data->sign && rad == 10) ? arg_data->sign : ret[0];
 	return (ret);
 }

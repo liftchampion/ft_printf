@@ -35,10 +35,10 @@ int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data) // TODO 
 	int was_found;
 
 	was_found = 0;
-	if (**frmt == ' ' && ++was_found && *(*frmt)++ && !arg_data->positive_sign)
-		arg_data->positive_sign = ' ';
+	if (**frmt == ' ' && ++was_found && *(*frmt)++ && !arg_data->sign)
+		arg_data->sign = ' ';
 	else if (**frmt == '+' && ++was_found && *(*frmt)++)
-		arg_data->positive_sign = '+';
+		arg_data->sign = '+';
 	else if (**frmt == '0' && ++was_found)
 		arg_data->allignment_char = *(*frmt)++;
 	else if (**frmt == '-' && ++was_found && *(*frmt)++)

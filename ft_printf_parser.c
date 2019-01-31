@@ -27,7 +27,7 @@ void			ft_printf_print_arg_data(t_arg_data *arg_data)
 		"ARG_IDX=%2d  size=%11d  char_arg=%2d  format=%c\n",
 			counter++, arg_data->width, arg_data->prcsn,
 			arg_data->left_allignment, arg_data->allignment_char,
-			arg_data->positive_sign, arg_data->alternative_form,
+			arg_data->sign, arg_data->alternative_form,
 			arg_data->apostrophe, arg_data->num, arg_data->size,
 			arg_data->char_arg, arg_data->format);
 }
