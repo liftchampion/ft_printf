@@ -45,8 +45,8 @@ int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data) // TODO 
 		arg_data->left_allignment = 1;
 	else if (**frmt == '#' && ++was_found && *(*frmt)++)
 		arg_data->alternative_form = 1;
-	else if (**frmt == '\'' && ++was_found && *(*frmt)++)
-		arg_data->apostrophe = 1;
+	else if ((**frmt == '\'' || **frmt == ',') && ++was_found)
+		arg_data->apostrophe = *(*frmt)++;
 	else if (**frmt == '.' && ++was_found && *(*frmt)++)
 	{
 		arg_data->__was_dot = 1;
