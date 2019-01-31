@@ -48,16 +48,19 @@ t_arg_sz		ft_printf_parser_get_int_arg_size(char c, int lengths[4])
 		return (DEFAULT);
 }
 
+#include <stdio.h>  // TODO delete
+
 int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 											t_string **args, int lengths[4])
 {
 	if (arg_data->prcsn == DEFAULT)
 		arg_data->prcsn = (c == 's' || c == 'S') ? DEFAULT_STRING_PRECISION :
 						  DEFAULT_INT_PRECISION;
-	else if (ft_tolower(c) != 's')
+	else if (ft_tolower(c) != 's') // TODO setting another prec here
 		arg_data->ac = ' ';
-	if (arg_data->ac == '0' && (c != 's' && c != 'S'))
+	if (arg_data->ac == '0' && (c != 's' && c != 'S')) // TODO dangerous
 	{
+		printf("+!!!!!!!!\n");		// TODO delete
 		arg_data->prcsn = arg_data->width;
 		arg_data->width = 1;
 	}
