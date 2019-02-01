@@ -12,6 +12,8 @@
 #ifndef FT_COLOR_H
 # define FT_COLOR_H
 # define NUM_OF_COLS 24
+# define FT_COL_PREFIX "\e["
+# define FT_COL_PREFIXD "\\e["
 struct s_pf_col
 {
 	char	*name;

@@ -98,7 +98,7 @@ int			ft_set_color(const char **frmt, t_string **str)
 
 	if (!frmt || !*frmt || !str || !*str)
 		return (-1);
-	ft_string_push_back_s(str, "\e[");
+	ft_string_push_back_s(str, FT_COL_PREFIX);
 	while (**frmt && **frmt != '}')
 	{
 		if (*(*frmt) == '\\')
@@ -108,10 +108,13 @@ int			ft_set_color(const char **frmt, t_string **str)
 		}
 		else if ((ret = ft_parse_format(frmt, str)) < 1)
 			return (ret);
-		if (**frmt != ',' || !(*frmt))
+		if (**frmt != ',')
 		{
-			(*str)->data[(*str)->len - 1] = '\0';
-			(*str)->len--;
+			if (**frmt != '}')
+			{
+				(*str)->len--;
+				(*str)->data[(*str)->len] = '\0';
+			}
 			break;
 		}
 		else if(!(*frmt)++ || !ft_string_push_back(str, ';'))
