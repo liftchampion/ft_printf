@@ -48,21 +48,11 @@ t_arg_sz		ft_printf_parser_get_int_arg_size(char c, int lengths[4])
 		return (DEFAULT);
 }
 
+#include <stdio.h>  // TODO delete
+
 int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 											t_string **args, int lengths[4])
 {
-	if (arg_data->prcsn == DEFAULT)
-		arg_data->prcsn = (c == 's' || c == 'S') ? DEFAULT_STRING_PRECISION :
-						  DEFAULT_INT_PRECISION;
-	else if (ft_tolower(c) != 's')
-		arg_data->allignment_char = ' ';
-	if (arg_data->allignment_char == '0' && (c != 's' && c != 'S'))
-	{
-		arg_data->prcsn = arg_data->width;
-		arg_data->width = 1;
-	}
-	if (arg_data->left_allignment)
-		arg_data->allignment_char = ' ';
 	arg_data->size = ft_printf_parser_get_int_arg_size(c, lengths);
 	if (c == 'c' && arg_data->size == DEFAULT)
 		arg_data->format = 'C';
@@ -77,8 +67,6 @@ int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 int				ft_set_float_arg_data(t_arg_data *arg_data, char c,
 												t_string **args, int lengths[4])
 {
-	if (arg_data->prcsn == DEFAULT)
-		arg_data->prcsn = DEFAULT_FLOAT_PRECISION;
 	arg_data->size = BIG_L_COUNT ? LONG : DEFAULT;
 	arg_data->format = c;
 	if (!ft_string_set_value(args, (size_t)(arg_data->num) - 1, 'g',
@@ -92,8 +80,6 @@ int				ft_set_float_arg_data(t_arg_data *arg_data, char c,
 void			ft_set_invalid_arg_data(t_arg_data *arg_data, char c,
 																t_string **args)
 {
-	if (arg_data->prcsn == DEFAULT)
-		arg_data->prcsn = DEFAULT_INT_PRECISION;
 	arg_data->size = CHAR;
 	arg_data->format = 'c';
 	arg_data->char_arg = c;

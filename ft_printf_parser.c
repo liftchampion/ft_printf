@@ -26,9 +26,9 @@ void			ft_printf_print_arg_data(t_arg_data *arg_data)
 		"pos_sign=<%c>  alt_form=%d  apostrop=%d  "
 		"ARG_IDX=%2d  size=%11d  char_arg=%2d  format=%c\n",
 			counter++, arg_data->width, arg_data->prcsn,
-			arg_data->left_allignment, arg_data->allignment_char,
-			arg_data->positive_sign, arg_data->alternative_form,
-			arg_data->apostrophe, arg_data->num, arg_data->size,
+			arg_data->l_a, arg_data->ac,
+			arg_data->sign, arg_data->alt,
+			arg_data->spl, arg_data->num, arg_data->size,
 			arg_data->char_arg, arg_data->format);
 }
 ///															TODO delete it
@@ -45,7 +45,7 @@ t_arg_data		*ft_printf_parser_flags_proceeder(const char **frmt, t_string **args
 	if (!(arg_data = (t_arg_data*)malloc(sizeof(t_arg_data))))
 		return (0);
 	*arg_data =
-			(t_arg_data){1, DEFAULT, 0, ' ', 0, 0, 0, 0, DEFAULT, 0, 0, 0};
+			(t_arg_data){0, DEFAULT, 0, ' ', 0, 0, 0, 0, DEFAULT, 0, 0, 0};
 	was_found_flag = 1;
 	while (was_found_flag)
 	{
@@ -73,21 +73,15 @@ t_arg_data		*ft_printf_parser(const char **frmt, t_string **args)
 	if (ft_strchr(INT_TYPE_SPECIFIERS, **frmt) && **frmt)
 	{
 		if (!ft_set_int_arg_data(arg_data, *(*frmt)++, args, lengths))
-		{
 			ft_memdel((void**)&arg_data);
-			return (0);
-		}
 	}
 	else if (ft_strchr(FLOAT_TYPE_SPECIFIERS, **frmt) && **frmt)
 	{
 		if (!ft_set_float_arg_data(arg_data, *(*frmt)++, args, lengths))
-		{
 			ft_memdel((void**)&arg_data);
-			return (0);
-		}
 	}
 	else if (**frmt)
 		ft_set_invalid_arg_data(arg_data, *(*frmt)++, args);
-	//ft_printf_print_arg_data(arg_data); // TODO delete it
+	ft_printf_print_arg_data(arg_data); // TODO delete it
 	return (arg_data);
 }

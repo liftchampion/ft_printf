@@ -13,7 +13,7 @@
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 # include <stdarg.h>
-# include "libft/libft.h"  //TODO reset!!!!
+# include "libft.h"
 
 typedef	enum	e_arg_sz
 {
@@ -40,11 +40,11 @@ typedef struct	s_arg_data
 {	
 	int		width; /// 									just push_n chars
 	int 	prcsn;   /// 								push_n '0'
-	char 	left_allignment; /// 						when to push width
-	char	allignment_char; ///						before pushing number push ' '/'+' (also -1 to width/prec)
-	char	positive_sign; /// sign used for plus in positive numbers, default is \0 can be '+' or ' '
-	char	alternative_form; /// #
-	char 	apostrophe; /// '
+	char 	l_a; /// 						when to push width
+	char	ac; ///						before pushing number push ' '/'+' (also -1 to width/prec)
+	char	sign; /// sign used for plus in positive numbers, default is \0 can be '+' or ' '
+	char	alt; /// #
+	char 	spl; /// '
 	int 	num;
 	t_arg_sz	size; /// Lenght of arg
 	char 	char_arg;	/// for cases when type-specifier is wrong and need to print char
@@ -63,5 +63,7 @@ void			*ft_get_va(int num, va_list vl, t_string *a_s);
 void			ft_gen_compose(t_arg_data *v, void *num, t_string **str);
 void			ft_float_compose(t_arg_data *v, void *num, t_string **str);
 int				ft_printf_compose(t_arg_data *arg_data, void *arg,
-												t_string **str, char type);
+		t_string **str, char type);
+int				ft_printf_int_compose(t_arg_data *arg_data, void* arg,
+		t_string **str);
 #endif

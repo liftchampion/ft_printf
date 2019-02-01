@@ -43,7 +43,7 @@ int	ft_printf(const char *frmt, ...)
 		{
 			if (ft_set_color(&frmt, &str[i]))
 				return (-1);
-			frmt += *frmt != '\0';
+			frmt += (*frmt != 0);
 		}
 		else
 		{
