@@ -6,26 +6,34 @@
 /*   By: ggerardy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 17:25:22 by ggerardy          #+#    #+#             */
-/*   Updated: 2018/11/29 16:09:36 by ggerardy         ###   ########.fr       */
+/*   Updated: 2018/11/26 17:25:22 by ggerardy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "libft.h"
 
-int		ft_atoi_m(const char **str)
+char		*ft_int_to_unicode(int n, char *bytes)
 {
-	int sign;
-	int res;
-
-	res = 0;
-	while (**str && ft_isspace(**str))
-		(*str)++;
-	sign = (**str == '-') ? -1 : 1;
-	if (**str == '+' || **str == '-')
-		(*str)++;
-	while (**str && ft_isdigit(**str))
+	if (n < 128)
+		bytes[0] = (char)n;
+	else if (n < 2048)
 	{
-		res = res * 10 + (*(*str)++ - '0') * sign;
+		bytes[0] = 192 + n / 64;
+		bytes[1] = 128 + n % 64;
 	}
-	return (res);
+	else if (n < 65536)
+	{
+		bytes[0] = 224 + n / 4096;
+		bytes[1] = 128 + (n / 64) % 64;
+		bytes[2] = 128 + (n % 64);
+	}
+	else
+	{
+		bytes[0] = 240 + n / 262144;
+		bytes[1] = 128 + (n / 4096) % 64;
+		bytes[2] = 128 + (n / 64) % 64;
+		bytes[3] = 128 + n % 64;
+	}
+	return (bytes);
 }

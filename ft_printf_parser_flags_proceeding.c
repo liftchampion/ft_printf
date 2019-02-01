@@ -30,30 +30,28 @@ int		ft_parse_len_specifier(const char **frmt, int lengths[4])
 	return (1);
 }
 
-int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data)
+int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data) // TODO fix .00  and  '+'/' '
 {
 	int was_found;
 
 	was_found = 0;
-	if ((**frmt == ' ' || **frmt == '+') && ++was_found)
-		arg_data->positive_sign = *(*frmt)++;
+	if (**frmt == ' ' && ++was_found && *(*frmt)++ && !arg_data->sign)
+		arg_data->sign = ' ';
+	else if (**frmt == '+' && ++was_found && *(*frmt)++)
+		arg_data->sign = '+';
 	else if (**frmt == '0' && ++was_found)
-		arg_data->allignment_char = *(*frmt)++;
+		arg_data->ac = *(*frmt)++;
 	else if (**frmt == '-' && ++was_found && *(*frmt)++)
-		arg_data->left_allignment = 1;
+		arg_data->l_a = 1;
 	else if (**frmt == '#' && ++was_found && *(*frmt)++)
-		arg_data->alternative_form = 1;
-	else if (**frmt == '\'' && ++was_found && *(*frmt)++)
-		arg_data->apostrophe = 1;
+		arg_data->alt = 1;
+	else if ((**frmt == '\'' || **frmt == ',') && ++was_found)
+		arg_data->spl = *(*frmt)++;
 	else if (**frmt == '.' && ++was_found && *(*frmt)++)
 	{
 		arg_data->__was_dot = 1;
-		if ((**frmt == '0' && (*frmt)++) || (!ft_isdigit(**frmt) &&
-																**frmt != '*'))
-		{
-			arg_data->prcsn = 0;
-			arg_data->__was_dot = 0;
-		}
+		if (**frmt != '*')
+			ft_printf_arg_data_set_width_or_prec(arg_data, ft_atoi_m(frmt));
 	}
 	return (was_found);
 }
@@ -122,7 +120,7 @@ int		ft_printf_parse_comlex_flags(const char **frmt, t_arg_data *arg_data,
 	{
 		return (0);
 	}
-	arg_data->allignment_char = was_zero ? (char)'0' :
-								arg_data->allignment_char;
+	arg_data->ac = was_zero ? (char)'0' :
+								arg_data->ac;
 	return ((num + 1 || was_star || was_dollar) ? 1 : 0);
 }

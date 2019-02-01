@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_string.c                                  :+:      :+:    :+:   */
+/*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/23 15:06:26 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/23 15:07:29 by ehugh-be         ###   ########.fr       */
+/*   Created: 2018/11/20 15:55:20 by ehugh-be          #+#    #+#             */
+/*   Updated: 2019/01/12 18:19:22 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "libft.h"
 
-void			ft_print_string(t_string *str)
+char		*ft_toupper_str(char *str)
 {
+	char *ret;
+
 	if (!str)
+		return (0);
+	ret = str;
+	while (*str)
 	{
-		ft_putstr("NO V_STRING\n");
-		return ;
+		*str = (char)ft_toupper(*str);
+		str++;
 	}
-	write(1, str->data, str->len);
+	return (ret);
 }

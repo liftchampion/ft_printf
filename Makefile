@@ -16,13 +16,13 @@ OBJS = $(SRCS:.c=.o)
 LIB = ./libft/libft.a
 LIBSPATH = -I ./libft
 HEADERS = $(wildcard *.h)
-FLAGS = -Wall -Wextra -Werror
+#FLAGS = -Wall -Wextra -Werror TODO uncomment
 DFLAGS = -g
 CC = clang
 
 .PHONY: all clean fclean re
 
-all: $(NAME)
+all: lib $(NAME)
 
 $(NAME): $(OBJS) $(HEADERS) $(LIB)
 	$(CC) $(LIBSPATH) -o $(NAME) $(OBJS) $(LIB) $(FLAGS)
@@ -30,7 +30,7 @@ $(NAME): $(OBJS) $(HEADERS) $(LIB)
 %.o: %.c $(HDR) $(LIB)
 	$(CC) $(FLAGS) $(LIBSPATH) -c $< -o $@
 
-$(LIB):
+lib:
 	make -C libft/ all
 
 debug: FLAGS = $(DFLAGS)

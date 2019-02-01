@@ -15,13 +15,15 @@
 
 # include <stdarg.h>
 # include "libft.h"
+# include "ft_printf.h"
 
 # define DEFAULT_FLOAT_PRECISION 6
 # define DEFAULT_INT_PRECISION 1
+# define DEFAULT_STRING_PRECISION 2147483647 // TODO care about it (-1 maybe)
 
-# define INT_TYPE_SPECIFIERS "dDiuUcCsSrpkxXoObB"
+# define INT_TYPE_SPECIFIERS "dDiIuUcCsSrpkxXoObB"
 # define FLOAT_TYPE_SPECIFIERS "fFeEgG"
-# define LONG_INT_TYPE_SPECS "sprkSDU"
+# define LONG_INT_TYPE_SPECS "sprkSDUIO"
 
 # define SET_DEFAULT_LENGTHS lengths[0] = 0; lengths[1] = 0; lengths[2] = 0
 # define _128_COUNT lengths[3]

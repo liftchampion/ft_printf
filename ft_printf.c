@@ -19,9 +19,8 @@ void ft_print_va_struct(va_list ls)
 			ls->gp_offset, ls->fp_offset, ls->overflow_arg_area, ls->reg_save_area);
 	long int *t1 = (long int *)ls->overflow_arg_area;
 	long int *t2 = (long int *)ls->reg_save_area;
-	printf("overflow_arg_area - %ld reg_save_area - %ld\n",
-			(*(t1)) , *(t2 + 3));
-	printf("3rd arg is %lf\n", *((double*)(&t2[6])));
+	printf("overflow_arg_area - %ld reg_save_area - %ld   delta = %zu\n",
+			(*(t1)) , *(t2 + 3), ls->overflow_arg_area - ls->reg_save_area);
 }
 
 int	ft_printf(const char *frmt, ...)
@@ -31,7 +30,6 @@ int	ft_printf(const char *frmt, ...)
 	int			i;
 	t_string	*args_seq;
 	t_arg_data	*vars[99];
-
 
 	va_start(vl, frmt);
 	args_seq = ft_make_string(1);
@@ -45,14 +43,17 @@ int	ft_printf(const char *frmt, ...)
 		{
 			if (ft_set_color(&frmt, &str[i]))
 				return (-1);
+			frmt += (*frmt != 0);
 		}
 		else
 		{
 			vars[i++] = ft_printf_parser(&frmt, &args_seq);
 			str[i] = ft_make_string(1);
+			str[i + 1] = NULL;
 		}
 	}
-	//ft_stringify(&str[0], vars);
+	ft_stringify(&(str[0]), vars, vl, args_seq);
+	ft_print_string(*str);
 	//ft_print_string_arr(str, i);
 	//ft_free_string_arr(str, i);
 
