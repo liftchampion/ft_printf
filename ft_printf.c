@@ -32,9 +32,9 @@ int	ft_printf(const char *frmt, ...)
 	t_arg_data	*vars[99];
 
 	va_start(vl, frmt);
-	args_seq = ft_make_string(1);
+	args_seq = ft_make_string(128);
 	i = 0;
-	str[i] = ft_make_string(1);
+	str[i] = ft_make_string(128);
 	while (*frmt)
 	{
 		if (!ft_find_cntrl(&frmt, &str[i]))
