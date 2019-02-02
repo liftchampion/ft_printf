@@ -69,6 +69,11 @@ int ft_printf_float_compose(t_arg_data *arg_d, void *arg, t_string **str)
 		flt = *(double *)arg;
 	else
 		flt = *(long double *) arg;
+	if (flt < 0)
+	{
+		ft_string_push_back(str, '-');
+		flt *= -1;
+	}
 	log = ft_find_whole_size(flt, &dec);
 
 	pad = arg_d->width - log - arg_d->prcsn - (arg_d->sign == '+') - log / 3;
