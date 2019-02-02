@@ -71,7 +71,7 @@ int ft_printf_float_compose(t_arg_data *arg_d, void *arg, t_string **str)
 		flt = *(long double *) arg;
 	log = ft_find_whole_size(flt, &dec);
 
-	pad = arg_d->width - log - 1 - arg_d->prcsn - (arg_d->sign == '+') - log / 3;
+	pad = arg_d->width - log - arg_d->prcsn - (arg_d->sign == '+') - log / 3;
 	if (arg_d->sign)
 		ft_string_push_back(str, arg_d->sign);
 	if (arg_d->width && !arg_d->l_a)
