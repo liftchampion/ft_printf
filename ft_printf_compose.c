@@ -60,7 +60,7 @@ void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 			arg_data->ac = ' ';
 	}
 	else if (type == 'f' && arg_data->prcsn == DEFAULT)
-			arg_data->prcsn = DEFAULT_F_PRECISION;
+			arg_data->prcsn = DEF_F_PRCSN;
 }
 
 // TODO get already tolowered type (fFg)
