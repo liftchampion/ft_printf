@@ -14,6 +14,7 @@
 # define FT_PRINTF_H
 # include <stdarg.h>
 # include "libft.h"
+#define FT_SEPARATOR ','
 
 typedef	enum	e_arg_sz
 {
