@@ -64,8 +64,9 @@ int ft_printf_float_compose(t_arg_data *arg_d, void *arg, t_string **str)
 	else
 		flt = *(long double *) arg;
 	log = ft_find_whole_size(flt, &dec);
-	printf("log = %d", 180, log);
 
+	if (arg_d->width && !arg_d->l_a)
+		ft_string_push_back_n_c(str, arg_d->width - log - 1 - arg_d->prcsn, arg_d->ac);
 	ft_push_whole(&flt, dec, str);
 	dec = 1.0;
 	ft_string_push_back(str, '.');
@@ -73,6 +74,7 @@ int ft_printf_float_compose(t_arg_data *arg_d, void *arg, t_string **str)
 			arg_d->prcsn > 0 ? arg_d->prcsn : DEFAULT_F_PRECISION);
 	flt += flt - (int)flt > .5 ? 1 : 0;
 	ft_push_whole(&flt, dec, str);
-	printf("%Lf\n", flt);
+	if (arg_d->l_a)
+		ft_string_push_back_n_c(str, arg_d->width - log - 1 - arg_d->prcsn, ' ');
 	flt *= pow(10, 6);
 }
