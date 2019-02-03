@@ -38,7 +38,7 @@ typedef	enum	e_arg_sz
 
 typedef struct	s_arg_data
 {	
-	int		width; /// 									just push_n chars
+	int		wdth; /// 									just push_n chars
 	int 	prcsn;   /// 								push_n '0'
 	char 	l_a; /// 						when to push width
 	char	ac; ///						before pushing number push ' '/'+' (also -1 to width/prec)

@@ -19,7 +19,7 @@ void			ft_printf_arg_data_set_width_or_prec(t_arg_data *arg_data,
 {
 	if (!arg_data->__was_dot)
 	{
-		arg_data->width = n;
+		arg_data->wdth = n;
 	}
 	else
 	{

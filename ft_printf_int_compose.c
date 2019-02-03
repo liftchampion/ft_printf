@@ -22,7 +22,7 @@ static char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 	char		f;
 
 	sz = ad->size;
-	ad->width = (ad->width == -1) ? 0 : ad->width;
+	ad->wdth = (ad->wdth == -1) ? 0 : ad->wdth;
 	f = ad->spl ? ad->spl : (char)' ';
 	i = 0;
 	sz = (sz == DEFAULT) ? 4 : sz;
@@ -81,7 +81,7 @@ static char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 	while (nb >= r && l++)
 		nb /= r;
 	l += ((l - 2) / 3) * ((i = 1) && ad->spl != 0 && (r == 10 || r == 8));
-	ad->prcsn += (ad->width == -1 && (ad->width = 1)) ? 0 : (ad->sign && r == 10);
+	ad->prcsn += (ad->wdth == -1 && (ad->wdth = 1)) ? 0 : (ad->sign && r == 10);
 	l = (ad->prcsn + 1 > l) ? (ad->prcsn + 1) : l;
 	if (!(ret = (char *)ft_memalloc(sizeof(char) * l--)))
 		return (NULL);
@@ -119,19 +119,19 @@ int					ft_printf_int_compose(t_arg_data *arg_data, void* arg,
 	radix = ft_printf_get_itoa_radix(arg_data->format);
 	need_hex_prefix = (ft_strchr("xXp", arg_data->format) && ((*(int*)arg != 0
 			&& arg_data->alt) || arg_data->format == 'p')) ? 1 : 0;
-	arg_data->width -= need_hex_prefix * 2;
+	arg_data->wdth -= need_hex_prefix * 2;
 	arg_data->prcsn += (arg_data->prcsn == 0) &&
 			(ft_tolower(arg_data->format) == 'o') && arg_data->alt;
 	res = ft_printf_itoa_pro(ft_printf_int_caster(arg, arg_data->size, us,
 			&arg_data->sign), radix, arg_data);
 	len = ft_strlen(res);
 	if (!arg_data->l_a)
-		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->ac);
+		ft_string_push_back_n_c(str, arg_data->wdth - len, arg_data->ac);
 	if (need_hex_prefix)
 		ft_string_push_back_s(str, arg_data->format == 'X' ? "0X" : "0x");
 	ft_string_push_back_s(str, res);
 	if (arg_data->l_a)
-		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->ac);
+		ft_string_push_back_n_c(str, arg_data->wdth - len, arg_data->ac);
 	free(res);
 	return ((*str || !res) ? 1 : 0);
 }

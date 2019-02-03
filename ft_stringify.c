@@ -57,8 +57,8 @@ void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
 	{
 		if (!str[i] || !v[i] || v[i]->format == 0)
 			return ;
-		if (v[i]->width < 0)
-			v[i]->width = *(int*)vl_p[-v[i]->width - 1];
+		if (v[i]->wdth < 0)
+			v[i]->wdth = *(int*)vl_p[-v[i]->wdth - 1];
 		if (v[i]->prcsn < 0 && v[i]->prcsn != DEFAULT)
 			v[i]->prcsn = *(int*)vl_p[-v[i]->prcsn - 1] >= 0 ? // tODO do something for correct moving in arr
 					*(int*)vl_p[-v[i]->prcsn - 1] : DEFAULT;  // todo add ternary for  >= 0

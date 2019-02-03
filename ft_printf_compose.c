@@ -32,7 +32,7 @@ int ft_printf_string_compose(t_arg_data *arg_data, char **arg, t_string **str)
 	len = arg ? ft_strlen(arg) : 1;
 	len = arg_data->prcsn < len ? arg_data->prcsn : len;
 	if(!arg_data->l_a)
-		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->ac);
+		ft_string_push_back_n_c(str, arg_data->wdth - len, arg_data->ac);
 	ft_bzero(uni, 5);
 	if (ft_tolower(arg_data->format) == 'c')
 		arg_data->format == 'C' ?
@@ -45,13 +45,13 @@ int ft_printf_string_compose(t_arg_data *arg_data, char **arg, t_string **str)
 		else
 			ft_string_push_back_s(str, *arg);
 	if(arg_data->l_a)
-		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->ac);
+		ft_string_push_back_n_c(str, arg_data->wdth - len, arg_data->ac);
 }
 
 void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 {
-	if (arg_data->width < 0 && (arg_data->l_a = 1))
-		arg_data->width *= -1;
+	if (arg_data->wdth < 0 && (arg_data->l_a = 1))
+		arg_data->wdth *= -1;
 	if (type == 'g')
 	{
 		if (arg_data->prcsn == DEFAULT)
@@ -61,8 +61,8 @@ void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 			arg_data->ac = ' ';
 		if (arg_data->ac == '0' && !ft_strchr("sSr", arg_data->format))
 		{
-			arg_data->prcsn = arg_data->width;
-			arg_data->width = -1;
+			arg_data->prcsn = arg_data->wdth;
+			arg_data->wdth = -1;
 		}
 		if (arg_data->l_a)
 			arg_data->ac = ' ';

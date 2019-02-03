@@ -22,10 +22,10 @@ void			ft_printf_print_arg_data(t_arg_data *arg_data)
 {
 	static int counter = 0;
 
-	printf("%2d   width=%4d  prec=%4d  left_allign=%d  allign_char=<%c>  "
+	printf("%2d   wdth=%4d  prec=%4d  left_allign=%d  allign_char=<%c>  "
 		"pos_sign=<%c>  alt_form=%d  apostrop=%d  "
 		"ARG_IDX=%2d  size=%11d  char_arg=%2d  format=%c\n",
-			counter++, arg_data->width, arg_data->prcsn,
+			counter++, arg_data->wdth, arg_data->prcsn,
 			arg_data->l_a, arg_data->ac,
 			arg_data->sign, arg_data->alt,
 			arg_data->spl, arg_data->num, arg_data->size,
