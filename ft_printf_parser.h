@@ -17,7 +17,7 @@
 # include "libft.h"
 # include "ft_printf.h"
 
-# define DEFAULT_FLOAT_PRECISION 6
+# define DEF_F_PRCSN 6
 # define DEFAULT_INT_PRECISION 1
 # define DEFAULT_STRING_PRECISION 2147483647 // TODO care about it (-1 maybe)
 

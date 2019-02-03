@@ -14,22 +14,12 @@
 #include "ft_printf.h"
 #include <stdio.h> // TODO delete
 
-/*int ft_printf_string_compose(t_arg_data *arg_data, void *arg, t_string **str)
-{
-
-}*/
-
-int ft_printf_float_compose(t_arg_data *arg_data, void *arg, t_string **str)
-{
-	printf("<%f>\n", *(double*)arg);
-}
-
 int ft_printf_string_compose(t_arg_data *arg_data, char **arg, t_string **str)
 {
 	size_t len;
 	char uni[5];
 
-	len = arg ? ft_strlen(arg) : 1;
+	len = arg ? ft_strlen((char*)arg) : 1;
 	len = arg_data->prcsn < len ? arg_data->prcsn : len;
 	if(!arg_data->l_a)
 		ft_string_push_back_n_c(str, arg_data->wdth - len, arg_data->ac);
@@ -40,12 +30,14 @@ int ft_printf_string_compose(t_arg_data *arg_data, char **arg, t_string **str)
 			: ft_string_push_back(str, arg ? (char)*arg : arg_data->char_arg);
 	else
 		if (arg_data->format == 'S')
-			while ((int*)arg++)
+			while (**(int**)arg && *arg++)
 				ft_string_push_back_s(str, ft_int_to_unicode(*(int*)arg, uni));
 		else
-			ft_string_push_back_s(str, *arg);
+			arg_data->prcsn >= 0 ?ft_string_push_back_n_s(str, *arg,
+					arg_data->prcsn) : ft_string_push_back_s(str, *arg);
 	if(arg_data->l_a)
 		ft_string_push_back_n_c(str, arg_data->wdth - len, arg_data->ac);
+	return (*str ? 1 : 0);
 }
 
 void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
@@ -68,7 +60,7 @@ void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 			arg_data->ac = ' ';
 	}
 	else if (type == 'f' && arg_data->prcsn == DEFAULT)
-			arg_data->prcsn = DEFAULT_FLOAT_PRECISION;
+			arg_data->prcsn = DEF_F_PRCSN;
 }
 
 // TODO get already tolowered type (fFg)
