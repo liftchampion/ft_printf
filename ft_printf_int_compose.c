@@ -22,6 +22,7 @@ static char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 	char		f;
 
 	sz = ad->size;
+	ad->width = (ad->width == -1) ? 0 : ad->width;
 	f = ad->spl ? ad->spl : (char)' ';
 	i = 0;
 	sz = (sz == DEFAULT) ? 4 : sz;
@@ -80,6 +81,7 @@ static char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 	while (nb >= r && l++)
 		nb /= r;
 	l += ((l - 2) / 3) * ((i = 1) && ad->spl != 0 && (r == 10 || r == 8));
+	ad->prcsn += (ad->width == -1 && (ad->width = 1)) ? 0 : (ad->sign && r == 10);
 	l = (ad->prcsn + 1 > l) ? (ad->prcsn + 1) : l;
 	if (!(ret = (char *)ft_memalloc(sizeof(char) * l--)))
 		return (NULL);

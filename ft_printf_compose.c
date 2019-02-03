@@ -62,7 +62,7 @@ void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 		if (arg_data->ac == '0' && !ft_strchr("sSr", arg_data->format))
 		{
 			arg_data->prcsn = arg_data->width;
-			arg_data->width = 1;
+			arg_data->width = -1;
 		}
 		if (arg_data->l_a)
 			arg_data->ac = ' ';
@@ -75,7 +75,7 @@ void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type)
 {
 	ft_printf_final_arg_data_checks(arg_data, type);
-	if (type == 'g' && !ft_strchr("sScC", arg_data->format))
+	if (type == 'g' && !ft_strchr("sScCr", arg_data->format))
 		return (ft_printf_int_compose(arg_data, arg, str));
 	else if (type == 'g')
 		return (ft_printf_string_compose(arg_data, (char**)arg, str));
