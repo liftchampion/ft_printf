@@ -15,6 +15,7 @@
 
 char		*ft_int_to_unicode(int n, char *bytes)
 {
+	ft_bzero(bytes, 5);
 	if (n < 128)
 		bytes[0] = (char)n;
 	else if (n < 2048)
