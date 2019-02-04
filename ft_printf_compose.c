@@ -36,6 +36,7 @@ int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str)
 
 	a = a && !*a && ft_tolower(ad->frt) == 's' && (ad->frt = 's') ? &n : a;
 	ln = a && ft_tolower(ad->frt) == 's' ? ft_strlen_u(*a, ad->frt == 's') : 1;
+	ln = a && ad->frt == 'C' ? ft_unilen(*(int*)a) : ln;
 	ln = ad->frt == 's' && ad->prcsn < ln ? ad->prcsn : ln;
 	ln = ad->frt == 'S' && ad->prcsn < ln ? ft_guf(*(int**)a, ad->prcsn) : ln;
 	ad->frt = ad->frt == 'C' && !*(int*)a ? (char)'c' : ad->frt;
