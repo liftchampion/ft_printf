@@ -32,14 +32,14 @@ int	ft_printf(const char *frmt, ...)
 	t_arg_data	*vars[99];
 
 	va_start(vl, frmt);
-	args_seq = ft_make_string(128);
+	args_seq = ft_make_string(32);
 	i = 0;
-	str[i] = ft_make_string(128);
+	str[i] = ft_make_string(64);
 	while (*frmt)
 	{
 		if (!ft_find_cntrl(&frmt, &str[i]))
 			return (-1);
-		if (*(frmt - 1) == '{')
+		if (*(frmt - 1) == CLR_CNTRL && CLR)
 		{
 			if (ft_set_color(&frmt, &str[i]))
 				return (-1);
@@ -48,7 +48,8 @@ int	ft_printf(const char *frmt, ...)
 		else
 		{
 			vars[i++] = ft_printf_parser(&frmt, &args_seq);
-			str[i] = ft_make_string(1);
+			vars[i] = 0;
+			str[i] = ft_make_string(4);
 			str[i + 1] = NULL;
 		}
 	}
@@ -57,5 +58,5 @@ int	ft_printf(const char *frmt, ...)
 	//ft_free_string_arr(str, i);
 
 	va_end(vl);
-	return (0);
+	return (str[0]->len);
 }

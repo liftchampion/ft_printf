@@ -10,9 +10,10 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = printf
+NAME = libftprintf.a
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
+OBJS2 = $(wildcard libft/*.o)
 LIB = ./libft/libft.a
 LIBSPATH = -I ./libft
 HEADERS = $(wildcard *.h)
@@ -24,11 +25,16 @@ CC = clang
 
 all: lib $(NAME)
 
-$(NAME): $(OBJS) $(HEADERS) $(LIB)
-	$(CC) $(LIBSPATH) -o $(NAME) $(OBJS) $(LIB) $(FLAGS)
+$(NAME): $(OBJS) $(HEADERS)
+	@ar r $(NAME) $(OBJS) $(OBJS2)
+	#$(CC) $(LIBSPATH) -o ft_printf $(OBJS) $(LIB) $(FLAGS)
 
 %.o: %.c $(HDR) $(LIB)
 	$(CC) $(FLAGS) $(LIBSPATH) -c $< -o $@
+
+libftprintf.a: $(LIB) $(NAME)
+
+$(LIB): lib
 
 lib:
 	make -C libft/ all

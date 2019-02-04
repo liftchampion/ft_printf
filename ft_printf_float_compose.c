@@ -109,15 +109,15 @@ int ft_printf_float_compose(t_arg_data *a_d, void *arg, t_string **str)
 	lg = ft_find_whole_size(flt, &dec);
 	if (a_d->sign)
 		ft_string_push_back(str, a_d->sign);
-	pad = ft_tolower(a_d->format) == 'e' ? a_d->width - lg - a_d->prcsn -
-			 (a_d->sign == '+') - lg / 3 : a_d->width - 6 - a_d->prcsn;
-	if (a_d->width && !a_d->l_a)
+	pad = ft_tolower(a_d->frt) == 'e' ? a_d->wdth - lg - a_d->prcsn -
+			 (a_d->sign == '+') - lg / 3 : a_d->wdth - 6 - a_d->prcsn;
+	if (a_d->wdth && !a_d->l_a)
 		ft_string_push_back_n_c(str, pad, a_d->ac);
-	lg = ft_tolower(a_d->format) == 'e' ? ft_enot_s(&flt, str, &dec) : lg;
+	lg = ft_tolower(a_d->frt) == 'e' ? ft_enot_s(&flt, str, &dec) : lg;
 	ft_push_whole(&flt, dec, str, a_d->spl ? lg : -1);
 	ft_push_frctn(&flt, &dec, a_d->prcsn >= 0 ? a_d->prcsn : DEF_F_PRCSN, str);
-	if (ft_tolower(a_d->format) == 'e')
-		ft_enot_e(str, lg, a_d->format);
+	if (ft_tolower(a_d->frt) == 'e')
+		ft_enot_e(str, lg, a_d->frt);
 	if (a_d->l_a)
-		ft_string_push_back_n_c(str, a_d->width - lg - 1 - a_d->prcsn, ' ');
+		ft_string_push_back_n_c(str, a_d->wdth - lg - 1 - a_d->prcsn, ' ');
 }

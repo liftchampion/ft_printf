@@ -106,4 +106,6 @@ int					ft_atoi_m(const char **str);
 char				*ft_itoa_base(__int128_t n, int rad);
 void				*ft_realloc(void *old_data, size_t prev_size,
 		size_t new_size);
+size_t				ft_strlen_u(const int* s, char f);
+char				ft_unilen(int u);
 #endif

@@ -14,50 +14,68 @@
 #include "ft_printf.h"
 #include <stdio.h> // TODO delete
 
-int ft_printf_string_compose(t_arg_data *arg_data, char **arg, t_string **str)
+int ft_guf(int *str, int prec)
 {
-	size_t len;
-	char uni[5];
+	int p;
 
-	len = arg ? ft_strlen((char*)arg) : 1;
-	len = arg_data->prcsn < len ? arg_data->prcsn : len;
-	if(!arg_data->l_a)
-		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->ac);
-	ft_bzero(uni, 5);
-	if (ft_tolower(arg_data->format) == 'c')
-		arg_data->format == 'C' ?
-			ft_string_push_back_s(str, ft_int_to_unicode(*(int*)arg, uni))
-			: ft_string_push_back(str, arg ? (char)*arg : arg_data->char_arg);
+	p = 0;
+	while (*str && prec > ft_unilen(*str) - 1)
+	{
+		p += ft_unilen(*str);
+		prec -= ft_unilen(*str);
+		str++;
+	}
+	return (p);
+}
+
+int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str)
+{
+	size_t ln;
+	char uni[5];
+	static char *n = "(null)";
+
+	a = a && !*a && ft_tolower(ad->frt) == 's' && (ad->frt = 's') ? &n : a;
+	ln = a && ft_tolower(ad->frt) == 's' ? ft_strlen_u(*a, ad->frt == 's') : 1;
+	ln = ad->frt == 's' && ad->prcsn < ln ? ad->prcsn : ln;
+	ln = ad->frt == 'S' && ad->prcsn < ln ? ft_guf(*(int**)a, ad->prcsn) : ln;
+	ad->frt = ad->frt == 'C' && !*(int*)a ? (char)'c' : ad->frt;
+	if (!ad->l_a)
+		ft_string_push_back_n_c(str, ad->wdth - ln, ad->ac);
+	if (ft_tolower(ad->frt) == 'c')
+		ad->frt == 'C' ? ft_string_push_back_s(str, ft_int_to_unicode(*(int*)a,
+				uni)) : ft_string_push_back(str, a ? (char)*a : ad->char_arg);
 	else
-		if (arg_data->format == 'S')
-			while (**(int**)arg && *arg++)
-				ft_string_push_back_s(str, ft_int_to_unicode(*(int*)arg, uni));
+		if (ad->frt == 'S')
+			while (**(int**)a && ad->prcsn > ft_unilen(*(int*)*a) - 1 &&
+						(*a += 4))
+				ad->prcsn -= ft_string_push_back_s(str,
+						ft_int_to_unicode(*(int*)(*a - 4), uni));
 		else
-			arg_data->prcsn >= 0 ?ft_string_push_back_n_s(str, *arg,
-					arg_data->prcsn) : ft_string_push_back_s(str, *arg);
-	if(arg_data->l_a)
-		ft_string_push_back_n_c(str, arg_data->width - len, arg_data->ac);
+			ad->prcsn >= 0 ? ft_string_push_back_n_s(str, *a,
+					ad->prcsn) : ft_string_push_back_s(str, *a);
+	if(ad->l_a)
+		ft_string_push_back_n_c(str, ad->wdth - ln, ad->ac);
 	return (*str ? 1 : 0);
 }
 
 void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 {
-	if (arg_data->width < 0 && (arg_data->l_a = 1))
-		arg_data->width *= -1;
+	if (arg_data->wdth < 0 && (arg_data->l_a = 1))
+		arg_data->wdth *= -1;
 	if (type == 'g')
 	{
 		if (arg_data->prcsn == DEFAULT)
-			arg_data->prcsn = (ft_strchr("sSr", arg_data->format)) ?
+			arg_data->prcsn = (ft_strchr("sSr", arg_data->frt)) ?
 					DEFAULT_STRING_PRECISION : DEFAULT_INT_PRECISION;
-		else if (!ft_strchr("sSr", arg_data->format))
+		else if (!ft_strchr("cCsSr", arg_data->frt))
 			arg_data->ac = ' ';
-		if (arg_data->ac == '0' && !ft_strchr("sSr", arg_data->format))
-		{
-			arg_data->prcsn = arg_data->width;
-			arg_data->width = 1;
-		}
 		if (arg_data->l_a)
 			arg_data->ac = ' ';
+		if (arg_data->ac == '0' && !ft_strchr("cCsSr", arg_data->frt))
+		{
+			arg_data->prcsn = arg_data->wdth;
+			arg_data->wdth = -1;
+		}
 	}
 	else if (type == 'f' && arg_data->prcsn == DEFAULT)
 			arg_data->prcsn = DEF_F_PRCSN;
@@ -67,7 +85,7 @@ void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type)
 {
 	ft_printf_final_arg_data_checks(arg_data, type);
-	if (type == 'g' && !ft_strchr("sScC", arg_data->format))
+	if (type == 'g' && !ft_strchr("sScCr", arg_data->frt))
 		return (ft_printf_int_compose(arg_data, arg, str));
 	else if (type == 'g')
 		return (ft_printf_string_compose(arg_data, (char**)arg, str));
