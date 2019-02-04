@@ -63,7 +63,7 @@ void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
 			v[i]->prcsn = *(int*)vl_p[-v[i]->prcsn - 1] >= 0 ? // tODO do something for correct moving in arr
 					*(int*)vl_p[-v[i]->prcsn - 1] : DEFAULT;  // todo add ternary for  >= 0
 		if (v[i]->char_arg)
-			ft_printf_compose(v[i], NULL, str, 'g');
+			ft_printf_compose(v[i], &v[i]->char_arg, str, 'g');
 		else
 			ft_printf_compose(v[i], vl_p[v[i]->num - 1], str,
 					(char)ft_tolower(a_s->data[v[i]->num - 1]));

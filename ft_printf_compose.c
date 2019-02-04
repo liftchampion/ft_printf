@@ -14,7 +14,7 @@
 #include "ft_printf.h"
 #include <stdio.h> // TODO delete
 
-int ft_guf(int *str, int prec)
+/*int ft_guf(int *str, int prec)
 {
 	int p;
 
@@ -57,7 +57,7 @@ int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str)
 	if(ad->l_a)
 		ft_string_push_back_n_c(str, ad->wdth - ln, ad->ac);
 	return (*str ? 1 : 0);
-}
+}*/
 
 void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 {

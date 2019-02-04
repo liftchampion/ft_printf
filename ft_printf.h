@@ -69,4 +69,7 @@ int				ft_printf_compose(t_arg_data *arg_data, void *arg,
 		t_string **str, char type);
 int				ft_printf_int_compose(t_arg_data *ad, void* arg,
 		t_string **str);
+int				ft_printf_string_compose(t_arg_data *ad, char **a,
+		t_string **str);
+
 #endif
