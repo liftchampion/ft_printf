@@ -55,7 +55,7 @@ void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
 	ft_vl_to_p(vl, a_s, vl_p);
 	while (1)
 	{
-		if (!str[i] || !v[i] || v[i]->format == 0)
+		if (!str[i] || !v[i] || v[i]->frt == 0)
 			return ;
 		if (v[i]->wdth < 0)
 			v[i]->wdth = *(int*)vl_p[-v[i]->wdth - 1];
