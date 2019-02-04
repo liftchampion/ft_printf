@@ -15,6 +15,8 @@
 # include <stdarg.h>
 # include "libft.h"
 #define FT_SEPARATOR ','
+#define CLR_CNTRL '{'
+#define CLR 0
 
 typedef	enum	e_arg_sz
 {
@@ -49,7 +51,7 @@ typedef struct	s_arg_data
 	int 	num;
 	t_arg_sz	size; /// Lenght of arg
 	char 	char_arg;	/// for cases when type-specifier is wrong and need to print char
-	char	format; // TODO d, D, u, U, f, F, e, E, g, G, x, X, o, s, c, p, b, B, r, k, C (lc), S
+	char	frt; // TODO d, D, u, U, f, F, e, E, g, G, x, X, o, s, c, p, b, B, r, k, C (lc), S
 	char	__was_dot; // don't use! only for parsing
 }				t_arg_data;
 
@@ -65,6 +67,6 @@ void			ft_gen_compose(t_arg_data *v, void *num, t_string **str);
 int				ft_printf_float_compose(t_arg_data *a_d, void *n, t_string **str);
 int				ft_printf_compose(t_arg_data *arg_data, void *arg,
 		t_string **str, char type);
-int				ft_printf_int_compose(t_arg_data *arg_data, void* arg,
+int				ft_printf_int_compose(t_arg_data *ad, void* arg,
 		t_string **str);
 #endif
