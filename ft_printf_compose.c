@@ -73,7 +73,7 @@ void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 			arg_data->ac = ' ';
 		if (arg_data->ac == '0' && !ft_strchr("cCsSr", arg_data->frt))
 		{
-			arg_data->prcsn = arg_data->wdth;
+			arg_data->prcsn = arg_data->wdth ? arg_data->wdth : 1;
 			arg_data->wdth = -1;
 		}
 	}
