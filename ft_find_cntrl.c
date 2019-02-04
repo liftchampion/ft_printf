@@ -19,7 +19,7 @@ int	ft_find_cntrl(const char **frmt, t_string **str)
 	if (!str || !*str)
 		return (0);
 	slash = 0;
-	while (**frmt && **frmt != '%' && (**frmt != '{' && !slash))
+	while (**frmt && **frmt != '%' && !(**frmt == CLR_CNTRL && !slash && CLR))
 	{
 		slash = (**frmt == '\\') ? 1 : 0;
 		if (!ft_string_push_back(str, **frmt))
