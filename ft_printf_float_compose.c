@@ -108,6 +108,8 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 	int lg;
 	int pad;
 	char nan;
+	int lge;
+	int pade;
 
 
 	flt = ad->size == DEFAULT ? *(double *)arg : *(long double *) arg;
@@ -115,11 +117,17 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 	ad->sign = flt < 0 && !nan ? '-' : ad->sign;
 	flt *= flt < 0 ? -1 : 1;
 	lg = ft_find_whole_size(flt, &dec);
-	lg = ft_tolower(ad->frt) == 'e' ? ft_enot_s(&flt, str, &dec) : lg;
-	pad = ft_tolower(ad->frt) == 'e' ? ad->wdth - 6 - (FT_ABS(lg) >= 100) - ad->prcsn -
-			(ad->sign != '\0') : ad->wdth - lg - 1 - ad->prcsn -
-			(ad->sign != '\0') - lg / 3 * (ad->spl != '\0');
+	lge = ft_enot_s(&flt, str, &dec);
+	pade = ad->wdth - 6 - (FT_ABS(lge) >= 100) - ad->prcsn - (ad->sign != '\0');
+	pad = ad->wdth - lg - 1 - ad->prcsn - (ad->sign != '\0') - lg / 3 * (ad->spl != '\0');
 	pad = nan ? ad->wdth - 3 : pad;
+	if (ad->frt == 'G' || ad->frt == 'g')
+	{
+		ad->frt = FT_ABS(pade) < FT_ABS(pad) ? ad->frt - 'g' + 'e' : ad->frt - 'g' + 'f';
+		pad = FT_ABS(pade) < FT_ABS(pad) ? pade : pad;
+	}
+	else if (ft_tolower(ad->frt) == 'e')
+		pad = pade;
 	ad->ac = nan ? ' ' : ad->ac;
 	if (ad->wdth && !ad->l_a)
 	{
@@ -127,7 +135,8 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 		{
 			ad->sign && flt == flt ? ft_string_push_back(str, ad->sign) : 0;
 			ft_string_push_back_n_c(str, pad, ad->ac);
-		} else
+		}
+		else
 		{
 			ft_string_push_back_n_c(str, pad, ad->ac);
 			ad->sign && flt == flt ? ft_string_push_back(str, ad->sign) : 0;
@@ -135,9 +144,12 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 	}
 	else
 		ad->sign && flt == flt ? ft_string_push_back(str, ad->sign) : 0;
-	if (nan)
+	if (nan && (ad->frt == 'e' || ad->frt == 'f'))
 		dec = flt != flt ? ft_string_push_back_s(str, "nan") - 10000000 :
 		ft_string_push_back_s(str, "inf") - 10000000;
+	else if (nan && (ad->frt == 'E' || ad->frt == 'F'))
+		dec = flt != flt ? ft_string_push_back_s(str, "NAN") - 10000000 :
+			  ft_string_push_back_s(str, "INF") - 10000000;
 	ft_push_whole(&flt, dec, str, ad->spl ? lg : -1);
 	ft_push_frctn(&flt, &dec, ad->prcsn >= 0 ? ad->prcsn : DEF_F_PRCSN, str);
 	if (ft_tolower(ad->frt) == 'e' && !nan)
