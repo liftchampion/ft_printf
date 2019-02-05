@@ -35,6 +35,7 @@ int	ft_printf(const char *frmt, ...)
 	args_seq = ft_make_string(32);
 	i = 0;
 	str[i] = ft_make_string(64);
+	vars[0] = 0;
 	while (*frmt)
 	{
 		if (!ft_find_cntrl(&frmt, &str[i]))

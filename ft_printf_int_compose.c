@@ -19,25 +19,27 @@ static char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 	char		*ret;
 	int			i;
 	t_arg_sz	sz;
-	char		f;
 
-	sz = ad->size;
 	ad->wdth = (ad->wdth == -1) ? 0 : ad->wdth;
-	f = ad->spl ? ad->spl : (char)' ';
 	i = 0;
-	sz = (sz == DEFAULT) ? 4 : sz;
-	len = sz * 8;
-	len += sz - 1;
-	if (!(ret = ft_memalloc(sizeof(char) * (len + 1))))
+	sz = (ad->size== DEFAULT) ? 4 : ad->size;
+	len = sz * 8 + sz - 1;
+	if (!(ret = ft_memalloc(len + 1 + 5 * 75 * (ad->alt != 0))))
 		return (0);
 	len -= (sz - 1) + 1;
 	while (len >= 0)
 	{
+		if (ad->alt && (i += 5))
+			ft_strlcat(ret, (n & (1L << len)) != 0 ? "\e[31m" : "\e[39m", 600);
 		ret[i++] = (char)'0' + ((n & (1L << len)) != 0);
 		if (len && len % 8 == 0)
-			ret[i++] = f;
+		{
+			ft_strlcat(ret, (ad->alt && (i += 5)) ? "\e[39m" : "", 600);
+			ret[i++] = ad->spl ? ad->spl : ' ';
+		}
 		len--;
 	}
+	ft_strlcat(ret, (ad->alt) ? "\e[39m" : "", 600);
 	return (ret);
 }
 
@@ -77,12 +79,12 @@ static char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 		return (ft_printf_get_bits(n, ad));
 	if (r == 16 || r == -16)
 		(r < 0 && (r *= -1)) ? ft_tolower_str(bas) : ft_toupper_str(bas);
-	l = 1 + (n != 0) + (ad->sign && r == 10);
+	l = 1 + (n != 0 || ad->prcsn) + (ad->sign && r == 10);
 	nb = n;
 	while (nb >= r && l++)
 		nb /= r;
 	l += ((l - 2) / 3) * ((i = 1) && ad->spl != 0 && (r == 10 || r == 8));
-	ad->prcsn = ((l > ad->prcsn) && r == 8 && ad->alt) ? l : ad->prcsn;
+	ad->prcsn = ((l - !n > ad->prcsn) && r == 8 && ad->alt) ? l : ad->prcsn;
 	ad->prcsn += (ad->wdth == -1 && (ad->wdth = 1)) ? 0 : (ad->sign && r == 10);
 	l = (ad->prcsn + 1 > l) ? (ad->prcsn + 1) : l;
 	if (!(ret = (char *)ft_memalloc(sizeof(char) * l--)))
@@ -118,14 +120,15 @@ int					ft_printf_int_compose(t_arg_data *ad, void* arg,
 	char us;
 	size_t len;
 	int nex;
+	unsigned long ar;
 
 	us = ft_strchr("puUxXoObB", ad->frt) != 0;
-	nex = (ft_strchr("xXp", ad->frt) && ((*(int*)arg != 0
+	ar = ft_printf_int_caster(arg, ad->size, us, &ad->sign);
+	nex = (ft_strchr("xXp", ad->frt) && ((ar != 0
 			&& ad->alt) || ad->frt == 'p')) ? 1 : 0;
-	ad->prcsn += /*((ad->prcsn == 0) && (ft_tolower(ad->frt) == 'o')
-		&& ad->alt)*/ - (nex && ad->wdth == -1 && (ad->wdth = 1)) * 2;
-	res = ft_printf_itoa_pro(ft_printf_int_caster(arg, ad->size, us,
-			&ad->sign), ft_printf_get_itoa_radix(ad->frt), ad);
+	ad->prcsn += ((ad->prcsn == 0) && (ft_tolower(ad->frt) == 'o') &&
+			ad->alt) - (nex && ad->wdth == -1 && (ad->wdth = 1)) * 2;
+	res = ft_printf_itoa_pro(ar, ft_printf_get_itoa_radix(ad->frt), ad);
 	len = ft_strlen(res);
 	if (!ad->l_a)
 		ft_string_push_back_n_c(str, ad->wdth - len - nex * 2, ad->ac);
