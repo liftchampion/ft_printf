@@ -91,8 +91,10 @@ void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type)
 {
 	ft_printf_final_arg_data_checks(arg_data, type);
-	if (type == 'g' && !ft_strchr("sScCr", arg_data->frt))
+	if (type == 'g' && !ft_strchr("sSncCr", arg_data->frt))
 		return (ft_printf_int_compose(arg_data, arg, str));
+	else if (type == 'g' && arg_data->frt == 'n')
+		return ((**(int**)arg = (int)(*str)->len) * 0 + 1);
 	else if (type == 'g')
 		return (ft_printf_string_compose(arg_data, (char**)arg, str));
 	else
