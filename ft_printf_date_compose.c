@@ -14,8 +14,10 @@
 #include "ft_printf.h"
 
 #define DAY 86400
+#define UTC 3
+#define HALF_YEAR (31556926 / 2)
 
-// TODO Think about additional seconds
+#define WHILE_TRUE(a) while(a)
 
 typedef struct	s_date
 {
@@ -27,7 +29,11 @@ typedef struct	s_date
 	char 		sec; /// 0 ?
 }				t_date;
 
+// TODO move to header
+
 static char mts[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+static char months[12][4] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+							 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 int ft_upd_year(t_date *dt, long int *n)
 {
@@ -235,27 +241,31 @@ int ft_sub_second(t_date *dt, long int *n)
 	return (1);
 }
 
-int		ft_printf_date_compose(t_arg_data *ad, void* arg, t_string **str)
+//TODO use ft_S_printf
+int		ft_printf_date_compose(t_arg_data *ad, void* arg, t_string **str) // TODO check wdth/prec
 {
 	t_date *dt;
 	long int n;
+	char buf[50];
+	char use_year;
 
+	ft_bzero(buf, 50);
 	if (!(dt = (t_date*)malloc(sizeof(t_date))))
 		return (0);
 	n = *(long int*)arg;
-	*dt = (t_date){1970, 0, 1, 0, 0, 0};
-	while (ft_upd_year(dt, &n))
-		;
-	while (ft_upd_month(dt, &n))
-		;
-	while (ft_upd_day(dt, &n))
-		;
-	while (n >= 0 ? ft_add_hour(dt, &n) : ft_sub_hour(dt, &n))
-		;
-	while (n >= 0 ? ft_add_minute(dt, &n) : ft_sub_minute(dt, &n))
-		;
-	while (n >= 0 ? ft_add_second(dt, &n) : ft_sub_second(dt, &n))
-		;
-	ft_printf("%d.%d.%d %d:%d:%d\n", dt->year, dt->mth, dt->day, dt->hr, dt->min, dt->sec);
+	*dt = (t_date){1970, 0, 1, UTC, 0, 0};
+	WHILE_TRUE(ft_upd_year(dt, &n));
+	WHILE_TRUE(ft_upd_month(dt, &n));
+	WHILE_TRUE(ft_upd_day(dt, &n));
+	WHILE_TRUE(n >= 0 ? ft_add_hour(dt, &n) : ft_sub_hour(dt, &n));
+	WHILE_TRUE(n >= 0 ? ft_add_minute(dt, &n) : ft_sub_minute(dt, &n));
+	WHILE_TRUE(n >= 0 ? ft_add_second(dt, &n) : ft_sub_second(dt, &n));
+	if (ad->alt && ((use_year = (FT_ABS(*(long*)arg - ad->prcsn) > HALF_YEAR)) + 1))
+		ft_printf(ft_strcat(ft_strcat(buf, "%s %2d "), use_year ? "%5d" : "%02d:%02d"),
+				months[dt->mth], dt->day, use_year ? dt->year : dt->hr, dt->min);
+	/*ft_strcat(buf, )
+	if (!ad->alt && ad->prcsn == 1)
+		ft_printf("%d", dt->year);*/
+	//ft_printf("%d.%d.%d %d:%d:%d\n", dt->year, dt->mth, dt->day, dt->hr, dt->min, dt->sec);
 	return (1);
 }
