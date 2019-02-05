@@ -82,7 +82,7 @@ void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
 			arg_data->prcsn = DEF_F_PRCSN;
 }
 
-// TODO get already tolowered type (fFg)
+// TODO set 'g'/'G' prec to 1 if zero
 int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type)
 {
 	ft_printf_final_arg_data_checks(arg_data, type);

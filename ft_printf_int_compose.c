@@ -24,19 +24,22 @@ static char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 	i = 0;
 	sz = (ad->size== DEFAULT) ? 4 : ad->size;
 	len = sz * 8 + sz - 1;
-	if (!(ret = ft_memalloc(len + 1 + 5 * 65 * (ad->spl != 0))))
+	if (!(ret = ft_memalloc(len + 1 + 5 * 75 * (ad->alt != 0))))
 		return (0);
 	len -= (sz - 1) + 1;
 	while (len >= 0)
 	{
-		if (ad->spl && (i += 5))
-			ft_strlcat(ret, (n & (1L << len)) != 0 ? "\e[31m" : "\e[39m", 500);
+		if (ad->alt && (i += 5))
+			ft_strlcat(ret, (n & (1L << len)) != 0 ? "\e[31m" : "\e[39m", 600);
 		ret[i++] = (char)'0' + ((n & (1L << len)) != 0);
 		if (len && len % 8 == 0)
-			ret[i++] = ' ';
+		{
+			ft_strlcat(ret, ad->alt ? "\e[39m" : "", 600);
+			ret[i++] = ad->spl ? ad->spl : ' ';
+		}
 		len--;
 	}
-	ft_strlcat(ret, (ad->spl) ? "\e[39m" : "", 500);
+	ft_strlcat(ret, (ad->alt) ? "\e[39m" : "", 600);
 	return (ret);
 }
 
