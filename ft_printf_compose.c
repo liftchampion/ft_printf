@@ -59,6 +59,11 @@ int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str)
 	return (*str ? 1 : 0);
 }*/
 
+int ft_print_hex_float_compose(t_arg_data *ad, void *arg, t_string **str)
+{
+
+}
+
 void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 {
 	if (ad->wdth < 0 && (ad->l_a = 1))
@@ -88,15 +93,17 @@ void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 }
 
 // TODO set 'g'/'G' prec to 1 if zero
-int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type)
+int ft_printf_compose(t_arg_data *ad, void *arg, t_string **str, char type)
 {
-	ft_printf_final_arg_data_checks(arg_data, type);
-	if (type == 'g' && !ft_strchr("sSncCr", arg_data->frt))
-		return (ft_printf_int_compose(arg_data, arg, str));
-	else if (type == 'g' && arg_data->frt == 'n')
+	ft_printf_final_arg_data_checks(ad, type);
+	if (type == 'g' && !ft_strchr("sSncCr", ad->frt))
+		return (ft_printf_int_compose(ad, arg, str));
+	else if (type == 'g' && ad->frt == 'n')
 		return ((**(int**)arg = (int)(*str)->len) * 0 + 1);
+	else if (type == 'f' && (ft_tolower(ad->frt) == 'a'))
+		return (ft_printf_hex_float_compose(ad, arg, str));
 	else if (type == 'g')
-		return (ft_printf_string_compose(arg_data, (char**)arg, str));
+		return (ft_printf_string_compose(ad, (char**)arg, str));
 	else
-		return (ft_printf_float_compose(arg_data, arg, str));
+		return (ft_printf_float_compose(ad, arg, str));
 }
