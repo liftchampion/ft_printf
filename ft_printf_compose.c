@@ -59,27 +59,32 @@ int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str)
 	return (*str ? 1 : 0);
 }*/
 
-void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
+void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 {
-	if (arg_data->wdth < 0 && (arg_data->l_a = 1))
-		arg_data->wdth *= -1;
+	if (ad->wdth < 0 && (ad->l_a = 1))
+		ad->wdth *= -1;
 	if (type == 'g')
 	{
-		if (arg_data->prcsn == DEFAULT)
-			arg_data->prcsn = (ft_strchr("sSr", arg_data->frt)) ?
-					DEFAULT_STRING_PRECISION : DEFAULT_INT_PRECISION;
-		else if (!ft_strchr("cCsSr", arg_data->frt))
-			arg_data->ac = ' ';
-		if (arg_data->l_a)
-			arg_data->ac = ' ';
-		if (arg_data->ac == '0' && !ft_strchr("cCsSr", arg_data->frt))
+		if (ad->prcsn == DEFAULT)
+			ad->prcsn = (ft_strchr("sSr", ad->frt)) ?
+						DEFAULT_STRING_PRECISION : DEFAULT_INT_PRECISION;
+		else if (!ft_strchr("cCsSr", ad->frt))
+			ad->ac = ' ';
+		if (ad->l_a)
+			ad->ac = ' ';
+		if (ad->ac == '0' && !ft_strchr("cCsSr", ad->frt))
 		{
-			arg_data->prcsn = arg_data->wdth ? arg_data->wdth : 1;
-			arg_data->wdth = -1;
+			ad->prcsn = ad->wdth ? ad->wdth : 1;
+			ad->wdth = -1;
 		}
 	}
-	else if (type == 'f' && arg_data->prcsn == DEFAULT)
-			arg_data->prcsn = DEF_F_PRCSN;
+	else if (type == 'f')
+	{
+		if (ad->prcsn == DEFAULT)
+			ad->prcsn = ft_tolower(ad->frt) == 'g' ? DEFAULT : DEF_F_PRCSN;
+		if (ad->prcsn == 0)
+			ad->prcsn = ft_tolower(ad->frt) == 'g' ? 1 : 0;
+	}
 }
 
 // TODO set 'g'/'G' prec to 1 if zero
