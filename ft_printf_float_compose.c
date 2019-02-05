@@ -114,6 +114,7 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 	int lge;
 	int pade;
 	long double fltc;
+	int prcsn;
 
 
 	flt = ad->size == DEFAULT ? *(double *)arg : *(long double *) arg;
@@ -128,8 +129,14 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 	pad = nan ? ad->wdth - 3 : pad;
 	if (ad->frt == 'G' || ad->frt == 'g')
 	{
-		ad->frt = FT_ABS(pade) < FT_ABS(pad) ? ad->frt - 'g' + 'e' : ad->frt - 'g' + 'f';
-		pad = FT_ABS(pade) < FT_ABS(pad) ? pade : pad;
+		prcsn = ad->prcsn == DEFAULT ? DEF_F_PRCSN : ad->prcsn;
+		ad->frt = lge < -4 || lge > prcsn ? ad->frt - 'g' + 'e' : ad->frt - 'g' + 'f';
+		pad = lge < -4 || lge > ad->wdth ? pade : pad;
+		if (ad->prcsn == DEFAULT && ft_tolower(ad->frt) == 'e')
+		{
+			ad->wdth = lge;
+			ad->prcsn = DEF_F_PRCSN - lge;
+		}
 	}
 	else if (ft_tolower(ad->frt) == 'e')
 	{
