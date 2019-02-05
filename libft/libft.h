@@ -108,4 +108,6 @@ void				*ft_realloc(void *old_data, size_t prev_size,
 		size_t new_size);
 size_t				ft_strlen_u(const int* s, char f);
 char				ft_unilen(int u);
+int					ft_intlen(long int n);
+char				*ft_itoa_buf(int n, char *res);
 #endif

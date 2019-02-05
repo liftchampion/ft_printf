@@ -34,19 +34,60 @@ int ft_guf(int *str, int prec)
 	return (p);
 }
 
+int ft_prcd_non_prntbl_str(const char *str, int prec, t_string **res, char psh)
+{
+	int p;
+	char buf[6];
+
+	p = 0;
+	buf[0] = '\\';
+	while (*str++ && prec-- > 0)
+		if (ft_isprint(*(str - 1)) && (p += 1))
+		{
+			PUSH_S(res, psh == 2 ? "\e[39m" : 0);
+			PUSH_C(res, psh ? *(str-1) : 0);
+		}
+		else if ((*(str - 1) == '\n' || *(str - 1) == '\t') && (p += 2))
+		{
+			PUSH_S(res, psh == 2 ? "\e[33m" : 0);
+			if (psh)
+				PUSH_S(res, (*(str - 1) == '\n') ? "\\n" : "\\t");
+		}
+		else
+		{
+			p += ft_intlen(*(str - 1)) + 1;
+			PUSH_S(res, psh == 2 ? "\e[33m" : 0);
+			PUSH_S(res, psh ? ft_itoa_buf(*(str - 1), buf+1) - 1 : 0);
+		}
+	PUSH_S(res, (psh == 2 && prec > 0) ? "\e[33m" : 0);
+	PUSH_S(res, (prec > 0 && (p += 2) && psh) ? "\\0" : 0);
+	return (PUSH_S(res, psh == 2 ? "\e[39m" : 0) * 0 + p);
+}
+
+size_t	srle(const char* s, char f, int prec)
+{
+	size_t ln;
+
+	ln = (f == 's') ? ft_strlen((char*)s) : 0;
+	ln = (f == 'c') ? 1 : ln;
+	ln = (f == 'S') ? ft_strlen_u((const int*)s, 0) : ln;
+	ln = (f == 'C') ? ft_unilen((int*)s) : ln;
+	ln = (f == 's' && prec < ln) ? prec : ln;
+	ln = (f == 'S' && prec < ln) ? ft_guf((int*)s, prec) : ln;
+	ln = (f == 'r') ? ft_prcd_non_prntbl_str(s, prec, 0, 0) : ln;
+	return (ln);
+}
+
 int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str) // TODO check null
 {
 	size_t ln;
 	char uni[5];
 	static char *n = "(null)";
 
-	a = !*a && ft_tolower(ad->frt) == 's' /*&& (ad->frt = 's')*/ ? &n : a;
-	ad->frt = a == &n ? (char)'s' : ad->frt;
-	ln = ft_tolower(ad->frt) == 's' ? ft_strlen_u(*a, ad->frt == 's') : 1;
-	ln = ad->frt == 'C' ? ft_unilen(*(int*)a) : ln;
-	ln = ad->frt == 's' && ad->prcsn < ln ? ad->prcsn : ln;
-	ln = ad->frt == 'S' && ad->prcsn < ln ? ft_guf(*(int**)a, ad->prcsn) : ln;
-	ad->frt = ad->frt == 'C' && !*(int*)a ? (char)'c' : ad->frt;
+	a = !*a && (ft_tolower(ad->frt) == 's' || ad->frt == 'r') ? &n : a;
+	ad->frt = (a == &n) ? (char)'s' : ad->frt;
+	ln = srle(*a, ad->frt, ad->prcsn);
+	ad->frt = (ad->frt == 'C' && !*(int*)a) ? (char)'c' : ad->frt;
 	if (!ad->l_a)
 		PUSH_NC(str, ad->wdth - ln, ad->ac);
 	if (ft_tolower(ad->frt) == 'c')
@@ -56,6 +97,8 @@ int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str) // TODO c
 		while (**(int**)a && ad->prcsn > ft_unilen(*(int*)*a) - 1 && (*a += 4))
 			ad->prcsn -= PUSH_S(str,
 					ft_int_to_unicode(*(int*)(*a - 4), uni));
+	else if (ad->frt == 'r')
+		ft_prcd_non_prntbl_str(*a, ad->prcsn, str, (ad->alt != 0) + 1);
 	else
 		ad->prcsn >= 0 ? PUSH_NS(str, *a, ad->prcsn) : PUSH_S(str, *a);
 	if (ad->l_a)

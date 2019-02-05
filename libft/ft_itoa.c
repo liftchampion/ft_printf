@@ -40,3 +40,31 @@ char	*ft_itoa(int n)
 		ret[0] = '-';
 	return (ret);
 }
+
+char	*ft_itoa_buf(int n, char *res)
+{
+	int		nb;
+	int		len;
+	char	*rt;
+
+	rt = res;
+	len = 2;
+	if (n < 0)
+		len++;
+	nb = n;
+	while (!(nb < 10 && nb > -10))
+	{
+		len++;
+		nb /= 10;
+	}
+	res[--len] = '\0';
+	nb = (n < 0) ? -1 : 1;
+	while (n || len)
+	{
+		res[--len] = n % 10 * nb + '0';
+		n /= 10;
+	}
+	if (nb < 0)
+		res[0] = '-';
+	return (rt);
+}
