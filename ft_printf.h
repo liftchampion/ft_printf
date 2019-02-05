@@ -64,7 +64,7 @@ void			ft_stringify(t_string **str, t_arg_data *v[], va_list vl,
 void			ft_free_string_arr(t_string *str[], int i);
 void			*ft_get_va(int num, va_list vl, t_string *a_s);
 void			ft_gen_compose(t_arg_data *v, void *num, t_string **str);
-int				ft_printf_float_compose(t_arg_data *a_d, void *n, t_string **str);
+int				ft_printf_float_compose(t_arg_data *ad, void *n, t_string **str);
 int				ft_printf_compose(t_arg_data *arg_data, void *arg,
 		t_string **str, char type);
 int				ft_printf_int_compose(t_arg_data *ad, void* arg,
