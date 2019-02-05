@@ -79,6 +79,8 @@ int	ft_enot_s(long double *flt, t_string **str, double *dec)
 
 	*dec = 1.0;
 	ret = 0;
+	if (*flt == 0)
+		return (ret);
 	if (*flt >= 10)
 		while (*flt > 10 && ++ret)
 			*flt /= 10;
@@ -105,19 +107,22 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 {
 	long double flt;
 	double dec;
+	double dece;
 	int lg;
 	int pad;
 	char nan;
 	int lge;
 	int pade;
+	long double fltc;
 
 
 	flt = ad->size == DEFAULT ? *(double *)arg : *(long double *) arg;
 	nan = flt != flt || isinf(flt);
 	ad->sign = flt < 0 && !nan ? '-' : ad->sign;
 	flt *= flt < 0 ? -1 : 1;
+	fltc = flt;
 	lg = ft_find_whole_size(flt, &dec);
-	lge = ft_enot_s(&flt, str, &dec);
+	lge = ft_enot_s(&fltc, str, &dece);
 	pade = ad->wdth - 6 - (FT_ABS(lge) >= 100) - ad->prcsn - (ad->sign != '\0');
 	pad = ad->wdth - lg - 1 - ad->prcsn - (ad->sign != '\0') - lg / 3 * (ad->spl != '\0');
 	pad = nan ? ad->wdth - 3 : pad;
@@ -127,7 +132,12 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 		pad = FT_ABS(pade) < FT_ABS(pad) ? pade : pad;
 	}
 	else if (ft_tolower(ad->frt) == 'e')
+	{
 		pad = pade;
+		lg = lge;
+		dec = dece;
+		ft_enot_s(&flt, str, &dec);
+	}
 	ad->ac = nan ? ' ' : ad->ac;
 	if (ad->wdth && !ad->l_a)
 	{
