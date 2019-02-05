@@ -34,13 +34,14 @@ int ft_guf(int *str, int prec)
 	return (p);
 }
 
-int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str)
+int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str) // TODO check null
 {
 	size_t ln;
 	char uni[5];
 	static char *n = "(null)";
 
-	a = !*a && ft_tolower(ad->frt) == 's' && (ad->frt = 's') ? &n : a;
+	a = !*a && ft_tolower(ad->frt) == 's' /*&& (ad->frt = 's')*/ ? &n : a;
+	ad->frt = a == &n ? (char)'s' : ad->frt;
 	ln = ft_tolower(ad->frt) == 's' ? ft_strlen_u(*a, ad->frt == 's') : 1;
 	ln = ad->frt == 'C' ? ft_unilen(*(int*)a) : ln;
 	ln = ad->frt == 's' && ad->prcsn < ln ? ad->prcsn : ln;
