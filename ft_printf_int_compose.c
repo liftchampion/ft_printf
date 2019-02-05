@@ -19,25 +19,24 @@ static char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 	char		*ret;
 	int			i;
 	t_arg_sz	sz;
-	char		f;
 
-	sz = ad->size;
 	ad->wdth = (ad->wdth == -1) ? 0 : ad->wdth;
-	f = ad->spl ? ad->spl : (char)' ';
 	i = 0;
-	sz = (sz == DEFAULT) ? 4 : sz;
-	len = sz * 8;
-	len += sz - 1;
-	if (!(ret = ft_memalloc(sizeof(char) * (len + 1))))
+	sz = (ad->size== DEFAULT) ? 4 : ad->size;
+	len = sz * 8 + sz - 1;
+	if (!(ret = ft_memalloc(len + 1 + 5 * 65 * (ad->spl != 0))))
 		return (0);
 	len -= (sz - 1) + 1;
 	while (len >= 0)
 	{
+		if (ad->spl && (i += 5))
+			ft_strlcat(ret, (n & (1L << len)) != 0 ? "\e[31m" : "\e[39m", 500);
 		ret[i++] = (char)'0' + ((n & (1L << len)) != 0);
 		if (len && len % 8 == 0)
-			ret[i++] = f;
+			ret[i++] = ' ';
 		len--;
 	}
+	ft_strlcat(ret, (ad->spl) ? "\e[39m" : "", 500);
 	return (ret);
 }
 
