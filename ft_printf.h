@@ -18,6 +18,8 @@
 #define CLR_CNTRL '{'
 #define CLR 0
 
+#define IS_LEAP_YEAR(y) ((!((y) % 400) || (!((y) % 4) && ((y) % 100))) ? 1 : 0)
+
 typedef	enum	e_arg_sz
 {
 	CHAR = 1,
@@ -70,6 +72,8 @@ int				ft_printf_compose(t_arg_data *arg_data, void *arg,
 int				ft_printf_int_compose(t_arg_data *ad, void* arg,
 		t_string **str);
 int				ft_printf_string_compose(t_arg_data *ad, char **a,
+		t_string **str);
+int				ft_printf_date_compose(t_arg_data *ad, void* arg,
 		t_string **str);
 
 #endif
