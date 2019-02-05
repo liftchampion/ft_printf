@@ -34,7 +34,7 @@ static char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 		ret[i++] = (char)'0' + ((n & (1L << len)) != 0);
 		if (len && len % 8 == 0)
 		{
-			ft_strlcat(ret, ad->alt ? "\e[39m" : "", 600);
+			ft_strlcat(ret, (ad->alt && (i += 5)) ? "\e[39m" : "", 600);
 			ret[i++] = ad->spl ? ad->spl : ' ';
 		}
 		len--;
