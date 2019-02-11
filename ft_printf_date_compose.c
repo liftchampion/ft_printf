@@ -241,31 +241,65 @@ int ft_sub_second(t_date *dt, long int *n)
 	return (1);
 }
 
-//TODO use ft_S_printf
-int		ft_printf_date_compose(t_arg_data *ad, void* arg, t_string **str) // TODO check wdth/prec
+t_date *ft_unix_time_to_date(long int ut)
 {
 	t_date *dt;
-	long int n;
+
+	if (!(dt = (t_date*)malloc(sizeof(t_date))))
+		return (0);
+	*dt = (t_date){1970, 0, 1, UTC, 0, 0};
+	WHILE_TRUE(ft_upd_year(dt, &ut));
+	WHILE_TRUE(ft_upd_month(dt, &ut));
+	WHILE_TRUE(ft_upd_day(dt, &ut));
+	WHILE_TRUE(ut >= 0 ? ft_add_hour(dt, &ut) : ft_sub_hour(dt, &ut));
+	WHILE_TRUE(ut >= 0 ? ft_add_minute(dt, &ut) : ft_sub_minute(dt, &ut));
+	WHILE_TRUE(ut >= 0 ? ft_add_second(dt, &ut) : ft_sub_second(dt, &ut));
+	return (dt);
+}
+
+#include <stdio.h> // TODO delete it
+
+//TODO use ft_S_printf
+
+char *ft_printf_date_compose_get_str(t_date *dt, void *arg, t_arg_data *ad)
+{
+	char *res;
 	char buf[50];
 	char use_year;
 
 	ft_bzero(buf, 50);
-	if (!(dt = (t_date*)malloc(sizeof(t_date))))
-		return (0);
-	n = *(long int*)arg;
-	*dt = (t_date){1970, 0, 1, UTC, 0, 0};
-	WHILE_TRUE(ft_upd_year(dt, &n));
-	WHILE_TRUE(ft_upd_month(dt, &n));
-	WHILE_TRUE(ft_upd_day(dt, &n));
-	WHILE_TRUE(n >= 0 ? ft_add_hour(dt, &n) : ft_sub_hour(dt, &n));
-	WHILE_TRUE(n >= 0 ? ft_add_minute(dt, &n) : ft_sub_minute(dt, &n));
-	WHILE_TRUE(n >= 0 ? ft_add_second(dt, &n) : ft_sub_second(dt, &n));
-	if (ad->alt && ((use_year = (FT_ABS(*(long*)arg - ad->prcsn) > HALF_YEAR)) + 1))
-		ft_printf(ft_strcat(ft_strcat(buf, "%s %2d "), use_year ? "%5d" : "%02d:%02d"),
-				months[dt->mth], dt->day, use_year ? dt->year : dt->hr, dt->min);
-	/*ft_strcat(buf, )
-	if (!ad->alt && ad->prcsn == 1)
-		ft_printf("%d", dt->year);*/
-	//ft_printf("%d.%d.%d %d:%d:%d\n", dt->year, dt->mth, dt->day, dt->hr, dt->min, dt->sec);
+	res = ft_memalloc(1000); // TODO just temporary for sprintf
+	if (ad->alt &&
+		((use_year = (FT_ABS(*(long*)arg - ad->prcsn) > HALF_YEAR)) + 1)) 			// TODO use ft_sprintf
+		sprintf(res, ft_strcat(ft_strcat(buf, "%s %2d "), use_year ? "%5d" :
+		"%02d:%02d"), months[dt->mth], dt->day, use_year ? dt->year : dt->hr,
+				dt->min);
+	else if (ad->size == DEFAULT || ad->size == LONG)
+	{
+		ad->size == DEFAULT ? sprintf(res, "%4d-%02d-%02d %02d:%02d", dt->year,
+				dt->mth, dt->day, dt->hr, dt->min) :
+				sprintf(res, "%4d-%02d-%02d %02d:%02d:%02d", dt->year,
+				dt->mth, dt->day, dt->hr, dt->min, dt->sec);
+	}
+	else if (ad->size == SHORT || ad->size == CHAR)
+	{
+		ad->size == SHORT ? sprintf(res, "%4d-%02d-%02d", dt->year, dt->mth,
+				dt->day) : sprintf(res, "%4d-%02d", dt->year, dt->mth);
+	}
+	return (res);
+}
+
+int		ft_printf_date_compose(t_arg_data *ad, void* arg, t_string **str)
+{
+	t_date *dt;
+	char *res;
+
+	dt = ft_unix_time_to_date(*(long int*)arg);
+	res = ft_printf_date_compose_get_str(dt, arg, ad);
+	if (!ad->l_a)
+		ft_string_push_back_n_c(str, ad->wdth - ft_strlen(res), ad->ac);
+	ft_string_push_back_s(str, res);
+	if (ad->l_a)
+		ft_string_push_back_n_c(str, ad->wdth - ft_strlen(res), ad->ac);
 	return (1);
 }

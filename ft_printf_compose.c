@@ -70,9 +70,9 @@ void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 						DEFAULT_STRING_PRECISION : DEFAULT_INT_PRECISION;
 		else if (!ft_strchr("cCsSr", ad->frt))
 			ad->ac = ' ';
-		if (ad->l_a)
+		if (ad->l_a || ad->frt == 'k')
 			ad->ac = ' ';
-		if (ad->ac == '0' && !ft_strchr("cCsSr", ad->frt))
+		if (ad->ac == '0' && !ft_strchr("cCsSrk", ad->frt))
 		{
 			ad->prcsn = ad->wdth ? ad->wdth : 1;
 			ad->wdth = -1;
@@ -91,10 +91,14 @@ void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type)
 {
 	ft_printf_final_arg_data_checks(arg_data, type);
-	if (type == 'g' && !ft_strchr("sScCr", arg_data->frt))
+	if (type == 'g' && !ft_strchr("sScCrk", arg_data->frt))
 		return (ft_printf_int_compose(arg_data, arg, str));
-	else if (type == 'g')
+	else if (type == 'g' && !ft_strchr("kn", arg_data->frt))
 		return (ft_printf_string_compose(arg_data, (char**)arg, str));
-	else
+	else if (type == 'g' && arg_data->frt == 'k')
+		return (ft_printf_date_compose(arg_data, arg, str));
+	else if (type == 'g' && arg_data->frt == 'n')
+		; // TODO n_compose
+	else if (type == 'f')
 		return (ft_printf_float_compose(arg_data, arg, str));
 }
