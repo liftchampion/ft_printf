@@ -18,8 +18,6 @@
 #define CLR_CNTRL '{'
 #define CLR 0
 
-#define IS_LEAP_YEAR(y) ((!((y) % 400) || (!((y) % 4) && ((y) % 100))) ? 1 : 0)
-
 typedef	enum	e_arg_sz
 {
 	CHAR = 1,
