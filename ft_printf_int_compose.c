@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include "ft_printf.h"
 
-static char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
+static char				*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 {
 	int			len;
 	char		*ret;
@@ -22,7 +22,7 @@ static char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 
 	ad->wdth = (ad->wdth == -1) ? 0 : ad->wdth;
 	i = 0;
-	sz = (ad->size== DEFAULT) ? 4 : ad->size;
+	sz = (ad->size == DEFAULT) ? 4 : ad->size;
 	len = sz * 8 + sz - 1;
 	if (!(ret = ft_memalloc(len + 1 + 5 * 75 * (ad->alt != 0))))
 		return (0);
@@ -32,12 +32,11 @@ static char			*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 		if (ad->alt && (i += 5))
 			ft_strlcat(ret, (n & (1L << len)) != 0 ? "\e[31m" : "\e[39m", 600);
 		ret[i++] = (char)'0' + ((n & (1L << len)) != 0);
-		if (len && len % 8 == 0)
+		if (len-- && (len + 1) % 8 == 0)
 		{
 			ft_strlcat(ret, (ad->alt && (i += 5)) ? "\e[39m" : "", 600);
 			ret[i++] = ad->spl ? ad->spl : ' ';
 		}
-		len--;
 	}
 	ft_strlcat(ret, (ad->alt) ? "\e[39m" : "", 600);
 	return (ret);
@@ -67,7 +66,8 @@ static unsigned long	ft_printf_int_caster(void *n, t_arg_sz sz, char us,
 		return (*(unsigned long*)n);
 }
 
-static char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
+static char				*ft_printf_itoa_pro(unsigned long n, int r,
+		t_arg_data *ad)
 {
 	static char		bas[] = "0123456789ABCDEF";
 	int				l;
@@ -96,7 +96,7 @@ static char			*ft_printf_itoa_pro(unsigned long n, int r, t_arg_data *ad)
 	return (ret);
 }
 
-static int			ft_printf_get_itoa_radix(char c)
+static int				ft_printf_get_itoa_radix(char c)
 {
 	if (ft_strchr("dDuUiI", c))
 		return (10);
@@ -110,17 +110,14 @@ static int			ft_printf_get_itoa_radix(char c)
 		return (10);
 }
 
-
-
-
-int					ft_printf_int_compose(t_arg_data *ad, void* arg,
+int						ft_printf_int_compose(t_arg_data *ad, void *arg,
 													t_string **str)
 {
-	char *res;
-	char us;
-	size_t len;
-	int nex;
-	unsigned long ar;
+	char			*res;
+	char			us;
+	size_t			len;
+	int				nex;
+	unsigned long	ar;
 
 	us = ft_strchr("puUxXoObB", ad->frt) != 0;
 	ar = ft_printf_int_caster(arg, ad->size, us, &ad->sign);

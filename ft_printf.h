@@ -18,6 +18,11 @@
 #define CLR_CNTRL '{'
 #define CLR 0
 
+#define PUSH_S ft_string_push_back_s
+#define PUSH_C ft_string_push_back
+#define PUSH_NC ft_string_push_back_n_c
+#define PUSH_NS ft_string_push_back_n_s
+
 typedef	enum	e_arg_sz
 {
 	CHAR = 1,

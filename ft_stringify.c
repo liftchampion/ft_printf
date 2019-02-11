@@ -13,7 +13,7 @@
 #include "ft_printf.h"
 #include <stdio.h> //TODO delete
 
-static void ft_vl_to_p(va_list vl, t_string *a_s, void *vl_p[])
+static void		ft_vl_to_p(va_list vl, t_string *a_s, void *vl_p[])
 {
 	int i;
 
@@ -22,9 +22,6 @@ static void ft_vl_to_p(va_list vl, t_string *a_s, void *vl_p[])
 	{
 		if (a_s->data[i] == 'F')
 		{
-			// TODO correct_work_with_paddings
-			///vl->overflow_arg_area = (size_t)vl->overflow_arg_area % 16 ? \
-					vl->overflow_arg_area + 8 : vl->overflow_arg_area;
 			vl_p[i] = vl->overflow_arg_area;
 			va_arg(vl, long double);
 		}
@@ -43,9 +40,10 @@ static void ft_vl_to_p(va_list vl, t_string *a_s, void *vl_p[])
 	}
 }
 
-void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
+void			ft_stringify(t_string **str, t_arg_data *v[], va_list vl,
+		t_string *a_s)
 {
-	int i;
+	int		i;
 	void	**vl_p;
 
 	i = 0;
@@ -60,8 +58,8 @@ void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
 		if (v[i]->wdth < 0)
 			v[i]->wdth = *(int*)vl_p[-v[i]->wdth - 1];
 		if (v[i]->prcsn < 0 && v[i]->prcsn != DEFAULT)
-			v[i]->prcsn = *(int*)vl_p[-v[i]->prcsn - 1] >= 0 ? // tODO do something for correct moving in arr
-					*(int*)vl_p[-v[i]->prcsn - 1] : DEFAULT;  // todo add ternary for  >= 0
+			v[i]->prcsn = *(int*)vl_p[-v[i]->prcsn - 1] >= 0 ?
+					*(int*)vl_p[-v[i]->prcsn - 1] : DEFAULT;
 		if (v[i]->char_arg)
 			ft_printf_compose(v[i], &v[i]->char_arg, str, 'g');
 		else

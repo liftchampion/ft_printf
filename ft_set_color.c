@@ -115,9 +115,9 @@ int			ft_set_color(const char **frmt, t_string **str)
 				(*str)->len--;
 				(*str)->data[(*str)->len] = '\0';
 			}
-			break;
+			break ;
 		}
-		else if(!(*frmt)++ || !ft_string_push_back(str, ';'))
+		else if (!(*frmt)++ || !ft_string_push_back(str, ';'))
 			return (-1);
 	}
 	while (**frmt && **frmt != '}')
