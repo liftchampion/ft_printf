@@ -33,12 +33,19 @@ int ft_find_whole_size(long double flt, double *dec)
 		*dec *= 10.0;
 		flt /= 10.0;
 	}
-	return (ret);
+	return (ret == 0 ? 1 : ret);
 }
 
 int ft_push_whole(long double *flt, double dec, t_string **str, int sep)
 {
 	sep = sep > 3 ? sep : -1;
+	if (dec < 0)
+		return (1);
+	if ((int)*flt < 10 && (int)*flt > -10 && dec < 1.0)
+	{
+		ft_string_push_back(str, (int) *flt + '0');
+		*flt -= (int)*flt;
+	}
 	while (dec >= 1.0)
 	{
 		if (sep > 0 && sep-- % 3 == 0)
@@ -51,16 +58,17 @@ int ft_push_whole(long double *flt, double dec, t_string **str, int sep)
 
 double	ft_push_frctn(long double *flt, double *dec, int p, t_string **str)
 {
-	if (!p)
+	if ((!p && dec > 0) || *dec < 0)
 		return (0);
 	ft_string_push_back(str, '.');
 	*dec = .1;
-	while (p--)
+	p++;
+	while (--p)
 	{
 		*flt *= 10;
 		*dec *= 10.0;
 	}
-	*flt += *flt - (long long)*flt > .5 ? 1 : 0;
+	*flt += (*flt - (long long)*flt) > .5 ? 1 : 0;
 	ft_push_whole(flt, *dec, str, -1);
 }
 
@@ -68,12 +76,11 @@ int	ft_enot_s(long double *flt, t_string **str, double *dec)
 {
 	int ret;
 
-	if (*flt != *flt)
-		*dec = ft_string_push_back_s(str, "nan") - 10000000;
-	if (isinf(*flt))
-		*dec = ft_string_push_back_s(str, "inf") - 10000000;
+
 	*dec = 1.0;
 	ret = 0;
+	if (*flt == 0)
+		return (ret);
 	if (*flt >= 10)
 		while (*flt > 10 && ++ret)
 			*flt /= 10;
@@ -86,38 +93,86 @@ int	ft_enot_s(long double *flt, t_string **str, double *dec)
 void ft_enot_e(t_string **str, int lg, char e)
 {
 	ft_string_push_back(str, e);
-	ft_string_push_back(str, lg > 0 ? '+' : '-');
+	ft_string_push_back(str, lg >= 0 ? '+' : '-');
 	if (FT_ABS(lg) >= 100)
-		ft_string_push_back(str, FT_ABS(lg) / 100 + '0');
-	ft_string_push_back(str, (FT_ABS(lg) > 10) ? FT_ABS(lg) / 10 + '0' : '0');
-	ft_string_push_back(str, lg % 10 + '0');
+		lg %= ft_string_push_back(str, FT_ABS(lg) / 100 + '0') * 100;
+	lg %= ft_string_push_back(str, (FT_ABS(lg) > 10) ? FT_ABS(lg) / 10 + '0' : '0') * 10;
+	ft_string_push_back(str, FT_ABS(lg) % 10 + '0');
 }
 
 /*TODO ? solution differs from original printf on big number of digits because of
  * dividing by big value. Suppose that original one gets digits from the end but
  * not form the beggining of number as ours does. Should we fix this differ?*/
-int ft_printf_float_compose(t_arg_data *a_d, void *arg, t_string **str)
+int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 {
 	long double flt;
 	double dec;
+	double dece;
 	int lg;
 	int pad;
+	char nan;
+	int lge;
+	int pade;
+	long double fltc;
+	int prcsn;
 
-	flt = a_d->size == DEFAULT ? *(double *)arg : *(long double *) arg;
-	flt < 0 ? ft_string_push_back(str, '-') : 0;
+
+	flt = ad->size == DEFAULT ? *(double *)arg : *(long double *) arg;
+	nan = flt != flt || isinf(flt);
+	ad->sign = flt < 0 && !nan ? '-' : ad->sign;
+	prcsn = ad->prcsn == DEFAULT ? DEF_F_PRCSN : ad->prcsn;
 	flt *= flt < 0 ? -1 : 1;
+	fltc = flt;
 	lg = ft_find_whole_size(flt, &dec);
-	if (a_d->sign)
-		ft_string_push_back(str, a_d->sign);
-	pad = ft_tolower(a_d->frt) == 'e' ? a_d->wdth - lg - a_d->prcsn -
-			 (a_d->sign == '+') - lg / 3 : a_d->wdth - 6 - a_d->prcsn;
-	if (a_d->wdth && !a_d->l_a)
-		ft_string_push_back_n_c(str, pad, a_d->ac);
-	lg = ft_tolower(a_d->frt) == 'e' ? ft_enot_s(&flt, str, &dec) : lg;
-	ft_push_whole(&flt, dec, str, a_d->spl ? lg : -1);
-	ft_push_frctn(&flt, &dec, a_d->prcsn >= 0 ? a_d->prcsn : DEF_F_PRCSN, str);
-	if (ft_tolower(a_d->frt) == 'e')
-		ft_enot_e(str, lg, a_d->frt);
-	if (a_d->l_a)
-		ft_string_push_back_n_c(str, a_d->wdth - lg - 1 - a_d->prcsn, ' ');
+	lge = ft_enot_s(&fltc, str, &dece);
+	pade = ad->wdth - 6 - (FT_ABS(lge) >= 100) - prcsn - (ad->sign != '\0');
+	pad = ad->wdth - lg - 1 - prcsn - (ad->sign != '\0') - lg / 3 * (ad->spl != '\0');
+	if (ad->frt == 'G' || ad->frt == 'g')
+	{
+
+		ad->frt = lge < -4 || lge > prcsn ? ad->frt - 'g' + 'e' : ad->frt - 'g' + 'f';
+		pad = lge < -4 || lge > ad->wdth ? pade : pad;
+		if (ad->prcsn == DEFAULT && ft_tolower(ad->frt) == 'f')
+		{
+			ad->wdth = lg;
+			ad->prcsn = DEF_F_PRCSN - lg;
+			pad += DEF_F_PRCSN - ad->prcsn;
+		}
+	}
+	else if (ft_tolower(ad->frt) == 'e')
+	{
+		pad = pade;
+		lg = lge;
+		dec = dece;
+		ft_enot_s(&flt, str, &dec);
+	}
+	pad = nan ? ad->wdth - 3 : pad;
+	ad->ac = nan ? ' ' : ad->ac;
+	if (ad->wdth && !ad->l_a)
+	{
+		if (ad->ac == '0')
+		{
+			ad->sign && flt == flt ? ft_string_push_back(str, ad->sign) : 0;
+			ft_string_push_back_n_c(str, pad, ad->ac);
+		}
+		else
+		{
+			ft_string_push_back_n_c(str, pad, ad->ac);
+			ad->sign && flt == flt ? ft_string_push_back(str, ad->sign) : 0;
+		}
+	}
+	else
+		ad->sign && flt == flt ? ft_string_push_back(str, ad->sign) : 0;
+	if (nan && (ad->frt == 'e' || ad->frt == 'f'))
+		dec = flt != flt ? ft_string_push_back_s(str, "nan") - 10000000 :
+		ft_string_push_back_s(str, "inf") - 10000000;
+	else if (nan && (ad->frt == 'E' || ad->frt == 'F'))
+		dec = flt != flt ? ft_string_push_back_s(str, "NAN") - 10000000 :
+			  ft_string_push_back_s(str, "INF") - 10000000;
+	ft_push_whole(&flt, dec, str, ad->spl ? lg : -1);
+	ft_push_frctn(&flt, &dec, ad->prcsn >= 0 ? ad->prcsn : DEF_F_PRCSN, str);
+	if (ft_tolower(ad->frt) == 'e' && !nan)
+		ft_enot_e(str, lg, ad->frt);
+	if (ad->l_a)
+		ft_string_push_back_n_c(str, pad, ' ');
 }

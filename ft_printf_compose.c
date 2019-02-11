@@ -14,7 +14,7 @@
 #include "ft_printf.h"
 #include <stdio.h> // TODO delete
 
-int ft_guf(int *str, int prec)
+/*int ft_guf(int *str, int prec)
 {
 	int p;
 
@@ -36,6 +36,7 @@ int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str)
 
 	a = a && !*a && ft_tolower(ad->frt) == 's' && (ad->frt = 's') ? &n : a;
 	ln = a && ft_tolower(ad->frt) == 's' ? ft_strlen_u(*a, ad->frt == 's') : 1;
+	ln = a && ad->frt == 'C' ? ft_unilen(*(int*)a) : ln;
 	ln = ad->frt == 's' && ad->prcsn < ln ? ad->prcsn : ln;
 	ln = ad->frt == 'S' && ad->prcsn < ln ? ft_guf(*(int**)a, ad->prcsn) : ln;
 	ad->frt = ad->frt == 'C' && !*(int*)a ? (char)'c' : ad->frt;
@@ -56,39 +57,53 @@ int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str)
 	if(ad->l_a)
 		ft_string_push_back_n_c(str, ad->wdth - ln, ad->ac);
 	return (*str ? 1 : 0);
+}*/
+
+int ft_print_hex_float_compose(t_arg_data *ad, void *arg, t_string **str)
+{
+
 }
 
-void ft_printf_final_arg_data_checks(t_arg_data *arg_data, char type)
+void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 {
-	if (arg_data->wdth < 0 && (arg_data->l_a = 1))
-		arg_data->wdth *= -1;
+	if (ad->wdth < 0 && (ad->l_a = 1))
+		ad->wdth *= -1;
 	if (type == 'g')
 	{
-		if (arg_data->prcsn == DEFAULT)
-			arg_data->prcsn = (ft_strchr("sSr", arg_data->frt)) ?
-					DEFAULT_STRING_PRECISION : DEFAULT_INT_PRECISION;
-		else if (!ft_strchr("cCsSr", arg_data->frt))
-			arg_data->ac = ' ';
-		if (arg_data->l_a)
-			arg_data->ac = ' ';
-		if (arg_data->ac == '0' && !ft_strchr("cCsSr", arg_data->frt))
+		if (ad->prcsn == DEFAULT)
+			ad->prcsn = (ft_strchr("sSr", ad->frt)) ?
+						DEFAULT_STRING_PRECISION : DEFAULT_INT_PRECISION;
+		else if (!ft_strchr("cCsSr", ad->frt))
+			ad->ac = ' ';
+		if (ad->l_a)
+			ad->ac = ' ';
+		if (ad->ac == '0' && !ft_strchr("cCsSr", ad->frt))
 		{
-			arg_data->prcsn = arg_data->wdth;
-			arg_data->wdth = -1;
+			ad->prcsn = ad->wdth ? ad->wdth : 1;
+			ad->wdth = -1;
 		}
 	}
-	else if (type == 'f' && arg_data->prcsn == DEFAULT)
-			arg_data->prcsn = DEF_F_PRCSN;
+	else if (type == 'f')
+	{
+		if (ad->prcsn == DEFAULT)
+			ad->prcsn = ft_tolower(ad->frt) == 'g' ? DEFAULT : DEF_F_PRCSN;
+		if (ad->prcsn == 0)
+			ad->prcsn = ft_tolower(ad->frt) == 'g' ? 1 : 0;
+	}
 }
 
-// TODO get already tolowered type (fFg)
-int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type)
+// TODO set 'g'/'G' prec to 1 if zero
+int ft_printf_compose(t_arg_data *ad, void *arg, t_string **str, char type)
 {
-	ft_printf_final_arg_data_checks(arg_data, type);
-	if (type == 'g' && !ft_strchr("sScCr", arg_data->frt))
-		return (ft_printf_int_compose(arg_data, arg, str));
+	ft_printf_final_arg_data_checks(ad, type);
+	if (type == 'g' && !ft_strchr("sSncCr", ad->frt))
+		return (ft_printf_int_compose(ad, arg, str));
+	else if (type == 'g' && ad->frt == 'n')
+		return ((**(int**)arg = (int)(*str)->len) * 0 + 1);
+	else if (type == 'f' && (ft_tolower(ad->frt) == 'a'))
+		return (ft_printf_hex_float_compose(ad, arg, str));
 	else if (type == 'g')
-		return (ft_printf_string_compose(arg_data, (char**)arg, str));
+		return (ft_printf_string_compose(ad, (char**)arg, str));
 	else
-		return (ft_printf_float_compose(arg_data, arg, str));
+		return (ft_printf_float_compose(ad, arg, str));
 }
