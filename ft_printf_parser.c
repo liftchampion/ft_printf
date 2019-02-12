@@ -33,8 +33,8 @@ void			ft_printf_print_arg_data(t_arg_data *arg_data)
 }
 ///															TODO delete it
 
-t_arg_data		*ft_printf_parser_flags_proceeder(const char **frmt, t_string **args,
-														int lengths[4])
+t_arg_data		*ft_printf_parser_flags_proceeder(const char **frmt,
+		t_string **args, int lengths[4])
 {
 	t_arg_data	*arg_data;
 	int			was_found_flag;

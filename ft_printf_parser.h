@@ -23,7 +23,7 @@
 
 # define INT_TYPE_SPECIFIERS "dDiIuUcCsSrpkxXoObBn"
 # define FLOAT_TYPE_SPECIFIERS "fFeEgG"
-# define LONG_INT_TYPE_SPECS "sprkSDUIOn"
+# define LONG_INT_TYPE_SPECS "sprSDUIO"
 
 # define SET_DEFAULT_LENGTHS lengths[0] = 0; lengths[1] = 0; lengths[2] = 0
 # define _128_COUNT lengths[3]
