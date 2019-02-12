@@ -100,8 +100,8 @@ int ft_printf_compose(t_arg_data *ad, void *arg, t_string **str, char type)
 		return (ft_printf_int_compose(ad, arg, str));
 	else if (type == 'g' && ad->frt == 'n')
 		return ((**(int**)arg = (int)(*str)->len) * 0 + 1);
-	else if (type == 'f' && (ft_tolower(ad->frt) == 'a'))
-		return (ft_printf_hex_float_compose(ad, arg, str));
+	//else if (type == 'f' && (ft_tolower(ad->frt) == 'a'))
+	//	return (ft_printf_hex_float_compose(ad, arg, str));
 	else if (type == 'g')
 		return (ft_printf_string_compose(ad, (char**)arg, str));
 	else

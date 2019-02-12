@@ -39,6 +39,13 @@ typedef struct	s_complex_flags_data
 	int was_zero;
 }				t_complex_flags_data;
 
+typedef union   u_bitld
+{
+    long double d;
+    long int	li[2];
+    __uint128_t i;
+}               t_bitld;
+
 t_arg_data		*ft_printf_parser(const char **frmt, t_string **args);
 int				ft_printf_parse_simple_flags(const char **frmt,
 										t_arg_data *arg_data, int *lenghts);

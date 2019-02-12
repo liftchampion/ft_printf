@@ -21,7 +21,26 @@
 
 //TODO rounding of when precision is 0
 
-int ft_find_whole_size(long double flt, double *dec)
+long double ft_find_whole(long double flt)
+{
+    t_bitld 	ld;
+    int			tmp;
+
+    ld.d = flt;
+    if (!(ld.i >> 126 & 1))
+	{
+		tmp = ((ld.i) >> 64) & 0x3FFF; //- 0b011111111111111;
+		if (tmp < 61)
+			ld.i = (ld.i >> (62 - tmp)) << (62 - tmp);
+		else if (tmp == 0x3FFF)
+			ld.i = (ld.i >> (63)) << (63);
+	}
+	else
+		return (0);
+	return (ld.d);
+}
+
+int ft_find_whole_size(long double flt, long double *dec)
 {
 	int ret;
 
@@ -30,49 +49,70 @@ int ft_find_whole_size(long double flt, double *dec)
 	while (flt > 1.0)
 	{
 		ret++;
-		*dec *= 10.0;
-		flt /= 10.0;
+		*dec *= 10.0l;
+		*dec = ft_find_whole(*dec);
+		flt /= 10.0l;
 	}
 	return (ret == 0 ? 1 : ret);
 }
 
-int ft_push_whole(long double *flt, double dec, t_string **str, int sep)
+int ft_push_whole(long double flt, long double dec, t_string **str, int sep)
 {
 	sep = sep > 3 ? sep : -1;
 	if (dec < 0)
 		return (1);
-	if ((int)*flt < 10 && (int)*flt > -10 && dec < 1.0)
+	if ((int)flt < 10 && (int)flt > -10 && dec < 1.0)
 	{
-		ft_string_push_back(str, (int) *flt + '0');
-		*flt -= (int)*flt;
+		ft_string_push_back(str, (int) flt + '0');
+		flt -= (int)flt;
 	}
 	while (dec >= 1.0)
 	{
 		if (sep > 0 && sep-- % 3 == 0)
 			ft_string_push_back(str, FT_SEPARATOR);
-		ft_string_push_back(str, (char)((int)(*flt / dec) + '0'));
-		*flt -= dec * (int)(*flt / dec);
-		dec /= 10.0;
+		ft_string_push_back(str, (char)((int)(flt / ft_find_whole(dec)) + '0'));
+		flt -= dec * (int)(flt / ft_find_whole(dec));
+		dec /= 10.0l;
 	}
 }
 
-double	ft_push_frctn(long double *flt, double *dec, int p, t_string **str)
+double	ft_push_frctn(t_arg_data *ad, t_string **str, void *args)
 {
-	if ((!p && dec > 0) || *dec < 0)
+    long double flt;
+    long double fltw;
+    long double dec;
+    int p;
+
+	fltw = ft_find_whole(*(((long double**)args)[0]));
+	flt = (*((long double**)args)[0]) - fltw;
+	p = ad->prcsn >= 0 ? ad->prcsn : DEF_F_PRCSN;
+	if ((!p && dec > 0) || dec < 0)
 		return (0);
-	ft_string_push_back(str, '.');
-	*dec = .1;
+	dec = .1;
 	p++;
 	while (--p)
 	{
-		*flt *= 10;
-		*dec *= 10.0;
+		flt *= 10l;
+		dec *= 10.0l;
+		dec = ft_find_whole(dec);
 	}
-	*flt += (*flt - (long long)*flt) > .5 ? 1 : 0;
-	ft_push_whole(flt, *dec, str, -1);
+	long double tm = flt - ft_find_whole(flt);
+	flt += (flt - ft_find_whole(flt)) >= .5 ? 1 : 0; //TODO
+	if ((int)(flt / ft_find_whole(dec)) >= 10)
+	{
+		fltw++;
+		fltw /= ft_tolower(ad->frt) == 'e' ? 10 : 1;
+		(*((int**)args)[2])++;
+		*(((long double**)args)[1]) *= ft_tolower(ad->frt) == 'e' ? 1 : 10;
+		flt = 0l;
+	}
+	ft_push_whole(fltw, *(((long double**)args)[1]), str,
+			ad->spl ? *((int**)args)[2] : -1);
+	ft_string_push_back(str, '.');
+	ft_push_whole(flt, dec, str, -1);
 }
 
-int	ft_enot_s(long double *flt, t_string **str, double *dec)
+int	ft_enot_s(long double *flt, t_string **str, long double *dec)
 {
 	int ret;
 
@@ -83,21 +123,26 @@ int	ft_enot_s(long double *flt, t_string **str, double *dec)
 		return (ret);
 	if (*flt >= 10)
 		while (*flt > 10 && ++ret)
-			*flt /= 10;
+			*flt /= 10l;
 	else
 		while (*flt < 1 && --ret)
-			*flt *= 10;
+			*flt *= 10l;
 	return (ret);
 }
 
 void ft_enot_e(t_string **str, int lg, char e)
 {
+	char buf[6];
 	ft_string_push_back(str, e);
 	ft_string_push_back(str, lg >= 0 ? '+' : '-');
-	if (FT_ABS(lg) >= 100)
-		lg %= ft_string_push_back(str, FT_ABS(lg) / 100 + '0') * 100;
-	lg %= ft_string_push_back(str, (FT_ABS(lg) > 10) ? FT_ABS(lg) / 10 + '0' : '0') * 10;
-	ft_string_push_back(str, FT_ABS(lg) % 10 + '0');
+	if (lg > 99)
+		ft_string_push_back_s(str, ft_itoa_buf(FT_ABS(lg), buf));
+	else
+	{
+		lg %= ft_string_push_back(str, (FT_ABS(lg) > 10) ? FT_ABS(lg) / 10 + '0'
+														 : '0') * 10;
+		ft_string_push_back(str, FT_ABS(lg) % 10 + '0');
+	}
 }
 
 /*TODO ? solution differs from original printf on big number of digits because of
@@ -106,27 +151,27 @@ void ft_enot_e(t_string **str, int lg, char e)
 int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 {
 	long double flt;
-	double dec;
-	double dece;
+	long double dec;
+	long double dece;
 	int lg;
-	int pad;
-	char nan;
 	int lge;
+	int pad;
 	int pade;
+	char nan;
 	long double fltc;
 	int prcsn;
 
 
 	flt = ad->size == DEFAULT ? *(double *)arg : *(long double *) arg;
-	nan = flt != flt || isinf(flt);
+	nan = flt != flt || isinf(flt); //TODO repalce isinf to ft_isinf
 	ad->sign = flt < 0 && !nan ? '-' : ad->sign;
 	prcsn = ad->prcsn == DEFAULT ? DEF_F_PRCSN : ad->prcsn;
 	flt *= flt < 0 ? -1 : 1;
 	fltc = flt;
 	lg = ft_find_whole_size(flt, &dec);
 	lge = ft_enot_s(&fltc, str, &dece);
-	pade = ad->wdth - 6 - (FT_ABS(lge) >= 100) - prcsn - (ad->sign != '\0');
 	pad = ad->wdth - lg - 1 - prcsn - (ad->sign != '\0') - lg / 3 * (ad->spl != '\0');
+	pade = ad->wdth - 6 - (FT_ABS(lge) >= 100) - prcsn - (ad->sign != '\0');
 	if (ad->frt == 'G' || ad->frt == 'g')
 	{
 
@@ -138,8 +183,10 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 			ad->prcsn = DEF_F_PRCSN - lg;
 			pad += DEF_F_PRCSN - ad->prcsn;
 		}
+		else if (ad->prcsn == DEFAULT)
+			ad->prcsn = 5;
 	}
-	else if (ft_tolower(ad->frt) == 'e')
+	if (ft_tolower(ad->frt) == 'e')
 	{
 		pad = pade;
 		lg = lge;
@@ -169,8 +216,8 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 	else if (nan && (ad->frt == 'E' || ad->frt == 'F'))
 		dec = flt != flt ? ft_string_push_back_s(str, "NAN") - 10000000 :
 			  ft_string_push_back_s(str, "INF") - 10000000;
-	ft_push_whole(&flt, dec, str, ad->spl ? lg : -1);
-	ft_push_frctn(&flt, &dec, ad->prcsn >= 0 ? ad->prcsn : DEF_F_PRCSN, str);
+	else
+		ft_push_frctn(ad, str, (long double *[]){&flt, &dec, &lg});
 	if (ft_tolower(ad->frt) == 'e' && !nan)
 		ft_enot_e(str, lg, ad->frt);
 	if (ad->l_a)
