@@ -36,8 +36,8 @@ int		ft_string_push_back(t_string **str_ptr, char c)
 
 int		ft_string_push_back_s(t_string **str_ptr, char *str)
 {
-	int t;
-	size_t l;
+	int		t;
+	size_t	l;
 
 	l = 0;
 	if (!str)

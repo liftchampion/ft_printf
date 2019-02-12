@@ -24,7 +24,7 @@ char	ft_unilen(int u)
 		return (4);
 }
 
-size_t	ft_strlen_u(const int* s, char f)
+size_t	ft_strlen_u(const int *s, char f)
 {
 	size_t len;
 

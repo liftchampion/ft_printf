@@ -55,5 +55,6 @@ int			ft_printf_date_compose(t_arg_data *ad, void *arg, t_string **str)
 	ft_string_push_back_s(str, res);
 	if (ad->l_a)
 		ft_string_push_back_n_c(str, ad->wdth - ft_strlen(res), ad->ac);
+	free(dt);
 	return (1);
 }

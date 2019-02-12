@@ -13,7 +13,7 @@
 #include "ft_printf_parser.h"
 #include "ft_printf.h"
 
-void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
+void	ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 {
 	if (ad->wdth < 0 && (ad->l_a = 1))
 		ad->wdth *= -1;
@@ -41,7 +41,8 @@ void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 	}
 }
 
-int ft_printf_compose(t_arg_data *arg_dat, void *arg, t_string **str, char type)
+int		ft_printf_compose(t_arg_data *arg_dat, void *arg, t_string **str,
+		char type)
 {
 	ft_printf_final_arg_data_checks(arg_dat, type);
 	if (type == 'g' && !ft_strchr("sScCrk", arg_dat->frt))
