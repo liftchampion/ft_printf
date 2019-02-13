@@ -88,9 +88,14 @@ void		ft_tor(t_fc *fc, t_arg_data *ad)
 	i = ad->prcsn + 1;
 	fc->f_d = 0.1l;
 	fc->f_lg = 0;
-	while (i-- && (fc->f_d *= 10.l))
-		cp = (cp - ft_find_whole(cp)) * 10.l;
-	fc->f += (cp > 5.l) ? 1.l / fc->f_d : 0.l;
+	while (i--)
+	{
+		cp -= ft_find_whole(cp);
+		cp *= 10.l;
+		fc->f_d *= 10.l;
+		fc->f_d = ft_find_whole(fc->f_d); // TODO no need ?
+	}
+	fc->f += cp >= 5.l ? 1.l / fc->f_d : 0.l;
 	if (fc->f > 1.l)
 	{
 		fc->f -= 1.l;
