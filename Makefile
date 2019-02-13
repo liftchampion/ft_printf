@@ -27,7 +27,7 @@ all: lib $(NAME)
 
 $(NAME): $(OBJS) $(HEADERS)
 	@ar r $(NAME) $(OBJS) $(OBJS2)
-	$(CC) $(LIBSPATH) -o ft_printf $(OBJS) $(LIB) $(FLAGS)
+	#$(CC) $(LIBSPATH) -o ft_printf $(OBJS) $(LIB) $(FLAGS)
 
 %.o: %.c $(HDR) $(LIB)
 	$(CC) $(FLAGS) $(LIBSPATH) -c $< -o $@
