@@ -65,8 +65,8 @@ size_t		srle(const char *s, char f, int prec)
 	ln = (f == 'c') ? 1 : ln;
 	ln = (f == 'S') ? ft_strlen_u((const int*)s, 0) : ln;
 	ln = (f == 'C') ? ft_unilen((int)s) : ln;
-	ln = (f == 's' && prec < ln) ? prec : ln;
-	ln = (f == 'S' && prec < ln) ? ft_guf((int*)s, prec) : ln;
+	ln = (f == 's' && prec < (int)ln) ? prec : ln;
+	ln = (f == 'S' && prec < (int)ln) ? ft_guf((int*)s, prec) : ln;
 	ln = (f == 'r') ? ft_prcd_non_prntbl_str(s, prec, 0, 0) : ln;
 	return (ln);
 }

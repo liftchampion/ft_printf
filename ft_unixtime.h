@@ -23,7 +23,7 @@
 typedef struct	s_date
 {
 	int			year;
-	char		mth;
+	int			mth;
 	char		day;
 	char		hr;
 	char		min;

@@ -81,7 +81,7 @@ static char				*ft_printf_itoa_pro(unsigned long n, int r,
 		(r < 0 && (r *= -1)) ? ft_tolower_str(bas) : ft_toupper_str(bas);
 	l = 1 + (n != 0 || ad->prcsn) + (ad->sign && r == 10);
 	nb = n;
-	while (nb >= r && l++)
+	while (nb >= (unsigned long)r && l++)
 		nb /= r;
 	l += ((l - 2) / 3) * ((i = 1) && ad->spl != 0 && (r == 10 || r == 8));
 	ad->prcsn = ((l - !n > ad->prcsn) && r == 8 && ad->alt) ? l : ad->prcsn;

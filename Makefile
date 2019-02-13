@@ -17,7 +17,8 @@ OBJS2 = $(wildcard libft/*.o)
 LIB = ./libft/libft.a
 LIBSPATH = -I ./libft
 HEADERS = $(wildcard *.h)
-#FLAGS = -Wall -Wextra -Werror TODO uncomment
+## TODO WERROR
+FLAGS = -Wall -Wextra
 DFLAGS = -g
 CC = clang
 
