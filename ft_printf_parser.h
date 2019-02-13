@@ -85,5 +85,6 @@ void			ft_tor(t_fc *fc, t_arg_data *ad);
 void			ft_dog(t_fc *fc, t_arg_data *ad);
 long double		ft_find_whole(long double flt);
 int				ft_find_whole_size(long double flt, long double *dec);
+long double		ft_check_digit(long double n, int *p, int prec);
 
 #endif

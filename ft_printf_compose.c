@@ -13,6 +13,35 @@
 #include "ft_printf_parser.h"
 #include "ft_printf.h"
 
+void	ft_push_all(t_fc *fc, t_arg_data *ad, t_string **str)
+{
+	int		pad;
+	char	buf[10];
+
+	buf[0] = '0';
+	pad = (ad->sign != 0) + ((ft_tolower(ad->frt) == 'e') ?
+			(3 + ft_intlen(FT_ABS(fc->w_lg)) + (fc->w_lg > -10 && fc->w_lg < 10)
+			+ (ad->prcsn != 0 || ad->alt) + ad->prcsn) : (fc->w_lg + 1 +
+			(ad->prcsn != 0 || ad->alt) + ad->prcsn));
+	ft_string_push_back((ad->sign && ad->ac == '0') ? str : 0, ad->sign);
+	if (!ad->l_a)
+		ft_string_push_back_n_c(str, ad->wdth - pad, ad->ac);
+	ft_string_push_back((ad->sign && ad->ac == ' ') ? str : 0, ad->sign);
+	ft_push_part(fc, -1, str);
+	ft_string_push_back((ad->prcsn || ad->alt) ? str : 0, '.');
+	ft_push_part(fc, ad->prcsn, str);
+	if (ft_tolower(ad->frt) == 'e')
+	{
+		ft_string_push_back(str, ad->frt);
+		ft_string_push_back(str, fc->w_lg >= 0 ? (char)'+' : (char)'-');
+		fc->w_lg = FT_ABS(fc->w_lg);
+		ft_string_push_back_s(str, ft_itoa_buf(fc->w_lg, buf +
+				(fc->w_lg < 10)) - (fc->w_lg < 10));
+	}
+	if (ad->l_a)
+		ft_string_push_back_n_c(str, ad->wdth - pad, ad->ac);
+}
+
 int		ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 {
 	long double	flt;

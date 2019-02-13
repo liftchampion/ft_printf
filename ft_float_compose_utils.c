@@ -13,7 +13,7 @@
 #include "ft_printf.h"
 #include "ft_printf_parser.h"
 
-int			ft_find_whole_size(long double flt, long double *dec)
+int				ft_find_whole_size(long double flt, long double *dec)
 {
 	int ret;
 
@@ -40,7 +40,7 @@ int			ft_find_whole_size(long double flt, long double *dec)
 	return (ret);
 }
 
-long double	ft_find_whole(long double flt)
+long double		ft_find_whole(long double flt)
 {
 	t_bitld		ld;
 	int			tmp;
@@ -61,7 +61,7 @@ long double	ft_find_whole(long double flt)
 	return (ld.d);
 }
 
-void		ft_dog(t_fc *fc, t_arg_data *ad)
+void			ft_dog(t_fc *fc, t_arg_data *ad)
 {
 	long double	dp;
 	int			i;
@@ -79,36 +79,32 @@ void		ft_dog(t_fc *fc, t_arg_data *ad)
 	ad->prcsn = lp == -1 ? 0 : lp;
 }
 
-void		ft_tor(t_fc *fc, t_arg_data *ad)
+long double		ft_check_digit(long double n, int *p, int prec)
 {
-	long double	cp;
-	int			i;
+	static long double	ten = 10e18l;
+	static int			prev = 9;
+	unsigned long		i;
 
-	cp = fc->f;
-	i = ad->prcsn + 1;
-	fc->f_d = 0.1l;
-	fc->f_lg = 0;
-	while (i--)
+	if (prec > 18 && (*p = 1))
+		return (n);
+	i = (unsigned long)(n * ten);
+	i %= 10;
+	if (*p == -1)
 	{
-		cp -= ft_find_whole(cp);
-		cp *= 10.l;
-		fc->f_d *= 10.l;
-		fc->f_d = ft_find_whole(fc->f_d); // TODO no need ?
+		prev = (int)i;
+		ten = 10e18 - 1.l;
+		*p = 1;
+		return (n);
 	}
-	fc->f += cp >= 5.l ? 1.l / fc->f_d : 0.l;
-	if (fc->f > 1.l)
+	if ((i == 9 && prev == 0) || (i == 0 && prev == 9))
 	{
-		fc->f -= 1.l;
-		fc->w += 1.l;
-		fc->w_lg += (ft_tolower(ad->frt) == 'e' || ft_tolower(ad->frt) == 'g')
-			? (fc->w >= 10.l && (fc->w /= 10.l)) : (fc->w / fc->w_d >= 10.l);
-		fc->w_d *= (fc->w / fc->w_d >= 10.l) ? 10.l : 1.l;
+		n = n + ((i == 9 && prev == 0) ? 1.l / ten : -1.l / ten);
 	}
-	if (ft_tolower(ad->frt) == 'e')
-		fc->w_d = 1;
+	ten /= 10.l;
+	return (n);
 }
 
-void		ft_enot(t_fc *fc)
+void			ft_enot(t_fc *fc)
 {
 	long double cp;
 

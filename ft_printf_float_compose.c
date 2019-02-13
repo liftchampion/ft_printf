@@ -17,8 +17,10 @@
 void		ft_push_part(t_fc *fc, int prc, t_string **str)
 {
 	int i;
+	int p;
 
 	i = 0;
+	p = -1;
 	if (prc == -1)
 	{
 		while (fc->w_d >= 1.0)
@@ -32,6 +34,7 @@ void		ft_push_part(t_fc *fc, int prc, t_string **str)
 	{
 		while (i++ < prc)
 		{
+			fc->f = ft_check_digit(fc->f, &p, prc);
 			fc->f *= 10.l;
 			ft_string_push_back(str, (char)((int)fc->f + '0'));
 			fc->f -= ft_find_whole(fc->f);
@@ -39,33 +42,31 @@ void		ft_push_part(t_fc *fc, int prc, t_string **str)
 	}
 }
 
-void		ft_push_all(t_fc *fc, t_arg_data *ad, t_string **str)
+void		ft_tor(t_fc *fc, t_arg_data *ad)
 {
-	int		pad;
-	char	buf[10];
+	long double	cp;
+	int			i;
+	int			p;
 
-	buf[0] = '0';
-	pad = (ad->sign != 0) + ((ft_tolower(ad->frt) == 'e') ?
-			(3 + ft_intlen(FT_ABS(fc->w_lg)) + (fc->w_lg > -10 && fc->w_lg < 10)
-			+ (ad->prcsn != 0 || ad->alt) + ad->prcsn)
-			: (fc->w_lg + 1 + (ad->prcsn != 0 || ad->alt) + ad->prcsn));
-	ft_string_push_back((ad->sign && ad->ac == '0') ? str : 0, ad->sign);
-	if (!ad->l_a)
-		ft_string_push_back_n_c(str, ad->wdth - pad, ad->ac);
-	ft_string_push_back((ad->sign && ad->ac == ' ') ? str : 0, ad->sign);
-	ft_push_part(fc, -1, str);
-	ft_string_push_back((ad->prcsn || ad->alt) ? str : 0, '.');
-	ft_push_part(fc, ad->prcsn, str);
-	if (ft_tolower(ad->frt) == 'e')
+	p = -1;
+	cp = fc->f;
+	i = ad->prcsn + 1;
+	fc->f_d = 0.1l;
+	fc->f_lg = 0;
+	while (i-- && (fc->f_d *= 10.l))
+		cp = ft_check_digit(cp - ft_find_whole(cp), &p, ad->prcsn) * 10.l;
+	fc->f += (cp > 5.l) ? 1.l / fc->f_d : 0.l;
+	if (fc->f > 1.l)
 	{
-		ft_string_push_back(str, ad->frt);
-		ft_string_push_back(str, fc->w_lg >= 0 ? (char)'+' : (char)'-');
-		fc->w_lg = FT_ABS(fc->w_lg);
-		ft_string_push_back_s(str, ft_itoa_buf(fc->w_lg, buf +
-			(fc->w_lg < 10)) - (fc->w_lg < 10));
+		fc->f -= 1.l;
+		fc->w += 1.l;
+		fc->w_lg += (ft_tolower(ad->frt) == 'e' || ft_tolower(ad->frt) == 'g')
+					? (fc->w >= 10.l && (fc->w /= 10.l)) :
+					(fc->w / fc->w_d >= 10.l);
+		fc->w_d *= (fc->w / fc->w_d >= 10.l) ? 10.l : 1.l;
 	}
-	if (ad->l_a)
-		ft_string_push_back_n_c(str, ad->wdth - pad, ad->ac);
+	if (ft_tolower(ad->frt) == 'e')
+		fc->w_d = 1;
 }
 
 int			ft_check_nan(long double *n, t_arg_data *ad, t_string **str)

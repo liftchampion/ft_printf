@@ -32,7 +32,7 @@ int			ft_prcd_non_prntbl_str(const char *str, int prec, t_string **res,
 {
 	int		p;
 	char	buf[6];
-	char 	use_len;
+	char	use_len;
 
 	p = 0;
 	use_len = (prec == DEFAULT_STRING_PRECISION) ? (char)0 : (char)1;
