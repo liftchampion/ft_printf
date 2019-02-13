@@ -39,6 +39,22 @@ typedef struct	s_complex_flags_data
 	int was_zero;
 }				t_complex_flags_data;
 
+typedef struct	s_fc
+{
+	long double w;
+	long double w_d;
+	long double f;
+	long double f_d;
+	int f_lg;
+	int w_lg;
+}				t_fc;
+
+typedef union   u_bitld
+{
+	long double d;
+	__uint128_t i;
+}               t_bitld;
+
 t_arg_data		*ft_printf_parser(const char **frmt, t_string **args);
 int				ft_printf_parse_simple_flags(const char **frmt,
 										t_arg_data *arg_data, int *lenghts);
@@ -58,5 +74,16 @@ int				ft_set_float_arg_data(t_arg_data *arg_data, char c,
 											t_string **args, int lengths[4]);
 void			ft_set_invalid_arg_data(t_arg_data *arg_data, char c,
 															t_string **args);
+
+t_fc			*ft_fc_maker(t_arg_data *ad, long double *arg);
+int				ft_get_exp(t_fc fc, t_arg_data *ad);
+int				ft_check_nan(long double *n, t_arg_data *ad, t_string **str);
+void			ft_push_all(t_fc *fc, t_arg_data *ad, t_string **str);
+void			ft_push_part(t_fc *fc, int prc, t_string **str);
+void			ft_enot(t_fc *fc);
+void			ft_tor(t_fc *fc, t_arg_data *ad);
+void			ft_dog(t_fc *fc, t_arg_data *ad);
+long double		ft_find_whole(long double flt);
+int				ft_find_whole_size(long double flt, long double *dec);
 
 #endif

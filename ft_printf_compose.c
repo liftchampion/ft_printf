@@ -12,9 +12,23 @@
 
 #include "ft_printf_parser.h"
 #include "ft_printf.h"
-#include <stdio.h> // TODO delete
 
-void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
+int		ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
+{
+	long double	flt;
+	t_fc		*dt;
+
+	flt = ad->size == DEFAULT ? *(double*)arg : *(long double*)arg;
+	if (ft_check_nan(&flt, ad, str))
+		return (*str ? 1 : 0);
+	if (!(dt = ft_fc_maker(ad, &flt)))
+		return (0);
+	ft_push_all(dt, ad, str);
+	free(dt);
+	return (*str ? 1 : 0);
+}
+
+void	ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 {
 	if (ad->wdth < 0 && (ad->l_a = 1))
 		ad->wdth *= -1;
@@ -42,8 +56,8 @@ void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 	}
 }
 
-// TODO set 'g'/'G' prec to 1 if zero
-int ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str, char type)
+int		ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str,
+				char type)
 {
 	ft_printf_final_arg_data_checks(arg_data, type);
 	if (type == 'g' && !ft_strchr("sScCrk", arg_data->frt))
