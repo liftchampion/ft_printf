@@ -14,8 +14,6 @@
 #include "ft_printf.h"
 #include "ft_unixtime.h"
 
-#include <stdio.h> // TODO delete it
-
 char		*ft_printf_date_compose_get_str(t_date *dt, void *arg,
 		t_arg_data *ad)
 {
@@ -26,20 +24,19 @@ char		*ft_printf_date_compose_get_str(t_date *dt, void *arg,
 								"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 	ft_bzero(buf, 50);
-	res = ft_memalloc(1000); // TODO just temporary for sprintf
 	if (ad->alt &&
 		((use_year = (FT_ABS(*(long*)arg - ad->prcsn) > HALF_YEAR)) + 1))
-		sprintf(res, ft_strcat(ft_strcat(buf, "%s %2d "), use_year ? "%5d" :
+		ft_sprintf(&res, ft_strcat(ft_strcat(buf, "%s %2d "), use_year ? "%5d" :
 		"%02d:%02d"), mths[dt->mth], dt->day, use_year ? dt->year : dt->hr,
 				dt->min);
 	else if (++dt->mth && (ad->size == DEFAULT || ad->size == LONG))
-		ad->size == DEFAULT ? sprintf(res, "%4d-%02d-%02d %02d:%02d", dt->year,
-				dt->mth, dt->day, dt->hr, dt->min) :
-				sprintf(res, "%4d-%02d-%02d %02d:%02d:%02d", dt->year,
+		ad->size == DEFAULT ? ft_sprintf(&res, "%4d-%02d-%02d %02d:%02d",
+				dt->year, dt->mth, dt->day, dt->hr, dt->min) :
+				ft_sprintf(&res, "%4d-%02d-%02d %02d:%02d:%02d", dt->year,
 				dt->mth, dt->day, dt->hr, dt->min, dt->sec);
 	else if (ad->size == SHORT || ad->size == CHAR)
-		ad->size == SHORT ? sprintf(res, "%4d-%02d-%02d", dt->year, dt->mth,
-				dt->day) : sprintf(res, "%4d-%02d", dt->year, dt->mth);
+		ad->size == SHORT ? ft_sprintf(&res, "%4d-%02d-%02d", dt->year, dt->mth,
+				dt->day) : ft_sprintf(&res, "%4d-%02d", dt->year, dt->mth);
 	return (res);
 }
 
@@ -56,5 +53,6 @@ int			ft_printf_date_compose(t_arg_data *ad, void *arg, t_string **str)
 	if (ad->l_a)
 		ft_string_push_back_n_c(str, ad->wdth - ft_strlen(res), ad->ac);
 	free(dt);
+	free(res);
 	return (1);
 }
