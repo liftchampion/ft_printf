@@ -232,10 +232,10 @@ void ft_dog(t_fc *fc, t_arg_data *ad)
 	lp = -1;
 	i = 0;
 	dp = fc->f;
-	while (i++ <= ad->prcsn)
+	while (++i <= ad->prcsn)
 	{
 		dp *= 10.l;
-		lp = (ft_find_whole(dp) != 0) ? i - 1 : lp;
+		lp = (ft_find_whole(dp) != 0) ? i : lp;
 		dp -= ft_find_whole(dp);
 	}
 	ad->prcsn = lp == -1 ? 0 : lp;
@@ -250,20 +250,20 @@ void ft_tor(t_fc *fc, t_arg_data *ad)
 	i = ad->prcsn + 1;
 	fc->f_d = 0.1l;
 	fc->f_lg = 0;
-	while (i-- && ++fc->f_lg)
+	while (i--)
 	{
 		cp -= ft_find_whole(cp);
 		cp *= 10.l;
 		fc->f_d *= 10.l;
-		//fc->f_d = ft_find_whole(fc->f_d); // TODO no need ?
+		fc->f_d = ft_find_whole(fc->f_d); // TODO no need ?
 	}
 	fc->f += cp > 5.l ? 1.l / fc->f_d : 0.l;
 	if (fc->f > 1.l)
 	{
 		fc->f -= 1.l;
 		fc->w += 1.l;
-		fc->w_lg += (ft_tolower(ad->frt) == 'e') ? (fc->w >= 10.l &&
-							(fc->w /= 10.l)) : (fc->w / fc->w_d >= 10.l);
+		fc->w_lg += (ft_tolower(ad->frt) == 'e' || ft_tolower(ad->frt) == 'g')
+			? (fc->w >= 10.l && (fc->w /= 10.l)) : (fc->w / fc->w_d >= 10.l);
 		fc->w_d *= (fc->w / fc->w_d >= 10.l) ? 10.l : 1.l;
 	}
 	if (ft_tolower(ad->frt) == 'e')
@@ -289,6 +289,13 @@ void ft_enot(t_fc *fc)
 	}
 }
 
+int ft_get_exp(t_fc fc, t_arg_data *ad)
+{
+	ft_enot(&fc);
+	ft_tor(&fc, ad);
+	return ((fc.w_lg ? fc.w_lg : fc.f_lg));
+}
+
 t_fc *ft_fc_maker(t_arg_data *ad, long double *arg)
 {
 	t_fc *dt;
@@ -304,8 +311,8 @@ t_fc *ft_fc_maker(t_arg_data *ad, long double *arg)
 	if (ft_tolower(ad->frt) == 'g')
 	{
 		ad->was_dot = 1;
-		exp = (dt->w_lg ? dt->w_lg : dt->f_lg);
-		ad->frt = ad->frt - 'g' + (exp < -4 || exp >= ad->prcsn) ? 'e' : 'g';
+		exp = ft_get_exp(*dt, ad); // `todo use get_exp
+		ad->frt = ad->frt - 'g' + (exp < -4 || exp >= ad->prcsn) ? 'e' : 'f';
 		ad->prcsn -= ft_tolower(ad->frt) == 'e' ? 1 : dt->w_lg + (dt->w_lg == 0);
 	}
 	if (ft_tolower(ad->frt) == 'e')
