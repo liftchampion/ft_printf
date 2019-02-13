@@ -65,6 +65,7 @@ typedef struct		s_string
 }					t_string;
 
 void				ft_print_string(t_string *str);
+void				ft_fd_print_string(t_string *str, int fd);
 
 void				ft_free_string(t_string **str);
 

@@ -14,6 +14,7 @@
 
 void		ft_free_string_arr(t_string **str, t_arg_data **vars)
 {
+    str++;
 	while (*str)
 	{
 		ft_free_string(&(*str));
@@ -52,23 +53,46 @@ static int	ft_loop(const char *frmt, t_string **str, t_arg_data **vars,
 	}
 }
 
-int			ft_printf(const char *frmt, ...)
+t_string	*ft_vprintf(const char *frmt, va_list vl)
 {
-	va_list		vl;
 	t_string	*str[100];
 	t_string	*args_seq;
 	t_arg_data	*vars[99];
 
-	va_start(vl, frmt);
 	args_seq = ft_make_string(32);
 	str[0] = ft_make_string(64);
 	vars[0] = 0;
 	ft_loop(frmt, str, vars, args_seq);
 	ft_stringify(&(str[0]), vars, vl, args_seq);
-	ft_print_string(*str);
 	free(args_seq);
-	args_seq = (void*)str[0]->len;
 	ft_free_string_arr(str, vars);
-	va_end(vl);
-	return ((int)args_seq > 0);
+	return ((*str));
+}
+
+int ft_fdprintf(int fd, const char *frmt, ...)
+{
+	va_list		vl;
+	t_string	*str;
+	long int	ret;
+
+	va_start(vl, frmt);
+	str = ft_vprintf(frmt, vl);
+	ft_fd_print_string(str, fd);
+	ret = str ? str->len : -1;
+	ft_free_string(&str);
+	return ((int)ret);
+}
+
+int ft_printf(const char *frmt, ...)
+{
+	va_list		vl;
+	t_string	*str;
+	long int	ret;
+
+	va_start(vl, frmt);
+	str = ft_vprintf(frmt, vl);
+	ft_print_string(str);
+	ret = str ? str->len : -1;
+	ft_free_string(&str);
+	return ((int)ret);
 }
