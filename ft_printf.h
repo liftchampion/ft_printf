@@ -51,6 +51,9 @@ typedef struct	s_arg_data
 }				t_arg_data;
 
 int				ft_printf(const char *frmt, ...);
+int				ft_sprintf(char **buf, const char *frmt, ...);
+t_string		*ft_vprintf(const char *frmt, va_list vl);
+int				ft_fdprintf(int fd, const char *frmt, ...);
 int				ft_find_cntrl(const char **frmt, t_string **str);
 int				ft_set_color(const char **frmt, t_string **str);
 t_arg_data		*ft_printf_parser(const char **frmt, t_string **args);

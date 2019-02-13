@@ -12,21 +12,6 @@
 
 #include "ft_printf.h"
 
-void		ft_free_string_arr(t_string **str, t_arg_data **vars)
-{
-    str++;
-	while (*str)
-	{
-		ft_free_string(&(*str));
-		str++;
-	}
-	while (*vars)
-	{
-		free(*vars);
-		vars++;
-	}
-}
-
 static int	ft_loop(const char *frmt, t_string **str, t_arg_data **vars,
 		t_string *args_seq)
 {
@@ -58,6 +43,7 @@ t_string	*ft_vprintf(const char *frmt, va_list vl)
 	t_string	*str[100];
 	t_string	*args_seq;
 	t_arg_data	*vars[99];
+	int			i;
 
 	args_seq = ft_make_string(32);
 	str[0] = ft_make_string(64);
@@ -65,11 +51,16 @@ t_string	*ft_vprintf(const char *frmt, va_list vl)
 	ft_loop(frmt, str, vars, args_seq);
 	ft_stringify(&(str[0]), vars, vl, args_seq);
 	free(args_seq);
-	ft_free_string_arr(str, vars);
+	i = 0;
+	while (str[i++])
+		ft_free_string(&(str[i]));
+	i = -1;
+	while (vars[++i])
+		free(vars[i]);
 	return ((*str));
 }
 
-int ft_fdprintf(int fd, const char *frmt, ...)
+int			ft_fdprintf(int fd, const char *frmt, ...)
 {
 	va_list		vl;
 	t_string	*str;
@@ -80,10 +71,26 @@ int ft_fdprintf(int fd, const char *frmt, ...)
 	ft_fd_print_string(str, fd);
 	ret = str ? str->len : -1;
 	ft_free_string(&str);
+	va_end(vl);
 	return ((int)ret);
 }
 
-int ft_printf(const char *frmt, ...)
+int			ft_sprintf(char **buf, const char *frmt, ...)
+{
+	va_list		vl;
+	t_string	*str;
+	long int	ret;
+
+	va_start(vl, frmt);
+	str = ft_vprintf(frmt, vl);
+	ret = str ? str->len : -1;
+	*buf = str ? str->data : NULL;
+	free(str);
+	va_end(vl);
+	return ((int)ret);
+}
+
+int			ft_printf(const char *frmt, ...)
 {
 	va_list		vl;
 	t_string	*str;
@@ -94,5 +101,6 @@ int ft_printf(const char *frmt, ...)
 	ft_print_string(str);
 	ret = str ? str->len : -1;
 	ft_free_string(&str);
+	va_end(vl);
 	return ((int)ret);
 }
