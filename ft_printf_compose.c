@@ -56,18 +56,18 @@ void	ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 	}
 }
 
-int		ft_printf_compose(t_arg_data *arg_data, void *arg, t_string **str,
-				char type)
+int		ft_printf_compose(t_arg_data *arg_dat, void *arg, t_string **str,
+		char type)
 {
-	ft_printf_final_arg_data_checks(arg_data, type);
-	if (type == 'g' && !ft_strchr("sScCrk", arg_data->frt))
-		return (ft_printf_int_compose(arg_data, arg, str));
-	else if (type == 'g' && !ft_strchr("kn", arg_data->frt))
-		return (ft_printf_string_compose(arg_data, (char**)arg, str));
-	else if (type == 'g' && arg_data->frt == 'k')
-		return (ft_printf_date_compose(arg_data, arg, str));
-	else if (type == 'g' && arg_data->frt == 'n')
-		; // TODO n_compose
+	ft_printf_final_arg_data_checks(arg_dat, type);
+	if (type == 'g' && !ft_strchr("sScCrk", arg_dat->frt))
+		return (ft_printf_int_compose(arg_dat, arg, str));
+	else if (type == 'g' && !ft_strchr("kn", arg_dat->frt))
+		return (ft_printf_string_compose(arg_dat, (char**)arg, str));
+	else if (type == 'g' && arg_dat->frt == 'k')
+		return (ft_printf_date_compose(arg_dat, arg, str));
+	else if (type == 'g' && arg_dat->frt == 'n')
+		return ((**(int**)arg = (int)(*str)->len) * 0 + 1);
 	else if (type == 'f')
-		return (ft_printf_float_compose(arg_data, arg, str));
+		return (ft_printf_float_compose(arg_dat, arg, str));
 }

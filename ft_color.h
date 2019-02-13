@@ -9,18 +9,20 @@
 /*   Updated: 2019/01/23 21:04:50 by ehugh-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #ifndef FT_COLOR_H
 # define FT_COLOR_H
 # define NUM_OF_COLS 24
 # define FT_COL_PREFIX "\e["
 # define FT_COL_PREFIXD "\\e["
-struct s_pf_col
+
+struct	s_pf_col
 {
 	char	*name;
 	int		num;
 };
 
-struct s_pf_col pf_cols[] = 
+struct s_pf_col pf_cols[] =
 {
 	{ "eof", 0},
 	{ "Bold", 1},

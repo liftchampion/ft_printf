@@ -48,8 +48,6 @@ t_arg_sz		ft_printf_parser_get_int_arg_size(char c, int lengths[4])
 		return (DEFAULT);
 }
 
-#include <stdio.h>  // TODO delete
-
 int				ft_set_int_arg_data(t_arg_data *arg_data, char c,
 											t_string **args, int lengths[4])
 {

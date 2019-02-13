@@ -21,7 +21,7 @@
 # define DEFAULT_INT_PRECISION 1
 # define DEFAULT_STRING_PRECISION 2147483647 // TODO care about it (-1 maybe)
 
-# define INT_TYPE_SPECIFIERS "dDiIuUcCsSrpkxXoObB"
+# define INT_TYPE_SPECIFIERS "dDiIuUcCsSrpkxXoObBn"
 # define FLOAT_TYPE_SPECIFIERS "fFeEgG"
 # define LONG_INT_TYPE_SPECS "sprSDUIO"
 

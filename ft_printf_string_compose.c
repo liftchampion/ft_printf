@@ -12,7 +12,6 @@
 
 #include "ft_printf_parser.h"
 #include "ft_printf.h"
-#include <stdio.h> // TODO delete
 
 int			ft_guf(int *str, int prec)
 {

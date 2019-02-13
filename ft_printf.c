@@ -11,36 +11,27 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h>
 
-void ft_print_va_struct(va_list ls)
+void		ft_free_string_arr(t_string **str, t_arg_data **vars)
 {
-	printf("gp_offs - %u fp_offs - %u overflow_arg_area - %p reg_save_area - %p\n",
-			ls->gp_offset, ls->fp_offset, ls->overflow_arg_area, ls->reg_save_area);
-	long int *t1 = (long int *)ls->overflow_arg_area;
-	long int *t2 = (long int *)ls->reg_save_area;
-	printf("overflow_arg_area - %ld reg_save_area - %ld   delta = %zu\n",
-			(*(t1)) , *(t2 + 3), ls->overflow_arg_area - ls->reg_save_area);
+	while (*str)
+	{
+		ft_free_string(&(*str));
+		str++;
+	}
+	while (*vars)
+	{
+		free(*vars);
+		vars++;
+	}
 }
 
-int ft_vprintf(char **res, const char *frmt, va_list vl)
+static int	ft_loop(const char *frmt, t_string **str, t_arg_data **vars,
+		t_string *args_seq)
 {
+	int i;
 
-}
-
-int	ft_printf(const char *frmt, ...)
-{
-	va_list		vl;
-	t_string	*str[100];
-	int			i;
-	t_string	*args_seq;
-	t_arg_data	*vars[99];
-
-	va_start(vl, frmt);
-	args_seq = ft_make_string(32);
 	i = 0;
-	str[i] = ft_make_string(64);
-	vars[0] = 0;
 	while (*frmt)
 	{
 		if (!ft_find_cntrl(&frmt, &str[i]))
@@ -59,10 +50,25 @@ int	ft_printf(const char *frmt, ...)
 			str[i + 1] = NULL;
 		}
 	}
+}
+
+int			ft_printf(const char *frmt, ...)
+{
+	va_list		vl;
+	t_string	*str[100];
+	t_string	*args_seq;
+	t_arg_data	*vars[99];
+
+	va_start(vl, frmt);
+	args_seq = ft_make_string(32);
+	str[0] = ft_make_string(64);
+	vars[0] = 0;
+	ft_loop(frmt, str, vars, args_seq);
 	ft_stringify(&(str[0]), vars, vl, args_seq);
 	ft_print_string(*str);
-	//ft_free_string_arr(str, i);
-
+	free(args_seq);
+	args_seq = (void*)str[0]->len;
+	ft_free_string_arr(str, vars);
 	va_end(vl);
-	return (str[0]->len);
+	return ((int)args_seq > 0);
 }
