@@ -17,14 +17,14 @@
 void			ft_printf_arg_data_set_width_or_prec(t_arg_data *arg_data,
 																		int n)
 {
-	if (!arg_data->__was_dot)
+	if (!arg_data->was_dot)
 	{
 		arg_data->wdth = n;
 	}
 	else
 	{
 		arg_data->prcsn = n;
-		arg_data->__was_dot = 0;
+		arg_data->was_dot = 0;
 	}
 }
 

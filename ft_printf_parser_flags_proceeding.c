@@ -49,7 +49,7 @@ int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data)
 		arg_data->spl = *(*frmt)++;
 	else if (**frmt == '.' && ++was_found && *(*frmt)++)
 	{
-		arg_data->__was_dot = 1;
+		arg_data->was_dot = 1;
 		if (**frmt != '*')
 			ft_printf_arg_data_set_width_or_prec(arg_data, ft_atoi_m(frmt));
 	}

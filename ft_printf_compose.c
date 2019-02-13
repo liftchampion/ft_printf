@@ -36,7 +36,7 @@ void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 	else if (type == 'f')
 	{
 		if (ad->prcsn == DEFAULT)
-			ad->prcsn = ft_tolower(ad->frt) == 'g' ? DEFAULT : DEF_F_PRCSN;
+			ad->prcsn = DEF_F_PRCSN;
 		if (ad->prcsn == 0)
 			ad->prcsn = ft_tolower(ad->frt) == 'g' ? 1 : 0;
 	}
