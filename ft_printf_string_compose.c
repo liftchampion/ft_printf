@@ -33,9 +33,11 @@ int			ft_prcd_non_prntbl_str(const char *str, int prec, t_string **res,
 {
 	int		p;
 	char	buf[6];
+	char 	use_len;
 
 	p = 0;
-	while ((buf[0] = '\\') && *str++ && prec-- > 0)
+	use_len = (prec == DEFAULT_STRING_PRECISION) ? (char)0 : (char)1;
+	while ((buf[0] = '\\') && (*str++ || use_len) && prec-- > 0)
 		if (ft_isprint(*(str - 1)) && (p += 1))
 		{
 			PUSH_S(res, psh == 2 ? "\e[39m" : 0);
@@ -44,12 +46,10 @@ int			ft_prcd_non_prntbl_str(const char *str, int prec, t_string **res,
 		else if ((*(str - 1) == '\n' || *(str - 1) == '\t') && (p += 2))
 		{
 			PUSH_S(res, psh == 2 ? "\e[33m" : 0);
-			if (psh)
-				PUSH_S(res, (*(str - 1) == '\n') ? "\\n" : "\\t");
+			PUSH_S(psh ? res : 0, (*(str - 1) == '\n') ? "\\n" : "\\t");
 		}
-		else
+		else if ((p += ft_intlen(*(str - 1)) + 1))
 		{
-			p += ft_intlen(*(str - 1)) + 1;
 			PUSH_S(res, psh == 2 ? "\e[33m" : 0);
 			PUSH_S(res, psh ? ft_itoa_buf(*(str - 1), buf + 1) - 1 : 0);
 		}
