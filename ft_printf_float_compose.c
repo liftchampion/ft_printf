@@ -52,7 +52,6 @@ typedef union   u_bitld
 {
 	long double d;
 	__uint128_t i;
-	unsigned long is[2];
 }               t_bitld;
 
 long double ft_find_whole(long double flt)
@@ -176,8 +175,8 @@ void ft_push_all(t_fc *fc, t_arg_data *ad, t_string **str)
 	char buf[10];
 
 	buf[0] = '0';
-	pad = (ad->sign != 0) + (ft_tolower(ad->frt) == 'e') ? (3 + ft_intlen(fc->w_lg) - (fc->w_lg < 0) + (fc->w_lg > -10 && fc->w_lg < 10) + (ad->prcsn != 0 || ad->alt) + ad->prcsn)
-			: (fc->w_lg + (ad->prcsn != 0 || ad->alt) + ad->prcsn);
+	pad = (ad->sign != 0) + ((ft_tolower(ad->frt) == 'e') ? (3 + ft_intlen(FT_ABS(fc->w_lg)) + (fc->w_lg > -10 && fc->w_lg < 10) + (ad->prcsn != 0 || ad->alt) + ad->prcsn)
+			: (fc->w_lg + 1 + (ad->prcsn != 0 || ad->alt) + ad->prcsn));
 	if (ad->sign && ad->ac == '0')
 		ft_string_push_back(str, ad->sign);
 	if (!ad->l_a)
@@ -203,22 +202,24 @@ int ft_check_nan(long double *n, t_arg_data *ad, t_string **str)
 {
 	int is_nan;
 	int is_inf;
+	t_bitld bts;
 
+	bts.d = *n;
 	is_nan = *n != *n;
 	is_inf = isinf(*n); // TODO use ft_isinf
-	ad->sign = ((*n < 0.0l) ? (char)'-' : ad->sign) * !is_nan; // TODO use bits for check for -0
+	ad->sign = ((bts.i >> 79 & 1) ? (char)'-' : ad->sign) * !is_nan;
 	ad->prcsn = (ad->prcsn > 4000) ? 4000 : ad->prcsn;
 	*n = (*n < 0.0l) ? (-1.0l * *n) : *n;
 	if (!is_inf && !is_nan)
 		return (0);
-	if (ad->l_a)
+	if (!ad->l_a)
 		ft_string_push_back_n_c(str, ad->wdth - (3 + (ad->sign != 0)), ' ');
 	ft_string_push_back(ad->sign ? str : 0, ad->sign);
 	if (ad->frt > 'Z')
 		ft_string_push_back_s(str, is_nan ? "nan" : "inf");
 	else
 		ft_string_push_back_s(str, is_nan ? "NAN" : "INF");
-	if (!ad->l_a)
+	if (ad->l_a)
 		ft_string_push_back_n_c(str, ad->wdth - (3 + (ad->sign != 0)), ' ');
 	return (1);
 }
@@ -312,7 +313,7 @@ t_fc *ft_fc_maker(t_arg_data *ad, long double *arg)
 	{
 		ad->was_dot = 1;
 		exp = ft_get_exp(*dt, ad); // `todo use get_exp
-		ad->frt = ad->frt - 'g' + (exp < -4 || exp >= ad->prcsn) ? 'e' : 'f';
+		ad->frt = ad->frt - 'g' + ((exp < -4 || exp >= ad->prcsn) ? 'e' : 'f');
 		ad->prcsn -= ft_tolower(ad->frt) == 'e' ? 1 : dt->w_lg + (dt->w_lg == 0);
 	}
 	if (ft_tolower(ad->frt) == 'e')
@@ -321,15 +322,6 @@ t_fc *ft_fc_maker(t_arg_data *ad, long double *arg)
 	if (ad->was_dot)
 		ft_dog(dt, ad);
 	return (dt);
-}
-
-char *ft_f_compose(t_fc *fc, t_arg_data *ad)
-{
-	t_string *buf;
-
-	if (!(buf = ft_make_string(64)))
-		return (0);
-
 }
 
 void ft_print_fc(t_fc *fc)
@@ -351,7 +343,7 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 		return (*str ? 1 : 0);
 	if (!(dt = ft_fc_maker(ad, &flt)))
 		return (0);
-	//ft_print_fc(dt);
+	///ft_print_fc(dt);
 	ft_push_all(dt, ad, str);
 	return (*str ? 1 : 0);
 

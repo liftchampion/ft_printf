@@ -18,14 +18,14 @@ void ft_printf_final_arg_data_checks(t_arg_data *ad, char type)
 {
 	if (ad->wdth < 0 && (ad->l_a = 1))
 		ad->wdth *= -1;
+	if (ad->l_a || ad->frt == 'k')
+		ad->ac = ' ';
 	if (type == 'g')
 	{
 		if (ad->prcsn == DEFAULT)
 			ad->prcsn = (ft_strchr("sSr", ad->frt)) ?
 						DEFAULT_STRING_PRECISION : DEFAULT_INT_PRECISION;
 		else if (!ft_strchr("cCsSr", ad->frt))
-			ad->ac = ' ';
-		if (ad->l_a || ad->frt == 'k')
 			ad->ac = ' ';
 		if (ad->ac == '0' && !ft_strchr("cCsSrk", ad->frt))
 		{
