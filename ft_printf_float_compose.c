@@ -144,11 +144,40 @@ typedef struct	s_fc
 	int w_lg;
 }				t_fc;
 
+long double ft_check_digit(long double n, int *p, int prec)
+{
+	///static long double div_by = 1.l;
+	/*static long double ten = 10e18l;
+	static int prev = 9;
+	unsigned long i;
+
+	long double debug = ten; // TODO delete
+	if (prec > 18 && (*p = 1))
+		return (n);
+	i = (unsigned long)(n * ten);
+	i %= 10;
+	if (*p == -1)
+	{
+		prev = (int)i;
+		ten = 10e18 - 1.l;
+		*p = 1;
+		return (n);
+	}
+	if ((i == 9 && prev == 0) || (i == 0 && prev == 9))
+	{
+		n = n + ((i == 9 && prev == 0) ? 1.l / ten : -1.l / ten);
+	}
+	ten /= 10.l;*/
+	return (n);
+}
+
 void ft_push_part(t_fc *fc, int prc, t_string **str)
 {
 	int i;
+	int p;
 
 	i = 0;
+	p = -1;
 	if (prc == -1)
 	{
 		while (fc->w_d >= 1.0)
@@ -162,6 +191,7 @@ void ft_push_part(t_fc *fc, int prc, t_string **str)
 	{
 		while (i++ < prc)
 		{
+			fc->f = ft_check_digit(fc->f, &p, prc);
 			fc->f *= 10.l;
 			ft_string_push_back(str, (char) ((int)fc->f + '0'));
 			fc->f -= ft_find_whole(fc->f);
@@ -246,19 +276,16 @@ void ft_tor(t_fc *fc, t_arg_data *ad)
 {
 	long double cp;
 	int i;
+	int p;
 
+	p = -1;
 	cp = fc->f;
 	i = ad->prcsn + 1;
 	fc->f_d = 0.1l;
 	fc->f_lg = 0;
-	while (i--)
-	{
-		cp -= ft_find_whole(cp);
-		cp *= 10.l;
-		fc->f_d *= 10.l;
-		fc->f_d = ft_find_whole(fc->f_d); // TODO no need ?
-	}
-	fc->f += cp > 5.l ? 1.l / fc->f_d : 0.l;
+	while (i-- && (fc->f_d *= 10.l))
+		cp = ft_check_digit(cp - ft_find_whole(cp), &p, ad->prcsn) * 10.l;
+	fc->f += (cp > 5.l) ? 1.l / fc->f_d : 0.l;
 	if (fc->f > 1.l)
 	{
 		fc->f -= 1.l;
@@ -312,7 +339,7 @@ t_fc *ft_fc_maker(t_arg_data *ad, long double *arg)
 	if (ft_tolower(ad->frt) == 'g')
 	{
 		ad->was_dot = 1;
-		exp = ft_get_exp(*dt, ad); // `todo use get_exp
+		exp = ft_get_exp(*dt, ad);
 		ad->frt = ad->frt - 'g' + ((exp < -4 || exp >= ad->prcsn) ? 'e' : 'f');
 		ad->prcsn -= ft_tolower(ad->frt) == 'e' ? 1 : dt->w_lg + (dt->w_lg == 0);
 	}
@@ -343,8 +370,8 @@ int ft_printf_float_compose(t_arg_data *ad, void *arg, t_string **str)
 		return (*str ? 1 : 0);
 	if (!(dt = ft_fc_maker(ad, &flt)))
 		return (0);
-	///ft_print_fc(dt);
 	ft_push_all(dt, ad, str);
+	free(dt);
 	return (*str ? 1 : 0);
 
 

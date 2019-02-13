@@ -23,6 +23,11 @@ void ft_print_va_struct(va_list ls)
 			(*(t1)) , *(t2 + 3), ls->overflow_arg_area - ls->reg_save_area);
 }
 
+int ft_vprintf(char **res, const char *frmt, va_list vl)
+{
+
+}
+
 int	ft_printf(const char *frmt, ...)
 {
 	va_list		vl;
