@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf_parser.h"
+#include "ft_printf_utils.h"
 #include "ft_printf.h"
 
 int			ft_guf(int *str, int prec)

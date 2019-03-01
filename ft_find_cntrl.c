@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "ft_printf_utils.h"
 
 int	ft_find_cntrl(const char **frmt, t_string **str)
 {
@@ -21,7 +21,7 @@ int	ft_find_cntrl(const char **frmt, t_string **str)
 	slash = 0;
 	while (**frmt && **frmt != '%' && !(**frmt == CLR_CNTRL && !slash && CLR))
 	{
-		slash = (**frmt == '\\') ? 1 : 0;
+		slash = (**frmt == '\\') ? (char)1 : (char)0;
 		if (!ft_string_push_back(str, **frmt))
 			return (0);
 		(*frmt)++;

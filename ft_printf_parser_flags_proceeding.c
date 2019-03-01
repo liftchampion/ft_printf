@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include "ft_printf_parser.h"
+#include "ft_printf_utils.h"
 
 int		ft_parse_len_specifier(const char **frmt, int lengths[4])
 {

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf_parser.h"
+#include "ft_printf_utils.h"
 #include "ft_printf.h"
 
 void	ft_push_all(t_fc *fc, t_arg_data *ad, t_string **str)
@@ -99,4 +99,5 @@ int		ft_printf_compose(t_arg_data *arg_dat, void *arg, t_string **str,
 		return ((**(int**)arg = (int)(*str)->len) * 0 + 1);
 	else if (type == 'f')
 		return (ft_printf_float_compose(arg_dat, arg, str));
+	return (0);
 }

@@ -6,12 +6,12 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 22:40:21 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/27 04:24:36 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/02/28 16:53:43 by ggerardy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include "ft_printf_parser.h"
+#include "ft_printf_utils.h"
 #include "libft.h"
 
 void			ft_printf_arg_data_set_width_or_prec(t_arg_data *arg_data,
@@ -28,14 +28,14 @@ void			ft_printf_arg_data_set_width_or_prec(t_arg_data *arg_data,
 	}
 }
 
-t_arg_sz		ft_printf_parser_get_int_arg_size(char c, int lengths[4])
+t_arg_sz		ft_printf_parser_get_int_arg_size(char c, const int lengths[4])
 {
 	if (ft_strchr(LONG_INT_TYPE_SPECS, c))
 		return (LONG);
 	else if ((c == 'c' && L_COUNT % 2) || c == 'C')
 		return (DEFAULT);
 	else if (c == 'c')
-		return (CHAR);
+		return (CHAR_P);
 	else if (_128_COUNT)
 		return (_INT128);
 	else if (L_COUNT)
@@ -43,7 +43,7 @@ t_arg_sz		ft_printf_parser_get_int_arg_size(char c, int lengths[4])
 	else if (H_COUNT % 2)
 		return (SHORT);
 	else if (H_COUNT)
-		return (CHAR);
+		return (CHAR_P);
 	else
 		return (DEFAULT);
 }
@@ -78,9 +78,9 @@ int				ft_set_float_arg_data(t_arg_data *arg_data, char c,
 void			ft_set_invalid_arg_data(t_arg_data *arg_data, char c,
 																t_string **args)
 {
-	arg_data->size = CHAR;
+	arg_data->size = CHAR_P;
 	arg_data->frt = 'c';
 	arg_data->char_arg = c;
 	arg_data->num = -1;
-	--(*args)->info;
+	--(*args)->offset;
 }

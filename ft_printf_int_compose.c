@@ -6,12 +6,12 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/27 03:00:46 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/27 04:24:46 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/02/28 16:56:51 by ggerardy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "ft_printf.h"
+#include "ft_printf_utils.h"
 
 static char				*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 {
@@ -35,7 +35,7 @@ static char				*ft_printf_get_bits(unsigned long n, t_arg_data *ad)
 		if (len-- && (len + 1) % 8 == 0)
 		{
 			ft_strlcat(ret, (ad->alt && (i += 5)) ? "\e[39m" : "", 600);
-			ret[i++] = ad->spl ? ad->spl : ' ';
+			ret[i++] = ad->spl ? ad->spl : (char)' ';
 		}
 	}
 	ft_strlcat(ret, (ad->alt) ? "\e[39m" : "", 600);
@@ -46,7 +46,7 @@ static unsigned long	ft_printf_int_caster(void *n, t_arg_sz sz, char us,
 		char *sign)
 {
 	*sign = us ? (char)0 : *sign;
-	if (sz == CHAR && (us || ((*(char*)n < 0 && (*sign = '-'))) ||
+	if (sz == CHAR_P && (us || ((*(char*)n < 0 && (*sign = '-'))) ||
 															(*(char*)n >= 0)))
 		return (us ? *(unsigned char*)n :
 					(unsigned char)(*(char*)n * (1 - 2 * (*sign == '-'))));

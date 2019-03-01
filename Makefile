@@ -6,7 +6,7 @@
 #    By: ggerardy <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/29 22:33:54 by ggerardy          #+#    #+#              #
-#    Updated: 2019/01/18 14:25:13 by ehugh-be         ###   ########.fr        #
+#    Updated: 2019/02/19 11:07:06 by ggerardy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,8 +17,7 @@ OBJS2 = $(wildcard libft/*.o)
 LIB = ./libft/libft.a
 LIBSPATH = -I ./libft
 HEADERS = $(wildcard *.h)
-## TODO WERROR
-FLAGS = -Wall -Wextra
+FLAGS = -Wall -Wextra -Werror
 DFLAGS = -g
 CC = clang
 
