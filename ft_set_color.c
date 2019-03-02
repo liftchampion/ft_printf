@@ -35,6 +35,7 @@ static int	ft_parse_format(const char **frm, t_string **str)
 {
 	char	bgre;
 	int		i;
+	char 	buf[20];
 
 	bgre = 0;
 	bgre += (*(*frm) == 'b' && *(*frm + 1) == '_') ? 10 : 0;
@@ -46,8 +47,8 @@ static int	ft_parse_format(const char **frm, t_string **str)
 	bgre -= (pf_cols[i].num < 10 && bgre / 10 == 1) ? 10 : 0;
 	bgre -= (pf_cols[i].num > 10 && bgre % 10 == 1) ? 1 : 0;
 	bgre = (pf_cols[i].num == 0) ? (char)0 : bgre;
-	return ((ft_string_push_back_s(str, ft_itoa(pf_cols[i].num + bgre +
-						bgre % 10 * 20)) < 1) ? -1 : 1);
+	return ((ft_string_push_back_s(str, ft_itoa_buf(pf_cols[i].num + bgre +
+						bgre % 10 * 20, buf)) < 1) ? -1 : 1);
 }
 
 static int	ft_parse_compl_col(const char **frmt, t_string **str)
