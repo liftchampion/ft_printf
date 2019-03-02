@@ -6,7 +6,7 @@
 /*   By: ehugh-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 13:47:48 by ehugh-be          #+#    #+#             */
-/*   Updated: 2019/01/27 02:36:37 by ehugh-be         ###   ########.fr       */
+/*   Updated: 2019/03/02 03:39:35 by ggerardy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	ft_parse_format(const char **frm, t_string **str)
 {
 	char	bgre;
 	int		i;
-	char 	buf[20];
+	char	buf[20];
 
 	bgre = 0;
 	bgre += (*(*frm) == 'b' && *(*frm + 1) == '_') ? 10 : 0;
