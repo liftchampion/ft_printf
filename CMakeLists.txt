@@ -25,5 +25,5 @@ add_executable(printf1 main.c ${LIBFT_SRCS} ${LIBFT_HEADERS}
         ft_stringify.c ft_printf_compose.c
         ft_printf_int_compose.c
         ft_printf_float_compose.c
-        libft/ft_tolower_str.c libft/ft_toupper_str.c libft/ft_int_to_unicode.c ft_printf_string_compose.c)
+        libft/ft_tolower_str.c libft/ft_toupper_str.c libft/ft_int_to_unicode.c ft_printf_string_compose.c libft/ft_intlen.c ft_printf_date_compose.c ft_unixtime.h ft_unixtime.c ft_unixtime_utils.c ft_float_compose_utils.c)
 #target_link_libraries(printf1 "/Users/ggerardy/CLION/printf1/libft/libft.a")

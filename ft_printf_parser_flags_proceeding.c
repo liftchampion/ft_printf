@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include "ft_printf_parser.h"
+#include "ft_printf_utils.h"
 
 int		ft_parse_len_specifier(const char **frmt, int lengths[4])
 {
@@ -30,7 +30,7 @@ int		ft_parse_len_specifier(const char **frmt, int lengths[4])
 	return (1);
 }
 
-int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data) // TODO fix .00  and  '+'/' '
+int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data)
 {
 	int was_found;
 
@@ -49,7 +49,7 @@ int		ft_printf_parse_modifiers(const char **frmt, t_arg_data *arg_data) // TODO 
 		arg_data->spl = *(*frmt)++;
 	else if (**frmt == '.' && ++was_found && *(*frmt)++)
 	{
-		arg_data->__was_dot = 1;
+		arg_data->was_dot = 1;
 		if (**frmt != '*')
 			ft_printf_arg_data_set_width_or_prec(arg_data, ft_atoi_m(frmt));
 	}

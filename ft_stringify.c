@@ -10,10 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
-#include <stdio.h> //TODO delete
+#include "ft_printf_utils.h"
 
-static void ft_vl_to_p(va_list vl, t_string *a_s, void *vl_p[])
+static void	ft_vl_to_p(va_list vl, t_string *a_s, void *vl_p[])
 {
 	int i;
 
@@ -22,9 +21,6 @@ static void ft_vl_to_p(va_list vl, t_string *a_s, void *vl_p[])
 	{
 		if (a_s->data[i] == 'F')
 		{
-			// TODO correct_work_with_paddings
-			///vl->overflow_arg_area = (size_t)vl->overflow_arg_area % 16 ? \
-					vl->overflow_arg_area + 8 : vl->overflow_arg_area;
 			vl_p[i] = vl->overflow_arg_area;
 			va_arg(vl, long double);
 		}
@@ -43,25 +39,20 @@ static void ft_vl_to_p(va_list vl, t_string *a_s, void *vl_p[])
 	}
 }
 
-void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
+static void	ft_loop(t_string **str, t_arg_data *v[], void **vl_p, t_string *a_s)
 {
 	int i;
-	void	**vl_p;
 
 	i = 0;
-	vl_p = malloc(sizeof(void *) * a_s->len);
-	if (!str || !*str || !vl_p || !a_s || !v || !*v)
-		return ;
-	ft_vl_to_p(vl, a_s, vl_p);
 	while (1)
 	{
 		if (!str[i] || !v[i] || v[i]->frt == 0)
-			return ;
+			break ;
 		if (v[i]->wdth < 0)
 			v[i]->wdth = *(int*)vl_p[-v[i]->wdth - 1];
 		if (v[i]->prcsn < 0 && v[i]->prcsn != DEFAULT)
-			v[i]->prcsn = *(int*)vl_p[-v[i]->prcsn - 1] >= 0 ? // tODO do something for correct moving in arr
-					*(int*)vl_p[-v[i]->prcsn - 1] : DEFAULT;  // todo add ternary for  >= 0
+			v[i]->prcsn = *(int*)vl_p[-v[i]->prcsn - 1] >= 0 ?
+				*(int*)vl_p[-v[i]->prcsn - 1] : DEFAULT;
 		if (v[i]->char_arg)
 			ft_printf_compose(v[i], &v[i]->char_arg, str, 'g');
 		else
@@ -70,4 +61,21 @@ void ft_stringify(t_string **str, t_arg_data *v[], va_list vl, t_string *a_s)
 		i++;
 		ft_string_push_back_s(str, str[i]->data);
 	}
+}
+
+int			ft_stringify(t_string **str, t_arg_data *v[], va_list vl,
+		t_string *a_s)
+{
+	void	**vl_p;
+
+	vl_p = malloc(sizeof(void *) * a_s->len);
+	if (!str || !*str || !vl_p || !a_s || !v || !*v)
+	{
+		free(vl_p);
+		return (-1);
+	}
+	ft_vl_to_p(vl, a_s, vl_p);
+	ft_loop(str, v, vl_p, a_s);
+	free(vl_p);
+	return (*str ? 1 : -1);
 }

@@ -6,7 +6,7 @@
 #    By: ggerardy <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/29 22:33:54 by ggerardy          #+#    #+#              #
-#    Updated: 2019/01/18 14:25:13 by ehugh-be         ###   ########.fr        #
+#    Updated: 2019/02/19 11:07:06 by ggerardy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ OBJS2 = $(wildcard libft/*.o)
 LIB = ./libft/libft.a
 LIBSPATH = -I ./libft
 HEADERS = $(wildcard *.h)
-#FLAGS = -Wall -Wextra -Werror TODO uncomment
+FLAGS = -Wall -Wextra -Werror
 DFLAGS = -g
 CC = clang
 
@@ -27,7 +27,7 @@ all: lib $(NAME)
 
 $(NAME): $(OBJS) $(HEADERS)
 	@ar r $(NAME) $(OBJS) $(OBJS2)
-	$(CC) $(LIBSPATH) -o ft_printf $(OBJS) $(LIB) $(FLAGS)
+	#$(CC) $(LIBSPATH) -o ft_printf $(OBJS) $(LIB) $(FLAGS)
 
 %.o: %.c $(HDR) $(LIB)
 	$(CC) $(FLAGS) $(LIBSPATH) -c $< -o $@

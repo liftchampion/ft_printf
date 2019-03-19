@@ -10,17 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf_parser.h"
+#include "ft_printf_utils.h"
 #include "ft_printf.h"
-#include <stdio.h> // TODO delete
 
-#define PUSH_S ft_string_push_back_s
-#define PUSH_C ft_string_push_back
-#define PUSH_NC ft_string_push_back_n_c
-#define PUSH_NS ft_string_push_back_n_s
-
-
-int ft_guf(int *str, int prec)
+int			ft_guf(int *str, int prec)
 {
 	int p;
 
@@ -34,55 +27,55 @@ int ft_guf(int *str, int prec)
 	return (p);
 }
 
-int ft_prcd_non_prntbl_str(const char *str, int prec, t_string **res, char psh)
+int			ft_prcd_non_prntbl_str(const char *str, int prec, t_string **res,
+		char psh)
 {
-	int p;
-	char buf[6];
+	int		p;
+	char	buf[6];
+	char	use_len;
 
 	p = 0;
-	buf[0] = '\\';
-	while (*str++ && prec-- > 0)
+	use_len = (prec == DEFAULT_STRING_PRECISION) ? (char)0 : (char)1;
+	while ((buf[0] = '\\') && (*str++ || use_len) && prec-- > 0)
 		if (ft_isprint(*(str - 1)) && (p += 1))
 		{
 			PUSH_S(res, psh == 2 ? "\e[39m" : 0);
-			PUSH_C(res, psh ? *(str-1) : 0);
+			PUSH_C(res, psh ? *(str - 1) : 0);
 		}
 		else if ((*(str - 1) == '\n' || *(str - 1) == '\t') && (p += 2))
 		{
 			PUSH_S(res, psh == 2 ? "\e[33m" : 0);
-			if (psh)
-				PUSH_S(res, (*(str - 1) == '\n') ? "\\n" : "\\t");
+			PUSH_S(psh ? res : 0, (*(str - 1) == '\n') ? "\\n" : "\\t");
 		}
-		else
+		else if ((p += ft_intlen(*(str - 1)) + 1))
 		{
-			p += ft_intlen(*(str - 1)) + 1;
 			PUSH_S(res, psh == 2 ? "\e[33m" : 0);
-			PUSH_S(res, psh ? ft_itoa_buf(*(str - 1), buf+1) - 1 : 0);
+			PUSH_S(res, psh ? ft_itoa_buf(*(str - 1), buf + 1) - 1 : 0);
 		}
 	PUSH_S(res, (psh == 2 && prec > 0) ? "\e[33m" : 0);
 	PUSH_S(res, (prec > 0 && (p += 2) && psh) ? "\\0" : 0);
 	return (PUSH_S(res, psh == 2 ? "\e[39m" : 0) * 0 + p);
 }
 
-size_t	srle(const char* s, char f, int prec)
+size_t		srle(const char *s, char f, int prec)
 {
 	size_t ln;
 
 	ln = (f == 's') ? ft_strlen((char*)s) : 0;
 	ln = (f == 'c') ? 1 : ln;
 	ln = (f == 'S') ? ft_strlen_u((const int*)s, 0) : ln;
-	ln = (f == 'C') ? ft_unilen((int*)s) : ln;
-	ln = (f == 's' && prec < ln) ? prec : ln;
-	ln = (f == 'S' && prec < ln) ? ft_guf((int*)s, prec) : ln;
+	ln = (f == 'C') ? ft_unilen((int)s) : ln;
+	ln = (f == 's' && prec < (int)ln) ? prec : ln;
+	ln = (f == 'S' && prec < (int)ln) ? ft_guf((int*)s, prec) : ln;
 	ln = (f == 'r') ? ft_prcd_non_prntbl_str(s, prec, 0, 0) : ln;
 	return (ln);
 }
 
-int ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str) // TODO check null
+int			ft_printf_string_compose(t_arg_data *ad, char **a, t_string **str)
 {
-	size_t ln;
-	char uni[5];
-	static char *n = "(null)";
+	size_t		ln;
+	char		uni[5];
+	static char	*n = "(null)";
 
 	a = !*a && (ft_tolower(ad->frt) == 's' || ad->frt == 'r') ? &n : a;
 	ad->frt = (a == &n) ? (char)'s' : ad->frt;
