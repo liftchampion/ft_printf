@@ -82,5 +82,5 @@ void			ft_set_invalid_arg_data(t_arg_data *arg_data, char c,
 	arg_data->frt = 'c';
 	arg_data->char_arg = c;
 	arg_data->num = -1;
-	--(*args)->offset;
+	--(*args)->info;
 }

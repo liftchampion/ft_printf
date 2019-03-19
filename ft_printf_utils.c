@@ -21,7 +21,7 @@ t_arg_data		*ft_printf_parser_flags_proceeder(const char **frmt,
 	t_arg_data	*arg_data;
 	int			was_found_flag;
 
-	++(*args)->offset;
+	++(*args)->info;
 	SET_DEFAULT_LENGTHS;
 	_128_COUNT = 0;
 	if (!(arg_data = (t_arg_data*)malloc(sizeof(t_arg_data))))
@@ -34,14 +34,14 @@ t_arg_data		*ft_printf_parser_flags_proceeder(const char **frmt,
 		was_found_flag = 0;
 		was_found_flag += ft_printf_parse_simple_flags(frmt, arg_data, lengths);
 		was_found_flag += ft_printf_parse_comlex_flags(frmt, arg_data, args,
-				&(*args)->offset);
-		if ((*args)->offset == -1)
+				&(*args)->info);
+		if ((*args)->info == -1)
 		{
 			ft_memdel((void**)&arg_data);
 			return (0);
 		}
 	}
-	arg_data->num = (*args)->offset;
+	arg_data->num = (*args)->info;
 	return (arg_data);
 }
 

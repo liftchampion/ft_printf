@@ -26,7 +26,7 @@ CC = clang
 all: lib $(NAME)
 
 $(NAME): $(OBJS) $(HEADERS)
-	@ar r $(NAME) $(OBJS) $(OBJS2)
+	@ar r $(NAME) $(OBJS) $(LIB)
 	#$(CC) $(LIBSPATH) -o ft_printf $(OBJS) $(LIB) $(FLAGS)
 
 %.o: %.c $(HDR) $(LIB)

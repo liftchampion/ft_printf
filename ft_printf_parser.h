@@ -16,6 +16,7 @@
 # include <stdarg.h>
 # include "libft.h"
 # include "ft_printf.h"
+# include "ft_printf_utils.h"
 
 # define DEF_F_PRCSN 6
 # define DEFAULT_INT_PRECISION 1
