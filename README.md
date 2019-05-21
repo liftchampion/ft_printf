@@ -12,7 +12,7 @@ $ \* %g %e (полный список в файле ft_printf_parser.h)
 + {Red}i'm red{eof} - возможность раскрашивать части строки в 256-битные цвета   
 (также поддерживается численный формат: {//202})
 
-![custom_oprions](https://raw.githubusercontent.com/liftchampion/ft_printf/master/imgs/custom.png)
+![custom_options](https://raw.githubusercontent.com/liftchampion/ft_printf/master/imgs/custom.png)
 
 Всё кроме чисел с плавающей точкой работает в точности, как printf, уступая по скорости примерно на 10%.  
 Числа с плавающей точкой реализованы через домножение на 10., поэтому разряды вне пределов их точности выводятся не точно.  
